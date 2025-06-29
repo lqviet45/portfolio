@@ -37,7 +37,6 @@ body {
 /*    opacity: 0;*/
 /*}*/
 
-
 header {
     position: fixed;
     top: 0;
@@ -48,22 +47,6 @@ header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1000;
     transition: transform 0.3s ease;
-}
-
-.project-card {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    padding: 40px;
-    border-radius: 20px;
-    color: white;
-    margin-bottom: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transform: none;
-    opacity: 1;
-}
-
-.js-enabled .project-card {
-    opacity: 0;
-    transform: translateY(50px) scale(0.8);
 }
 
 nav {
@@ -232,11 +215,19 @@ nav {
 .skill-card li {
     margin: 8px 0;
     opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    transition: transform 0.2s;
+}
+
+.skill-card li i {
+    font-size: 1rem;
+    color: white;
 }
 
 .skill-card li:hover {
     transform: scale(1.05);
-    transition: transform 0.2s;
 }
 
 .experience-item {
@@ -270,6 +261,22 @@ nav {
 .experience-item p {
     color: var(--text-color);
     line-height: 1.6;
+}
+
+.project-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 40px;
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transform: none;
+    opacity: 1;
+}
+
+.js-enabled .project-card {
+    opacity: 0;
+    transform: translateY(50px) scale(0.8);
 }
 
 .project-card h3 {
@@ -434,6 +441,12 @@ footer {
     }
     .nav-links li {
         margin: 10px 0;
+    }
+    .skill-card li {
+        font-size: 0.9rem;
+    }
+    .skill-card li i {
+        font-size: 0.9rem;
     }
 }
 
