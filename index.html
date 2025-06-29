@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Le Quoc Viet, a Backend Developer specializing in ASP.NET Core, Spring Boot, and modern web technologies.">
+    <meta name="keywords" content="backend developer, ASP.NET Core, Spring Boot, portfolio, Le Quoc Viet">
+    <meta name="author" content="Le Quoc Viet">
+    <title>Le Quoc Viet - Backend Developer</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./portfolio.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+</head>
+<body>
+<!--<div class="cursor"></div>-->
+
+<div class="floating-elements">
+    <div class="floating-element element-1"></div>
+    <div class="floating-element element-2"></div>
+    <div class="floating-element element-3"></div>
+    <div class="floating-element element-4"></div>
+</div>
+
+<header>
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="logo" aria-label="Le Quoc Viet's Portfolio">LQV</div>
+        <button class="theme-toggle" aria-label="Toggle dark/light mode">🌙</button>
+        <button class="menu-toggle" aria-label="Toggle navigation menu">☰</button>
+        <ul class="nav-links">
+            <li><a href="#home" aria-current="page">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section id="home" class="hero">
+    <div class="hero-content">
+        <h1>Le Quoc Viet</h1>
+        <div class="subtitle">Fresher Backend Developer</div>
+        <p class="description">Passionate about building scalable backend solutions with 1+ years of real-world experience in software development, specializing in ASP.NET Core, Spring Boot, and modern web technologies.</p>
+        <a href="#contact" class="cta-button">Let's Work Together</a>
+    </div>
+</section>
+
+<section id="about" class="section">
+    <div class="container">
+        <h2>About Me</h2>
+        <p style="text-align: center; font-size: 1.1rem; max-width: 800px; margin: 0 auto 40px; line-height: 1.6; color: var(--text-color);">
+            Currently pursuing a Bachelor's in Information Technology at FPT University with a GPA of 7.92/10.
+            I have hands-on experience working on production-level projects at Amazing Tech for 9 months,
+            developing robust backend systems for various industries including water management, tax invoicing, and construction.
+        </p>
+
+        <div style="text-align: center; margin-bottom: 40px;">
+            <a href="https://github.com/Lqviet45" target="_blank" style="display: inline-block; margin: 0 15px; padding: 12px 25px; background: linear-gradient(45deg, #333, #555); color: white; text-decoration: none; border-radius: 25px; transition: transform 0.3s;">
+                🔗 GitHub: Lqviet45
+            </a>
+            <a href="https://linkedin.com/in/le-viet-a03721240" target="_blank" style="display: inline-block; margin: 0 15px; padding: 12px 25px; background: linear-gradient(45deg, #0077b5, #005885); color: white; text-decoration: none; border-radius: 25px; transition: transform 0.3s;">
+                💼 LinkedIn Profile
+            </a>
+        </div>
+
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3>Programming</h3>
+                <ul>
+                    <li>C# & ASP.NET Core</li>
+                    <li>Java & Spring Boot</li>
+                    <li>ReactJS & NextJS</li>
+                    <li>HTML, CSS, JavaScript</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <h3>Database</h3>
+                <ul>
+                    <li>SQL Server</li>
+                    <li>PostgreSQL</li>
+                    <li>Dapper ORM</li>
+                    <li>Stored Procedures</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <h3>Tools & Technologies</h3>
+                <ul>
+                    <li>RESTful APIs</li>
+                    <li>Git & Version Control</li>
+                    <li>Docker</li>
+                    <li>Postman & Swagger</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <h3>Architecture</h3>
+                <ul>
+                    <li>Clean Architecture</li>
+                    <li>CQRS & MediatR</li>
+                    <li>Repository Pattern</li>
+                    <li>Microservices</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="experience" class="section">
+    <div class="container">
+        <h2>Work Experience</h2>
+
+        <div class="experience-item">
+            <h3>Backend Developer</h3>
+            <div class="company">Amazing Tech - EInvoice Project</div>
+            <div class="date">April 2024 - May 2024</div>
+            <p>Developed a Node.js web API for creating tax invoices for businesses, integrating with Odoo for data storage and facilitating connections with the Malaysian government. Implemented robust OTP validation for enhanced security.</p>
+        </div>
+
+        <div class="experience-item">
+            <h3>Backend Developer</h3>
+            <div class="company">Amazing Tech - AquaCity Project</div>
+            <div class="date">December 2023 - April 2024</div>
+            <p>Built a comprehensive water plant management system. Designed and implemented APIs for complex data queries and statistical reports with Excel export functionality. Optimized performance using Dapper and stored procedures.</p>
+        </div>
+
+        <div class="experience-item">
+            <h3>Backend Developer</h3>
+            <div class="company">Amazing Tech - Construction Management System</div>
+            <div class="date">September 2023 - November 2023</div>
+            <p>Developed a web application for tracking and managing concrete piles in construction projects. Collaborated with stakeholders to gather requirements and designed the initial database structure and feature specifications.</p>
+        </div>
+    </div>
+</section>
+
+<section id="projects" class="section">
+    <div class="container">
+        <h2>Featured Projects</h2>
+
+        <div class="project-card">
+            <h3>FEDOM-AI | Exam & Proctor Management System</h3>
+            <p>A comprehensive mobile and web system for FPTU Examination Office with AI chatbot integration. Built with modern architecture patterns and real-time features.</p>
+            <div style="margin-top: 20px;">
+                <span class="tech-stack" title="ASP.NET Core 8: A cross-platform framework for building web applications">ASP.NET Core 8</span>
+                <span class="tech-stack" title="Spring AI: Framework for AI-driven Java applications">Spring AI</span>
+                <span class="tech-stack" title="Next.js: React framework for server-side rendering">Next.js</span>
+                <span class="tech-stack" title="Flutter: Cross-platform mobile app framework">Flutter</span>
+                <span class="tech-stack" title="SignalR: Real-time communication library">SignalR</span>
+                <span class="tech-stack" title="RabbitMQ: Message broker for distributed systems">RabbitMQ</span>
+                <span class="tech-stack" title="Docker: Containerization platform for deployment">Docker</span>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <h3>Gym Management Application</h3>
+            <p>Full-stack gym management system handling members, subscriptions, and operations with integrated payment processing and admin interface.</p>
+            <div style="margin-top: 20px;">
+                <span class="tech-stack" title="ASP.NET Core: A cross-platform framework for building web applications">ASP.NET Core</span>
+                <span class="tech-stack" title="Next.js: React framework for server-side rendering">Next.js</span>
+                <span class="tech-stack" title="PayOS: Payment processing platform">PayOS</span>
+                <span class="tech-stack" title="ASP.NET Identity: Authentication and authorization framework">ASP.NET Identity</span>
+                <span class="tech-stack" title="MediatR: Mediator pattern for request handling">MediatR</span>
+                <span class="tech-stack" title="CQRS: Command Query Responsibility Segregation pattern">CQRS</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="section">
+    <div class="container">
+        <h2>Get In Touch</h2>
+        <form class="contact-form" id="contact-form">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input id="name" type="text" placeholder="Your Name" required aria-required="true">
+            </div>
+            <div class="form-group">
+                <label for="email">Your Email</label>
+                <input id="email" type="email" placeholder="Your Email" required aria-required="true">
+            </div>
+            <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" rows="6" placeholder="Your Message" required aria-required="true"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="cta-button">Send Message</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>© 2025 Le Quoc Viet. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://github.com/Lqviet45" target="_blank">GitHub</a>
+            <a href="https://linkedin.com/in/le-viet-a03721240" target="_blank">LinkedIn</a>
+            <a href="mailto:lqviet455@gmail.com">Email</a>
+            <a href="tel:0353081770">Phone</a>
+        </div>
+    </div>
+</footer>
+
+<script src="./app.js"></script>
+</body>
+</html>
