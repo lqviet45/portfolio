@@ -110,7 +110,7 @@ gsap.utils.toArray('.section').forEach((section) => {
 });
 
 // Enhanced batch animations with full scroll direction support
-gsap.set(".skill-card, .experience-item, .project-card", {
+gsap.set(".skill-card, .experience-item, .project-card, .certificate-card", {
     opacity: 0,
     y: 80,
     scale: 0.8
@@ -228,6 +228,50 @@ ScrollTrigger.batch(".project-card", {
             scale: 1,
             duration: 1,
             stagger: 0.15,
+            ease: "power2.out"
+        });
+    },
+    onLeaveBack: (elements) => {
+        gsap.to(elements, {
+            opacity: 0,
+            y: 80,
+            scale: 0.8,
+            duration: 0.6,
+            stagger: 0.1
+        });
+    },
+    start: "top 90%",
+    end: "bottom 10%"
+});
+
+// Certificate cards animations
+ScrollTrigger.batch(".certificate-card", {
+    onEnter: (elements) => {
+        gsap.to(elements, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            stagger: 0.2,
+            duration: 1.1,
+            ease: "back.out(1.2)"
+        });
+    },
+    onLeave: (elements) => {
+        gsap.to(elements, {
+            opacity: 0.4,
+            y: -40,
+            scale: 0.95,
+            duration: 0.5,
+            stagger: 0.1
+        });
+    },
+    onEnterBack: (elements) => {
+        gsap.to(elements, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            stagger: 0.1,
             ease: "power2.out"
         });
     },
@@ -384,6 +428,28 @@ document.querySelectorAll('.project-card').forEach(card => {
     });
     card.addEventListener('mouseleave', () => {
         gsap.to(card, { scale: 1, y: 0, duration: 0.3, ease: "power2.out" });
+    });
+});
+
+// Certificate cards hover effect
+document.querySelectorAll('.certificate-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+            scale: 1.03,
+            y: -8,
+            boxShadow: "0 25px 50px rgba(0,0,0,0.3)",
+            duration: 0.3,
+            ease: "power2.out"
+        });
+    });
+    card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+            scale: 1,
+            y: 0,
+            boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+            duration: 0.3,
+            ease: "power2.out"
+        });
     });
 });
 
