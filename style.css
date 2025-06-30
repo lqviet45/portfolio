@@ -198,9 +198,8 @@ nav {
     border-radius: 15px;
     color: white;
     text-align: center;
-    transform: scale(0.8);
-    opacity: 0;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Removed conflicting transform and opacity - JS handles initial state */
 }
 
 .skill-card h3 {
@@ -237,8 +236,7 @@ nav {
     margin-bottom: 30px;
     border-left: 5px solid var(--primary-color);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transform: translateX(-100px);
-    opacity: 0;
+    /* Removed conflicting transform and opacity - JS handles initial state */
 }
 
 .experience-item h3 {
@@ -270,13 +268,7 @@ nav {
     color: white;
     margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    transform: none;
-    opacity: 1;
-}
-
-.js-enabled .project-card {
-    opacity: 0;
-    transform: translateY(50px) scale(0.8);
+    /* Removed conflicting transform and opacity - JS handles initial state */
 }
 
 .project-card h3 {

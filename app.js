@@ -134,13 +134,20 @@ gsap.utils.toArray('.section').forEach((section) => {
     });
 });
 
-// Batch animations for skill cards, experience items, and project cards
+// FIXED: Batch animations for skill cards, experience items, and project cards
+// Set initial state first, then animate to visible state
+gsap.set(".skill-card, .experience-item, .project-card", {
+    opacity: 0,
+    y: 50,
+    scale: 0.8
+});
+
 ScrollTrigger.batch(".skill-card, .experience-item, .project-card", {
     onEnter: (elements) => {
-        gsap.from(elements, {
-            opacity: 0,
-            y: 50,
-            scale: 0.8,
+        gsap.to(elements, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
             stagger: 0.1,
             duration: 1,
             ease: "power3.out"
@@ -159,7 +166,7 @@ ScrollTrigger.batch(".skill-card, .experience-item, .project-card", {
         });
     },
     start: "top 90%",
-    end: "bottom 20%",
+    end: "bottom 10%",
     toggleActions: "play none none reverse"
 });
 
