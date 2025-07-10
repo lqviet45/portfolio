@@ -5,8 +5,6 @@
     box-sizing: border-box;
 }
 
-/* Enhanced Light Theme Variables and Styles */
-
 :root {
     --primary-color: #00d4ff;
     --secondary-color: #0099cc;
@@ -48,6 +46,22 @@
     --gradient-bg: linear-gradient(-45deg, #ffffff, #f8f9fb, #f1f3f6, #e8eaf0);
 }
 
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--gradient-bg);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    color: var(--text-color);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 /* Light Theme Specific Enhancements */
 [data-theme="light"] .hero-background .grid-overlay {
     background-image:
@@ -74,7 +88,9 @@
 [data-theme="light"] .certificate-card,
 [data-theme="light"] .project-card,
 [data-theme="light"] .experience-card,
-[data-theme="light"] .contact-form {
+[data-theme="light"] .contact-form,
+[data-theme="light"] .stat-item,
+[data-theme="light"] .contact-item {
     background: #ffffff;
     border: 1px solid rgba(44, 62, 80, 0.08);
     box-shadow: 0 2px 16px rgba(44, 62, 80, 0.06);
@@ -84,7 +100,9 @@
 [data-theme="light"] .skill-card:hover,
 [data-theme="light"] .certificate-card:hover,
 [data-theme="light"] .project-card:hover,
-[data-theme="light"] .experience-card:hover {
+[data-theme="light"] .experience-card:hover,
+[data-theme="light"] .stat-item:hover,
+[data-theme="light"] .contact-item:hover {
     box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
     border-color: rgba(0, 102, 204, 0.2);
 }
@@ -138,17 +156,6 @@
     color: var(--text-secondary);
 }
 
-/* Enhanced Stat Items for Light Theme */
-[data-theme="light"] .stat-item {
-    background: #ffffff;
-    border: 1px solid rgba(44, 62, 80, 0.08);
-    box-shadow: 0 2px 12px rgba(44, 62, 80, 0.05);
-}
-
-[data-theme="light"] .stat-item:hover {
-    box-shadow: 0 6px 24px rgba(44, 62, 80, 0.1);
-}
-
 /* Enhanced Timeline for Light Theme */
 [data-theme="light"] .timeline::before {
     background: var(--gradient-primary);
@@ -156,18 +163,6 @@
 
 [data-theme="light"] .timeline-dot {
     border-color: var(--background-dark);
-}
-
-/* Enhanced Contact Items for Light Theme */
-[data-theme="light"] .contact-item {
-    background: #ffffff;
-    border: 1px solid rgba(44, 62, 80, 0.08);
-    box-shadow: 0 2px 12px rgba(44, 62, 80, 0.05);
-}
-
-[data-theme="light"] .contact-item:hover {
-    box-shadow: 0 6px 24px rgba(44, 62, 80, 0.1);
-    border-color: rgba(0, 102, 204, 0.2);
 }
 
 /* Enhanced Code Snippet for Light Theme */
@@ -203,6 +198,11 @@
 [data-theme="light"] .tech-tag {
     background: rgba(0, 102, 204, 0.08);
     border: 1px solid rgba(0, 102, 204, 0.2);
+    color: var(--primary-color);
+}
+
+[data-theme="light"] .tech-tag:hover {
+    background: rgba(0, 102, 204, 0.15);
 }
 
 [data-theme="light"] .cert-date {
@@ -241,33 +241,15 @@
 }
 
 /* Social Links Enhancement */
-[data-theme="light"] .social-link:hover {
+[data-theme="light"] .social-link:hover,
+[data-theme="light"] .project-link:hover,
+[data-theme="light"] .cert-link:hover {
     box-shadow: 0 8px 25px rgba(0, 102, 204, 0.2);
 }
 
 /* Button Enhancements */
 [data-theme="light"] .cta-button:hover {
     box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
-}
-
-[data-theme="light"] .cert-link:hover {
-    box-shadow: 0 8px 25px rgba(0, 102, 204, 0.2);
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--gradient-bg);
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
-    color: var(--text-color);
-    overflow-x: hidden;
-    line-height: 1.6;
-}
-
-@keyframes gradientShift {
-    0% { background-position: 0 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0 50%; }
 }
 
 /* Common animations */
