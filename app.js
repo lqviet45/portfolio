@@ -65,7 +65,7 @@ const translations = {
     },
     vi: {
         'hero-title': 'Lê Quốc Việt',
-        'hero-subtitle': 'Lập Trình Viên Backend Mới',
+        'hero-subtitle': 'Lập Trình Viên Backend',
         'hero-description': 'Đam mê xây dựng các giải pháp backend có thể mở rộng với hơn 1 năm kinh nghiệm thực tế trong phát triển phần mềm, chuyên về ASP.NET Core, Spring Boot và các công nghệ web hiện đại.',
         'status-available': 'Sẵn sàng làm việc',
         'cta-contact': 'Hãy Cùng Làm Việc',
@@ -83,7 +83,7 @@ const translations = {
         'stat-projects': 'Dự Án Hoàn Thành',
         'stat-gpa': 'Điểm GPA',
         'skills-title': 'Kỹ Năng Kỹ Thuật',
-        'backend-title': 'Phát Triển Backend',
+        'backend-title': 'Backend',
         'database-title': 'Cơ Sở Dữ Liệu',
         'tools-title': 'Công Cụ & Công Nghệ',
         'frontend-title': 'Frontend',
@@ -105,7 +105,7 @@ const translations = {
         'cert1-issuer': 'University of Minnesota in Coursera',
         'cert1-date': '2024',
         'cert1-desc': 'Quy trình và phương pháp phát triển phần mềm.',
-        'cert2-title': 'Phát Triển Backend',
+        'cert2-title': 'Backend Developer',
         'cert2-issuer': 'Microsoft in Coursera',
         'cert2-date': '2023',
         'cert2-desc': 'Khóa học toàn diện về các nguyên tắc cơ bản phát triển backend, bao gồm cơ sở dữ liệu, API và lập trình phía máy chủ.',
@@ -338,20 +338,50 @@ function setupScrollAnimations() {
         return;
     }
 
-    // Section animations
+    // Enhanced Section animations with reverse
     gsap.utils.toArray('.section').forEach((section) => {
         gsap.set(section, { y: 100, opacity: 0 });
+
         ScrollTrigger.create({
             trigger: section,
             start: "top 85%",
             end: "bottom 15%",
             onEnter: () => {
-                gsap.to(section, { y: 0, opacity: 1, duration: 1, ease: "power3.out" });
+                gsap.to(section, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: "power3.out"
+                });
+            },
+            onLeave: () => {
+                gsap.to(section, {
+                    y: -50,
+                    opacity: 0.3,
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
+            },
+            onEnterBack: () => {
+                gsap.to(section, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power3.out"
+                });
+            },
+            onLeaveBack: () => {
+                gsap.to(section, {
+                    y: 100,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
             }
         });
     });
 
-    // Skill cards animation
+    // Enhanced Skill cards animation with reverse
     ScrollTrigger.batch(".skill-card", {
         onEnter: (elements) => {
             gsap.to(elements, {
@@ -363,10 +393,41 @@ function setupScrollAnimations() {
                 ease: "back.out(1.2)"
             });
         },
-        start: "top 90%"
+        onLeave: (elements) => {
+            gsap.to(elements, {
+                opacity: 0.3,
+                y: -30,
+                scale: 0.95,
+                stagger: 0.1,
+                duration: 0.5,
+                ease: "power2.in"
+            });
+        },
+        onEnterBack: (elements) => {
+            gsap.to(elements, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                stagger: 0.1,
+                duration: 0.8,
+                ease: "back.out(1.1)"
+            });
+        },
+        onLeaveBack: (elements) => {
+            gsap.to(elements, {
+                opacity: 0,
+                y: 50,
+                scale: 0.9,
+                stagger: 0.1,
+                duration: 0.5,
+                ease: "power2.in"
+            });
+        },
+        start: "top 90%",
+        end: "bottom 10%"
     });
 
-    // Certificate cards animation
+    // Enhanced Certificate cards animation with reverse
     ScrollTrigger.batch(".certificate-card", {
         onEnter: (elements) => {
             gsap.to(elements, {
@@ -378,10 +439,41 @@ function setupScrollAnimations() {
                 ease: "back.out(1.2)"
             });
         },
-        start: "top 90%"
+        onLeave: (elements) => {
+            gsap.to(elements, {
+                opacity: 0.3,
+                y: -30,
+                scale: 0.95,
+                stagger: 0.1,
+                duration: 0.5,
+                ease: "power2.in"
+            });
+        },
+        onEnterBack: (elements) => {
+            gsap.to(elements, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                stagger: 0.15,
+                duration: 0.8,
+                ease: "back.out(1.1)"
+            });
+        },
+        onLeaveBack: (elements) => {
+            gsap.to(elements, {
+                opacity: 0,
+                y: 50,
+                scale: 0.9,
+                stagger: 0.1,
+                duration: 0.5,
+                ease: "power2.in"
+            });
+        },
+        start: "top 90%",
+        end: "bottom 10%"
     });
 
-    // Project cards animation
+    // Enhanced Project cards animation with reverse
     ScrollTrigger.batch(".project-card", {
         onEnter: (elements) => {
             gsap.to(elements, {
@@ -393,24 +485,123 @@ function setupScrollAnimations() {
                 ease: "back.out(1.1)"
             });
         },
-        start: "top 90%"
+        onLeave: (elements) => {
+            gsap.to(elements, {
+                opacity: 0.3,
+                y: -30,
+                scale: 0.95,
+                stagger: 0.15,
+                duration: 0.5,
+                ease: "power2.in"
+            });
+        },
+        onEnterBack: (elements) => {
+            gsap.to(elements, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                stagger: 0.2,
+                duration: 0.8,
+                ease: "back.out(1.1)"
+            });
+        },
+        onLeaveBack: (elements) => {
+            gsap.to(elements, {
+                opacity: 0,
+                y: 50,
+                scale: 0.9,
+                stagger: 0.15,
+                duration: 0.5,
+                ease: "power2.in"
+            });
+        },
+        start: "top 90%",
+        end: "bottom 10%"
     });
 
-    // Skill level animations
+    // Enhanced Skill level animations with reverse
     document.querySelectorAll('.skill-level').forEach(level => {
         const percentage = level.getAttribute('data-level');
+
         ScrollTrigger.create({
             trigger: level,
             start: "top 90%",
+            end: "bottom 10%",
             onEnter: () => {
                 gsap.to(level, {
                     '--skill-width': percentage + '%',
                     duration: 1.5,
                     ease: "power2.out"
                 });
+            },
+            onLeave: () => {
+                gsap.to(level, {
+                    '--skill-width': '0%',
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
+            },
+            onEnterBack: () => {
+                gsap.to(level, {
+                    '--skill-width': percentage + '%',
+                    duration: 1,
+                    ease: "power2.out"
+                });
+            },
+            onLeaveBack: () => {
+                gsap.to(level, {
+                    '--skill-width': '0%',
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
             }
         });
     });
+
+    // Enhanced Experience timeline animations
+    ScrollTrigger.batch(".timeline-item", {
+        onEnter: (elements) => {
+            gsap.to(elements, {
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                stagger: 0.3,
+                ease: "power3.out"
+            });
+        },
+        onLeave: (elements) => {
+            gsap.to(elements, {
+                opacity: 0.3,
+                x: -50,
+                duration: 0.5,
+                stagger: 0.1,
+                ease: "power2.in"
+            });
+        },
+        onEnterBack: (elements) => {
+            gsap.to(elements, {
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+        },
+        onLeaveBack: (elements) => {
+            gsap.to(elements, {
+                opacity: 0,
+                x: 50,
+                duration: 0.5,
+                stagger: 0.1,
+                ease: "power2.in"
+            });
+        },
+        start: "top 85%",
+        end: "bottom 15%"
+    });
+
+    // Set initial states for timeline items
+    gsap.set(".timeline-item", { opacity: 0, x: 50 });
 }
 
 // Form handling
@@ -541,6 +732,12 @@ function initializeSkillLevelObserver() {
                         const percentage = skillLevel.getAttribute('data-level');
                         skillLevel.style.setProperty('--skill-width', percentage + '%');
                     }
+                } else {
+                    // Reset when leaving viewport
+                    const skillLevel = entry.target.querySelector('.skill-level');
+                    if (skillLevel) {
+                        skillLevel.style.setProperty('--skill-width', '0%');
+                    }
                 }
             });
         }, { threshold: 0.5 });
@@ -560,6 +757,9 @@ function addRevealAnimations() {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('fade-in', 'visible');
+                } else {
+                    // Remove classes when leaving viewport for re-animation
+                    entry.target.classList.remove('fade-in', 'visible');
                 }
             });
         }, { threshold: 0.1 });
@@ -612,3 +812,66 @@ function safeAnimate(target, properties, options = {}) {
     }
     return null;
 }
+
+// Enhanced scroll-based particle effects
+let particleAnimations = [];
+
+function createEnhancedParticles() {
+    const particleContainer = document.querySelector('.particles');
+    if (!particleContainer) return;
+
+    // Clear existing particles
+    particleContainer.innerHTML = '';
+    particleAnimations.forEach(anim => anim.kill());
+    particleAnimations = [];
+
+    const particleCount = window.innerWidth < 768 ? 20 : 35;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+
+        // Create GSAP animation for each particle
+        const anim = gsap.to(particle, {
+            y: `-=${Math.random() * 200 + 100}px`,
+            x: `+=${(Math.random() - 0.5) * 100}px`,
+            opacity: Math.random() * 0.5 + 0.2,
+            duration: Math.random() * 15 + 10,
+            ease: "none",
+            repeat: -1,
+            yoyo: true,
+            delay: Math.random() * 5
+        });
+
+        particleAnimations.push(anim);
+        particleContainer.appendChild(particle);
+    }
+}
+
+// Update particles based on scroll
+let lastScrollY = 0;
+window.addEventListener('scroll', () => {
+    const scrollY = window.pageYOffset;
+    const scrollDelta = scrollY - lastScrollY;
+
+    // Update particle movement based on scroll direction
+    particleAnimations.forEach((anim, index) => {
+        if (anim && anim.target) {
+            const currentY = gsap.getProperty(anim.target, 'y');
+            gsap.set(anim.target, {
+                y: currentY + scrollDelta * 0.1 * (index % 2 === 0 ? 1 : -1)
+            });
+        }
+    });
+
+    lastScrollY = scrollY;
+});
+
+// Initialize enhanced effects
+window.addEventListener('load', () => {
+    if (typeof gsap !== 'undefined') {
+        createEnhancedParticles();
+    }
+});
