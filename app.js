@@ -875,3 +875,316 @@ window.addEventListener('load', () => {
         createEnhancedParticles();
     }
 });
+
+// FIXED Music Player Class
+class MusicPlayer {
+    constructor() {
+        this.audio = document.getElementById('audioPlayer');
+        this.isPlaying = false;
+        this.currentTrack = 0;
+        this.isMinimized = false;
+
+        // Your playlist - update with your actual music files
+        this.playlist = [
+            {
+                title: "La vaguelette",
+                artist: "Genshin Impact",
+                src: "music/la-vaguelette.mp3", // Your actual file path
+                duration: "2:30"
+            },
+            // {
+            //     title: "Your Song 2",
+            //     artist: "Artist Name",
+            //     src: "music/song2.mp3",
+            //     duration: "3:45"
+            // },
+            // {
+            //     title: "Your Song 3",
+            //     artist: "Artist Name",
+            //     src: "music/song3.mp3",
+            //     duration: "4:20"
+            // }
+        ];
+
+        this.initializePlayer();
+        this.setupEventListeners();
+        this.renderPlaylist();
+        if (this.playlist.length > 0) {
+            this.loadTrack(0);
+        }
+    }
+
+    initializePlayer() {
+        this.audio.volume = 0.3;
+    }
+
+    setupEventListeners() {
+        // FIXED: Minimize button event
+        const minimizeBtn = document.getElementById('minimizeBtn');
+        if (minimizeBtn) {
+            minimizeBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                this.toggleMinimize();
+            });
+        }
+
+        // FIXED: Click on minimized player to expand
+        const musicPlayer = document.getElementById('musicPlayer');
+        if (musicPlayer) {
+            musicPlayer.addEventListener('click', (e) => {
+                if (this.isMinimized) {
+                    // Only expand if clicking on the player itself
+                    if (e.target === musicPlayer ||
+                        e.target === minimizeBtn ||
+                        e.target.closest('.minimize-btn')) {
+                        this.toggleMinimize();
+                    }
+                }
+            });
+        }
+
+        // Play/Pause button
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        if (playPauseBtn) {
+            playPauseBtn.addEventListener('click', () => {
+                this.togglePlayPause();
+            });
+        }
+
+        // Previous/Next buttons
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                this.previousTrack();
+            });
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                this.nextTrack();
+            });
+        }
+
+        // Volume control
+        const volumeSlider = document.getElementById('volumeSlider');
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                this.audio.volume = e.target.value / 100;
+            });
+        }
+
+        // Progress bar
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+            progressBar.addEventListener('click', (e) => {
+                const rect = e.target.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                this.audio.currentTime = percent * this.audio.duration;
+            });
+        }
+
+        // Audio events
+        this.audio.addEventListener('timeupdate', () => {
+            this.updateProgress();
+        });
+
+        this.audio.addEventListener('ended', () => {
+            this.nextTrack();
+        });
+
+        this.audio.addEventListener('loadedmetadata', () => {
+            this.updateDuration();
+        });
+    }
+
+    renderPlaylist() {
+        const playlistContainer = document.getElementById('playlist');
+        if (!playlistContainer) return;
+
+        playlistContainer.innerHTML = '';
+
+        this.playlist.forEach((track, index) => {
+            const playlistItem = document.createElement('div');
+            playlistItem.className = 'playlist-item';
+            playlistItem.innerHTML = `
+                <i class="fas fa-music"></i>
+                <div style="flex: 1; margin-left: 10px;">
+                    <div style="font-size: 0.85rem; font-weight: 500; color: var(--text-color);">${track.title}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);">${track.artist}</div>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary);">${track.duration}</div>
+            `;
+
+            playlistItem.addEventListener('click', () => {
+                this.loadTrack(index);
+                if (this.isPlaying) {
+                    this.audio.play();
+                }
+            });
+
+            playlistContainer.appendChild(playlistItem);
+        });
+    }
+
+    loadTrack(index) {
+        this.currentTrack = index;
+        const track = this.playlist[index];
+
+        this.audio.src = track.src;
+        const trackTitle = document.getElementById('trackTitle');
+        const trackArtist = document.getElementById('trackArtist');
+
+        if (trackTitle) trackTitle.textContent = track.title;
+        if (trackArtist) trackArtist.textContent = track.artist;
+
+        // Update playlist active state
+        document.querySelectorAll('.playlist-item').forEach((item, i) => {
+            item.classList.toggle('active', i === index);
+        });
+    }
+
+    togglePlayPause() {
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        if (!playPauseBtn) return;
+
+        if (this.isPlaying) {
+            this.audio.pause();
+            this.isPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        } else {
+            this.audio.play().then(() => {
+                this.isPlaying = true;
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch((error) => {
+                console.error('Error playing audio:', error);
+                // Show user-friendly message
+                this.showNotification('Audio file not found or cannot be played');
+            });
+        }
+    }
+
+    previousTrack() {
+        this.currentTrack = (this.currentTrack - 1 + this.playlist.length) % this.playlist.length;
+        this.loadTrack(this.currentTrack);
+        if (this.isPlaying) {
+            this.audio.play();
+        }
+    }
+
+    nextTrack() {
+        this.currentTrack = (this.currentTrack + 1) % this.playlist.length;
+        this.loadTrack(this.currentTrack);
+        if (this.isPlaying) {
+            this.audio.play();
+        }
+    }
+
+    updateProgress() {
+        if (this.audio.duration) {
+            const percent = (this.audio.currentTime / this.audio.duration) * 100;
+            const progressFill = document.getElementById('progressFill');
+            const currentTime = document.getElementById('currentTime');
+
+            if (progressFill) {
+                progressFill.style.width = percent + '%';
+            }
+            if (currentTime) {
+                currentTime.textContent = this.formatTime(this.audio.currentTime);
+            }
+        }
+    }
+
+    updateDuration() {
+        const totalTime = document.getElementById('totalTime');
+        if (totalTime && this.audio.duration) {
+            totalTime.textContent = this.formatTime(this.audio.duration);
+        }
+    }
+
+    formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // FIXED: Toggle minimize function
+    toggleMinimize() {
+        this.isMinimized = !this.isMinimized;
+        const player = document.getElementById('musicPlayer');
+        const minimizeBtn = document.getElementById('minimizeBtn');
+
+        if (!player || !minimizeBtn) return;
+
+        if (this.isMinimized) {
+            player.classList.add('minimized');
+            minimizeBtn.innerHTML = '<i class="fas fa-expand"></i>';
+        } else {
+            player.classList.remove('minimized');
+            minimizeBtn.innerHTML = '<i class="fas fa-minus"></i>';
+        }
+    }
+
+    // Utility function to show notifications
+    showNotification(message) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            z-index: 1001;
+            font-size: 0.9rem;
+            animation: slideIn 0.3s ease;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+}
+
+// UPDATED: Initialize music player with proper error handling
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Initialize existing portfolio functionality
+//     if (typeof initializePortfolio === 'function') {
+//         initializePortfolio();
+//     }
+//
+//     // Initialize music player with delay to ensure DOM is ready
+//     setTimeout(() => {
+//         try {
+//             const musicPlayerElement = document.getElementById('musicPlayer');
+//             if (musicPlayerElement) {
+//                 new MusicPlayer();
+//                 console.log('Music player initialized successfully');
+//             } else {
+//                 console.warn('Music player element not found');
+//             }
+//         } catch (error) {
+//             console.error('Error initializing music player:', error);
+//         }
+//     }, 1000);
+// });
+
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        try {
+            const musicPlayerElement = document.getElementById('musicPlayer');
+            if (musicPlayerElement) {
+                new MusicPlayer();
+                console.log('Music player initialized');
+            }
+        } catch (error) {
+            console.error('Music player error:', error);
+        }
+    }, 1000);
+});
