@@ -2,8 +2,8 @@
 const translations = {
     en: {
         'hero-title': 'Le Quoc Viet',
-        'hero-subtitle': 'Fresher Backend Developer',
-        'hero-description': 'Passionate about building scalable backend solutions with 1+ years of real-world experience in software development, specializing in ASP.NET Core, Spring Boot, and modern web technologies.',
+        'hero-subtitle': 'Backend Developer',
+        'hero-description': 'Passionate about building scalable backend systems with experience in microservices architecture. Currently developing a core banking platform using Java 21, Spring Boot, and Oracle, specializing in high-throughput transaction processing and distributed systems.',
         'status-available': 'Available for work',
         'cta-contact': "Let's Work Together",
         'cta-projects': 'View Projects',
@@ -15,7 +15,7 @@ const translations = {
         'nav-certificates': 'Certificates',
         'nav-contact': 'Contact',
         'about-title': 'About Me',
-        'about-description': 'Currently pursuing a Bachelor\'s in Information Technology at FPT University with a GPA of 7.92/10. I have hands-on experience working on production-level projects at Amazing Tech for 9 months, developing robust backend systems for various industries including water management, tax invoicing, and construction.',
+        'about-description': 'Graduated with a Bachelor\'s in Information Technology from FPT University (GPA: 7.92/10). Currently working as a Backend Developer on CoreSL — a microservices-based core banking system for Certificate of Deposit management using Java 21, Spring Boot, Oracle, and Redis. Previously built production-level backend systems at Amazing Tech across tax invoicing, water management, and construction domains.',
         'stat-experience': 'Years Experience',
         'stat-projects': 'Projects Completed',
         'stat-gpa': 'GPA Score',
@@ -25,6 +25,12 @@ const translations = {
         'tools-title': 'Tools & Technologies',
         'frontend-title': 'Frontend',
         'experience-title': 'Experience',
+        'exp2-title': 'Backend Developer',
+        'exp2-company': 'CoreSL',
+        'exp2-date': 'Present',
+        'exp2-desc1': 'Developed CD issuance API with PaymentHub/T24 integration. Built CD buying API with interest-rate-based pricing formula, lot locking mechanism, and Redis-based idempotency. Developed CD selling API supporting 3 sell modes (by quantity, by amount, sell all) with a prioritization algorithm based on maturity and purchase date.',
+        'exp2-desc2': 'Built Apache Airflow DAGs for automated bulk CD purchasing: 4-step pipeline with lot allocation algorithm by customer segment. Optimized DAG performance by migrating to async batch processing (aiohttp + semaphore) and moving large inter-task datasets (>2,000 records) from XCom to Redis.',
+        'exp2-desc3': 'Integrated ODS (balance inquiry), PaymentHub/T24, and interest rate API via OpenFeign. Implemented distributed locking, patched security vulnerabilities in dependencies, and built configuration management APIs for buy/sell limits and interest rate tables. Deployed on Kubernetes/OpenShift.',
         'exp1-title': 'Backend Developer Intern',
         'exp1-company': 'Amazing Tech',
         'exp1-date': '9 months',
@@ -66,7 +72,7 @@ const translations = {
     vi: {
         'hero-title': 'Lê Quốc Việt',
         'hero-subtitle': 'Lập Trình Viên Backend',
-        'hero-description': 'Đam mê xây dựng các giải pháp backend có thể mở rộng với hơn 1 năm kinh nghiệm thực tế trong phát triển phần mềm, chuyên về ASP.NET Core, Spring Boot và các công nghệ web hiện đại.',
+        'hero-description': 'Đam mê xây dựng các hệ thống backend có khả năng mở rộng với kinh nghiệm về kiến trúc microservices. Hiện đang phát triển nền tảng core banking với Java 21, Spring Boot và Oracle, chuyên về xử lý giao dịch hiệu suất cao và hệ thống phân tán.',
         'status-available': 'Sẵn sàng làm việc',
         'cta-contact': 'Hãy Cùng Làm Việc',
         'cta-projects': 'Xem Dự Án',
@@ -78,7 +84,7 @@ const translations = {
         'nav-certificates': 'Chứng Chỉ',
         'nav-contact': 'Liên Hệ',
         'about-title': 'Giới Thiệu Về Tôi',
-        'about-description': 'Tốt nghiệp Cử nhân Công nghệ Thông tin tại Đại học FPT với GPA 7.92/10. Tôi có kinh nghiệm thực tế làm việc trên các dự án production tại Amazing Tech trong 9 tháng, phát triển hệ thống backend mạnh mẽ cho nhiều ngành công nghiệp bao gồm quản lý nước, hóa đơn thuế và xây dựng.',
+        'about-description': 'Tốt nghiệp Cử nhân Công nghệ Thông tin tại Đại học FPT với GPA 7.92/10. Hiện đang làm Backend Developer trên dự án CoreSL — hệ thống core banking quản lý Chứng chỉ tiền gửi theo kiến trúc microservices, sử dụng Java 21, Spring Boot, Oracle và Redis. Trước đó đã xây dựng các hệ thống backend production tại Amazing Tech trong các lĩnh vực hóa đơn thuế, quản lý nước và xây dựng.',
         'stat-experience': 'Năm Kinh Nghiệm',
         'stat-projects': 'Dự Án Hoàn Thành',
         'stat-gpa': 'Điểm GPA',
@@ -88,6 +94,12 @@ const translations = {
         'tools-title': 'Công Cụ & Công Nghệ',
         'frontend-title': 'Frontend',
         'experience-title': 'Kinh Nghiệm',
+        'exp2-title': 'Lập Trình Viên Backend',
+        'exp2-company': 'CoreSL',
+        'exp2-date': 'Hiện tại',
+        'exp2-desc1': 'Phát triển API phát hành chứng chỉ tiền gửi (CD) tích hợp PaymentHub/T24. Xây dựng API mua CD với công thức định giá theo lãi suất, cơ chế khóa lô và idempotency qua Redis. Phát triển API bán CD hỗ trợ 3 chế độ bán (theo số lượng, theo số tiền, bán toàn bộ) với thuật toán ưu tiên theo ngày đáo hạn và ngày mua.',
+        'exp2-desc2': 'Xây dựng Apache Airflow DAGs cho quy trình mua CD hàng loạt tự động: pipeline 4 bước với thuật toán phân bổ lô theo phân khúc khách hàng. Tối ưu hiệu năng bằng cách chuyển sang xử lý bất đồng bộ theo lô (aiohttp + semaphore) và migrate dữ liệu liên task lớn (>2.000 bản ghi) từ XCom sang Redis.',
+        'exp2-desc3': 'Tích hợp các hệ thống ngoài ODS (truy vấn số dư), PaymentHub/T24 và API lãi suất qua OpenFeign. Triển khai distributed locking, vá lỗi bảo mật trong các dependency, và xây dựng API quản lý cấu hình hạn mức mua/bán và bảng lãi suất. Triển khai trên Kubernetes/OpenShift.',
         'exp1-title': 'Thực Tập Sinh Backend Developer',
         'exp1-company': 'Amazing Tech',
         'exp1-date': '9 tháng',
@@ -313,7 +325,7 @@ function initializeAnimations() {
     const subtitleElement = document.querySelector('.subtitle');
     if (subtitleElement) {
         gsap.to(subtitleElement, {
-            text: currentLang === 'en' ? "Fresher Backend Developer" : "Lập Trình Viên Backend Mới",
+            text: currentLang === 'en' ? "Backend Developer" : "Lập Trình Viên Backend",
             duration: 2,
             ease: "power2.inOut",
             delay: 1
