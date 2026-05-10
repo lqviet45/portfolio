@@ -401,7 +401,7 @@ function buildBrowserContent() {
           <span id="br-tab-title">New Tab</span>
           <span class="br-tab-x">×</span>
         </div>
-        <button class="br-new-tab"><i class="fas fa-plus"></i></button>
+        <button class="br-new-tab" onclick="navigateBrowser('lqviet.dev')"><i class="fas fa-plus"></i></button>
       </div>
       <div class="browser-page" id="br-page"></div>
     </div>
