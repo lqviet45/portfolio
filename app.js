@@ -1,1202 +1,987 @@
-// Language data
-const translations = {
-    en: {
-        'hero-title': 'Le Quoc Viet',
-        'hero-subtitle': 'Backend Developer',
-        'hero-description': 'Passionate about building scalable backend systems with experience in microservices architecture. Currently developing a core banking platform using Java, Spring Boot, and Oracle, specializing in high-throughput transaction processing and distributed systems.',
-        'status-available': 'Available for work',
-        'cta-contact': "Let's Work Together",
-        'cta-projects': 'View Projects',
-        'scroll-text': 'Scroll to explore',
-        'nav-about': 'About',
-        'nav-skills': 'Skills',
-        'nav-experience': 'Experience',
-        'nav-projects': 'Projects',
-        'nav-certificates': 'Certificates',
-        'nav-contact': 'Contact',
-        'about-title': 'About Me',
-        'about-description': 'Graduated with a Bachelor\'s in Information Technology from FPT University (GPA: 7.92/10). Currently working as a Backend Developer on CoreSL — a microservices-based core banking system for Certificate of Deposit management using Java, Spring Boot, Oracle, and Redis. Previously built production-level backend systems at Amazing Tech across tax invoicing, water management, and construction domains.',
-        'stat-experience': 'Years Experience',
-        'stat-projects': 'Projects Completed',
-        'stat-gpa': 'GPA Score',
-        'skills-title': 'Technical Skills',
-        'backend-title': 'Backend Development',
-        'database-title': 'Database',
-        'tools-title': 'Tools & Technologies',
-        'frontend-title': 'Frontend',
-        'experience-title': 'Experience',
-        'exp2-title': 'Backend Developer',
-        'exp2-company': 'Sacombank',
-        'exp2-date': 'Present',
-        'exp2-desc1': 'Developed CD issuance API with PaymentHub/T24 integration. Built CD buying API with interest-rate-based pricing formula, lot locking mechanism, and Redis-based idempotency. Developed CD selling API supporting 3 sell modes (by quantity, by amount, sell all) with a prioritization algorithm based on maturity and purchase date.',
-        'exp2-desc2': 'Built Apache Airflow DAGs for automated bulk CD purchasing: 4-step pipeline with lot allocation algorithm by customer segment. Optimized DAG performance by migrating to async batch processing (aiohttp + semaphore) and moving large inter-task datasets (>2,000 records) from XCom to Redis.',
-        'exp2-desc3': 'Integrated ODS (balance inquiry), PaymentHub/T24, and interest rate API via OpenFeign. Implemented distributed locking and built configuration management APIs for buy/sell limits and interest rate tables. Fixed security vulnerabilities identified by BlackDuck and Coverity. Deployed on Kubernetes/OpenShift.',
-        'exp1-title': 'Backend Developer',
-        'exp1-company': 'Amazing Tech',
-        'exp1-date': '9 months',
-        'exp1-desc1': 'Developed a Node.js web API for creating tax invoices for businesses, integrating with Odoo for data storage and facilitating connections with the Malaysian government. Implemented robust OTP validation for enhanced security.',
-        'exp1-desc2': 'Built a comprehensive water plant management system. Designed and implemented APIs for complex data queries and statistical reports with Excel export functionality. Optimized performance using Dapper and stored procedures.',
-        'exp1-desc3': 'Developed a web application for tracking and managing concrete piles in construction projects. Collaborated with stakeholders to gather requirements and designed the initial database structure and feature specifications.',
-        'projects-title': 'Featured Projects',
-        'project1-title': 'FPTU HCM Examination Department Operation Management System',
-        'project1-desc': 'A comprehensive mobile and web system for FPTU Examination Office with AI chatbot integration. Built with modern architecture patterns and real-time features.',
-        'project2-title': 'Gym Management System',
-        'project2-desc': 'Full-stack gym management system handling members, subscriptions, and operations with integrated payment processing and admin interface.',
-        'certificates-title': 'Certificates & Achievements',
-        'cert-verified': 'Verified',
-        'cert1-title': 'Software Development Lifecycle',
-        'cert1-issuer': 'University of Minnesota in Coursera',
-        'cert1-date': '2024',
-        'cert1-desc': 'Software Development Processes and Methodologies.',
-        'cert2-title': 'Backend Development',
-        'cert2-issuer': 'Microsoft in Coursera',
-        'cert2-date': '2023',
-        'cert2-desc': 'Comprehensive course covering backend development fundamentals, including databases, APIs, and server-side programming.',
-        'cert3-title': 'C# Programming',
-        'cert3-issuer': 'Microsoft in Coursera',
-        'cert3-date': '2023',
-        'cert3-desc': 'Introduction to C# programming language, covering syntax, data types, and basic programming concepts.',
-        'cert-view': 'View Certificate',
-        'contact-title': 'Let\'s Connect',
-        'contact-subtitle': 'Ready to bring your ideas to life? Let\'s discuss your next project.',
-        'contact-email-title': 'Email',
-        'contact-phone-title': 'Phone',
-        'contact-facebook-title': 'Facebook',
-        'contact-github-title': 'GitHub',
-        'form-name': 'Your Name',
-        'form-email': 'Your Email',
-        'form-message': 'Your Message',
-        'form-submit': 'Send Message',
-        'footer-text': '© 2025 Le Quoc Viet. All rights reserved.'
-    },
-    vi: {
-        'hero-title': 'Lê Quốc Việt',
-        'hero-subtitle': 'Lập Trình Viên Backend',
-        'hero-description': 'Đam mê xây dựng các hệ thống backend có khả năng mở rộng với kinh nghiệm về kiến trúc microservices. Hiện đang phát triển nền tảng core banking với Java, Spring Boot và Oracle, chuyên về xử lý giao dịch hiệu suất cao và hệ thống phân tán.',
-        'status-available': 'Sẵn sàng làm việc',
-        'cta-contact': 'Hãy Cùng Làm Việc',
-        'cta-projects': 'Xem Dự Án',
-        'scroll-text': 'Cuộn để khám phá',
-        'nav-about': 'Giới Thiệu',
-        'nav-skills': 'Kỹ Năng',
-        'nav-experience': 'Kinh Nghiệm',
-        'nav-projects': 'Dự Án',
-        'nav-certificates': 'Chứng Chỉ',
-        'nav-contact': 'Liên Hệ',
-        'about-title': 'Giới Thiệu Về Tôi',
-        'about-description': 'Tốt nghiệp Cử nhân Công nghệ Thông tin tại Đại học FPT với GPA 7.92/10. Hiện đang làm Backend Developer trên dự án CoreSL — hệ thống core banking quản lý Chứng chỉ tiền gửi theo kiến trúc microservices, sử dụng Java, Spring Boot, Oracle và Redis. Trước đó đã xây dựng các hệ thống backend production tại Amazing Tech trong các lĩnh vực hóa đơn thuế, quản lý nước và xây dựng.',
-        'stat-experience': 'Năm Kinh Nghiệm',
-        'stat-projects': 'Dự Án Hoàn Thành',
-        'stat-gpa': 'Điểm GPA',
-        'skills-title': 'Kỹ Năng Kỹ Thuật',
-        'backend-title': 'Backend',
-        'database-title': 'Cơ Sở Dữ Liệu',
-        'tools-title': 'Công Cụ & Công Nghệ',
-        'frontend-title': 'Frontend',
-        'experience-title': 'Kinh Nghiệm',
-        'exp2-title': 'Lập Trình Viên Backend',
-        'exp2-company': 'Sacombank',
-        'exp2-date': 'Hiện tại',
-        'exp2-desc1': 'Phát triển API phát hành chứng chỉ tiền gửi (CD) tích hợp PaymentHub/T24. Xây dựng API mua CD với công thức định giá theo lãi suất, cơ chế khóa lô và idempotency qua Redis. Phát triển API bán CD hỗ trợ 3 chế độ bán (theo số lượng, theo số tiền, bán toàn bộ) với thuật toán ưu tiên theo ngày đáo hạn và ngày mua.',
-        'exp2-desc2': 'Xây dựng Apache Airflow DAGs cho quy trình mua CD hàng loạt tự động: pipeline 4 bước với thuật toán phân bổ lô theo phân khúc khách hàng. Tối ưu hiệu năng bằng cách chuyển sang xử lý bất đồng bộ theo lô (aiohttp + semaphore) và migrate dữ liệu liên task lớn (>2.000 bản ghi) từ XCom sang Redis.',
-        'exp2-desc3': 'Tích hợp các hệ thống ngoài ODS (truy vấn số dư), PaymentHub/T24 và API lãi suất qua OpenFeign. Triển khai distributed locking và xây dựng API quản lý cấu hình hạn mức mua/bán và bảng lãi suất. Fix các lỗi bảo mật được phát hiện bởi BlackDuck và Coverity. Triển khai trên Kubernetes/OpenShift.',
-        'exp1-title': 'Lập Trình Viên Backend',
-        'exp1-company': 'Amazing Tech',
-        'exp1-date': '9 tháng',
-        'exp1-desc1': 'Phát triển web API Node.js để tạo hóa đơn thuế cho doanh nghiệp, tích hợp với Odoo để lưu trữ dữ liệu và tạo kết nối với chính phủ Malaysia. Triển khai xác thực OTP mạnh mẽ để tăng cường bảo mật.',
-        'exp1-desc2': 'Xây dựng hệ thống quản lý nhà máy nước toàn diện. Thiết kế và triển khai API cho các truy vấn dữ liệu phức tạp và báo cáo thống kê với chức năng xuất Excel. Tối ưu hóa hiệu suất bằng Dapper và stored procedures.',
-        'exp1-desc3': 'Phát triển ứng dụng web để theo dõi và quản lý cọc bê tông trong các dự án xây dựng. Hợp tác với các bên liên quan để thu thập yêu cầu và thiết kế cấu trúc cơ sở dữ liệu ban đầu và đặc tả tính năng.',
-        'projects-title': 'Dự Án Nổi Bật',
-        'project1-title': 'Hệ thống quản lý hoạt động Phòng Khảo thí Đại học FPT HCM',
-        'project1-desc': 'Hệ thống di động và web toàn diện cho Phòng Thi FPTU với tích hợp chatbot AI. Được xây dựng với các mẫu kiến trúc hiện đại và tính năng thời gian thực.',
-        'project2-title': 'Hệ Thống Quản Lý Phòng Gym',
-        'project2-desc': 'Hệ thống quản lý phòng gym full-stack xử lý thành viên, đăng ký và hoạt động với xử lý thanh toán tích hợp và giao diện quản trị.',
-        'certificates-title': 'Chứng Chỉ & Thành Tích',
-        'cert-verified': 'Đã Xác Minh',
-        'cert1-title': 'Quy Trình Phát Triển Phần Mềm',
-        'cert1-issuer': 'University of Minnesota in Coursera',
-        'cert1-date': '2024',
-        'cert1-desc': 'Quy trình và phương pháp phát triển phần mềm.',
-        'cert2-title': 'Backend Developer',
-        'cert2-issuer': 'Microsoft in Coursera',
-        'cert2-date': '2023',
-        'cert2-desc': 'Khóa học toàn diện về các nguyên tắc cơ bản phát triển backend, bao gồm cơ sở dữ liệu, API và lập trình phía máy chủ.',
-        'cert3-title': 'Lập Trình C#',
-        'cert3-issuer': 'Microsoft in Coursera',
-        'cert3-date': '2023',
-        'cert3-desc': 'Giới thiệu về ngôn ngữ lập trình C#, bao gồm cú pháp, kiểu dữ liệu và các khái niệm lập trình cơ bản.',
-        'cert-view': 'Xem Chứng Chỉ',
-        'contact-title': 'Kết Nối Với Tôi',
-        'contact-subtitle': 'Sẵn sàng biến ý tưởng của bạn thành hiện thực? Hãy thảo luận về dự án tiếp theo của bạn.',
-        'contact-email-title': 'Email',
-        'contact-phone-title': 'Điện Thoại',
-        'contact-facebook-title': 'Facebook',
-        'contact-github-title': 'GitHub',
-        'form-name': 'Tên Của Bạn',
-        'form-email': 'Email Của Bạn',
-        'form-message': 'Tin Nhắn Của Bạn',
-        'form-submit': 'Gửi Tin Nhắn',
-        'footer-text': '© 2025 Lê Quốc Việt. Tất cả quyền được bảo lưu.'
-    }
+/* ==============================================
+   Portfolio OS — app.js
+   Vanilla JS, no framework
+   ============================================== */
+
+'use strict';
+
+/* ------ Global state ------ */
+let globalZ = 200;
+const openWindows = {}; // id -> { el, config }
+const maximizedWindows = {}; // id -> { top, left, width, height }
+let currentTheme = localStorage.getItem('theme') || 'dark';
+let currentLang = localStorage.getItem('lang') || 'en';
+let musicPlaying = false;
+
+/* ==============================================
+   App Configs
+   ============================================== */
+const APP_CONFIGS = {
+  about: {
+    title: 'About_Me.txt',
+    icon: 'fas fa-user-circle',
+    iconColor: '#6366f1',
+    width: 500,
+    height: 460,
+    content: buildAboutContent
+  },
+  experience: {
+    title: 'Experience/',
+    icon: 'fas fa-folder',
+    iconColor: '#f59e0b',
+    width: 580,
+    height: 520,
+    content: buildExperienceContent
+  },
+  projects: {
+    title: 'Projects/',
+    icon: 'fas fa-folder-open',
+    iconColor: '#f59e0b',
+    width: 560,
+    height: 480,
+    content: buildProjectsContent
+  },
+  skills: {
+    title: 'skills.json',
+    icon: 'fas fa-code',
+    iconColor: '#a855f7',
+    width: 500,
+    height: 460,
+    content: buildSkillsContent
+  },
+  terminal: {
+    title: 'Terminal',
+    icon: 'fas fa-terminal',
+    iconColor: '#22c55e',
+    width: 580,
+    height: 420,
+    content: buildTerminalContent
+  },
+  certificates: {
+    title: 'Certificates/',
+    icon: 'fas fa-certificate',
+    iconColor: '#f59e0b',
+    width: 480,
+    height: 400,
+    content: buildCertificatesContent
+  },
+  contact: {
+    title: 'Contact.lnk',
+    icon: 'fas fa-address-card',
+    iconColor: '#a855f7',
+    width: 420,
+    height: 380,
+    content: buildContactContent
+  },
+  recycle: {
+    title: 'Recycle Bin',
+    icon: 'fas fa-trash-alt',
+    iconColor: '#6b7280',
+    width: 440,
+    height: 360,
+    content: buildRecycleContent
+  }
 };
 
-// Current language
-let currentLang = 'en';
-
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    initializePortfolio();
-});
-
-function initializePortfolio() {
-    createParticles();
-    loadLanguagePreference();
-    initializeAnimations();
-    setupEventListeners();
-    setupScrollAnimations();
+/* ==============================================
+   Content Builders
+   ============================================== */
+function buildAboutContent() {
+  return `
+    <div class="about-header">
+      <img src="face-img.png" alt="Le Quoc Viet" class="about-avatar">
+      <div class="about-identity">
+        <h2>Le Quoc Viet</h2>
+        <div class="about-role">Backend Developer @ Sacombank</div>
+      </div>
+    </div>
+    <div class="about-stats">
+      <div class="stat-box"><span class="stat-val">2+</span><div class="stat-lbl">Years Experience</div></div>
+      <div class="stat-box"><span class="stat-val">7.92</span><div class="stat-lbl">GPA Score</div></div>
+      <div class="stat-box"><span class="stat-val">FPT</span><div class="stat-lbl">University</div></div>
+    </div>
+    <p class="about-desc">
+      Graduated with a Bachelor's in Information Technology from FPT University (GPA: 7.92/10).
+      Currently working as a Backend Developer on CoreSL — a microservices-based core banking
+      system for Certificate of Deposit management using Java, Spring Boot, Oracle, and Redis.
+      Previously built production-level backend systems at Amazing Tech across tax invoicing,
+      water management, and construction domains. Passionate about building scalable,
+      high-throughput distributed systems.
+    </p>
+  `;
 }
 
-// Create particles
-function createParticles() {
-    const particleContainer = document.querySelector('.particles');
-    if (!particleContainer) return;
-
-    const particleCount = window.innerWidth < 768 ? 30 : 50;
-
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 20 + 's';
-        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-        particleContainer.appendChild(particle);
-    }
+function buildExperienceContent() {
+  return `
+    <div class="explorer-breadcrumb">
+      <i class="fas fa-home"></i> Home
+      <i class="fas fa-chevron-right"></i> Work_Experience
+    </div>
+    <div class="file-list">
+      <div class="file-item" id="exp-sacombank">
+        <div class="file-item-header" onclick="toggleFileDetail('exp-sacombank')">
+          <i class="fas fa-file-alt file-icon"></i>
+          <span class="file-name">Sacombank_CoreSL.log</span>
+          <span class="file-date">Present</span>
+          <i class="fas fa-chevron-right file-chevron"></i>
+        </div>
+        <div class="file-detail">
+          <p><strong style="color:var(--text)">Backend Developer @ Sacombank — CoreSL Project</strong></p>
+          <p>Developed CD issuance API with PaymentHub/T24 integration. Built CD buying API with
+          interest-rate-based pricing formula, lot locking mechanism, and Redis-based idempotency.
+          Developed CD selling API supporting 3 sell modes (by quantity, by amount, sell all)
+          with a prioritization algorithm based on maturity and purchase date.</p>
+          <p>Built Apache Airflow DAGs for automated bulk CD purchasing: 4-step pipeline with lot
+          allocation algorithm by customer segment. Optimized DAG performance by migrating to
+          async batch processing (aiohttp + semaphore) and moving large inter-task datasets
+          (&gt;2,000 records) from XCom to Redis.</p>
+          <p>Integrated ODS (balance inquiry), PaymentHub/T24, and interest rate API via OpenFeign.
+          Implemented distributed locking and built configuration management APIs for buy/sell limits
+          and interest rate tables. Fixed security vulnerabilities identified by BlackDuck and
+          Coverity. Deployed on Kubernetes/OpenShift.</p>
+          <div class="exp-tags">
+            <span class="exp-tag">Java</span>
+            <span class="exp-tag">Spring Boot</span>
+            <span class="exp-tag">Oracle</span>
+            <span class="exp-tag">Redis</span>
+            <span class="exp-tag">Airflow</span>
+            <span class="exp-tag">OpenFeign</span>
+            <span class="exp-tag">K8s/OpenShift</span>
+          </div>
+        </div>
+      </div>
+      <div class="file-item" id="exp-amazing">
+        <div class="file-item-header" onclick="toggleFileDetail('exp-amazing')">
+          <i class="fas fa-file-alt file-icon"></i>
+          <span class="file-name">AmazingTech.log</span>
+          <span class="file-date">9 months</span>
+          <i class="fas fa-chevron-right file-chevron"></i>
+        </div>
+        <div class="file-detail">
+          <p><strong style="color:var(--text)">Backend Developer @ Amazing Tech</strong></p>
+          <p>Developed a Node.js web API for creating tax invoices for businesses, integrating
+          with Odoo for data storage and facilitating connections with the Malaysian government.
+          Implemented robust OTP validation for enhanced security.</p>
+          <p>Built a comprehensive water plant management system. Designed and implemented APIs
+          for complex data queries and statistical reports with Excel export functionality.
+          Optimized performance using Dapper and stored procedures.</p>
+          <p>Developed a web application for tracking and managing concrete piles in construction
+          projects. Collaborated with stakeholders to gather requirements and designed the initial
+          database structure and feature specifications.</p>
+          <div class="exp-tags">
+            <span class="exp-tag">Node.js</span>
+            <span class="exp-tag">ASP.NET Core</span>
+            <span class="exp-tag">SQL Server</span>
+            <span class="exp-tag">Dapper</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-// Setup event listeners
-function setupEventListeners() {
-    // Mobile menu toggle
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (menuToggle && navLinks) {
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-        });
-    }
-
-    // Theme toggle
-    const themeToggle = document.querySelector('.theme-toggle');
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            themeToggle.innerHTML = currentTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-            localStorage.setItem('theme', currentTheme);
-        });
-    }
-
-    // Language toggle
-    const langToggle = document.getElementById('lang-toggle');
-    if (langToggle) {
-        langToggle.addEventListener('click', () => {
-            currentLang = currentLang === 'en' ? 'vi' : 'en';
-            updateLanguage();
-            updateToggleButton();
-            saveLanguagePreference();
-        });
-    }
-
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                if (navLinks) navLinks.classList.remove('active');
-                if (menuToggle) menuToggle.classList.remove('active');
-            }
-        });
-    });
-
-    // Contact form
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', handleFormSubmit);
-    }
-
-    // Header hide/show on scroll
-    let lastScroll = 0;
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        const header = document.querySelector('header');
-
-        if (header) {
-            if (currentScroll > lastScroll && currentScroll > 100) {
-                gsap.to(header, { y: '-100%', duration: 0.3, ease: 'power2.out' });
-            } else if (currentScroll < lastScroll) {
-                gsap.to(header, { y: '0%', duration: 0.3, ease: 'power2.out' });
-            }
-        }
-
-        lastScroll = currentScroll;
-    });
+function buildProjectsContent() {
+  return `
+    <div class="project-grid">
+      <div class="project-card">
+        <h3>FPTU Examination System</h3>
+        <p>A comprehensive mobile and web system for FPTU Examination Office with AI chatbot
+        integration. Built with modern architecture patterns and real-time features.</p>
+        <div class="tech-chips">
+          <span class="tech-chip">ASP.NET Core</span>
+          <span class="tech-chip">React</span>
+          <span class="tech-chip">SQL Server</span>
+          <span class="tech-chip">SignalR</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <h3>Gym Management System</h3>
+        <p>Full-stack gym management system handling members, subscriptions, and operations with
+        integrated payment processing and admin interface.</p>
+        <div class="tech-chips">
+          <span class="tech-chip">ASP.NET Core</span>
+          <span class="tech-chip">NextJS</span>
+          <span class="tech-chip">PostgreSQL</span>
+          <span class="tech-chip">PayOS</span>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-// Language functions
-function updateLanguage() {
-    const elements = document.querySelectorAll('[data-lang]');
-    elements.forEach(element => {
-        const key = element.getAttribute('data-lang');
-        if (translations[currentLang][key]) {
-            gsap.to(element, {
-                opacity: 0,
-                duration: 0.2,
-                onComplete: () => {
-                    element.textContent = translations[currentLang][key];
-                    gsap.to(element, { opacity: 1, duration: 0.2 });
-                }
-            });
-        }
-    });
+function buildSkillsContent() {
+  return `
+    <div class="skills-file-header">
+      <span style="color:#6366f1">// skills.json</span><br>
+      <span style="color:#f59e0b">{</span>
+    </div>
+    <div class="skill-category-block">
+      <div class="skill-cat-label"><span>"Backend"</span>: [</div>
+      <div class="skill-chips">
+        <span class="skill-chip backend">Java</span>
+        <span class="skill-chip backend">Spring Boot</span>
+        <span class="skill-chip backend">ASP.NET Core</span>
+        <span class="skill-chip backend">C#</span>
+        <span class="skill-chip backend">Node.js</span>
+      </div>
+    </div>
+    <div class="skill-category-block">
+      <div class="skill-cat-label"><span>"Database"</span>: [</div>
+      <div class="skill-chips">
+        <span class="skill-chip database">Oracle</span>
+        <span class="skill-chip database">SQL Server</span>
+        <span class="skill-chip database">PostgreSQL</span>
+        <span class="skill-chip database">Redis</span>
+      </div>
+    </div>
+    <div class="skill-category-block">
+      <div class="skill-cat-label"><span>"Tools & DevOps"</span>: [</div>
+      <div class="skill-chips">
+        <span class="skill-chip devops">Git</span>
+        <span class="skill-chip devops">Docker</span>
+        <span class="skill-chip devops">Kubernetes/OpenShift</span>
+        <span class="skill-chip devops">Apache Airflow</span>
+      </div>
+    </div>
+    <div class="skill-category-block">
+      <div class="skill-cat-label"><span>"Frontend"</span>: [</div>
+      <div class="skill-chips">
+        <span class="skill-chip frontend">HTML5</span>
+        <span class="skill-chip frontend">CSS3</span>
+        <span class="skill-chip frontend">JavaScript</span>
+        <span class="skill-chip frontend">React</span>
+      </div>
+    </div>
+    <div class="skills-file-header" style="margin-top:8px"><span style="color:#f59e0b">}</span></div>
+  `;
 }
 
-function updateToggleButton() {
-    const toggleBtn = document.getElementById('lang-toggle');
-    if (!toggleBtn) return;
-
-    const flag = toggleBtn.querySelector('.flag');
-    const text = toggleBtn.querySelector('.lang-text');
-
-    if (flag && text) {
-        if (currentLang === 'en') {
-            flag.textContent = '🇻🇳';
-            text.textContent = 'VI';
-        } else {
-            flag.textContent = '🇺🇸';
-            text.textContent = 'EN';
-        }
-    }
+function buildTerminalContent() {
+  return `
+    <div class="terminal-window" id="terminal-win">
+      <div class="terminal-output" id="terminal-output"></div>
+      <div class="terminal-input-row">
+        <span class="terminal-prompt">lqviet@portfolio:~$</span>
+        <input class="terminal-input" id="terminal-input" type="text"
+               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+               placeholder="type a command...">
+      </div>
+    </div>
+  `;
 }
 
-function saveLanguagePreference() {
-    localStorage.setItem('preferredLanguage', currentLang);
+function buildCertificatesContent() {
+  return `
+    <div class="cert-list">
+      <a class="cert-item" href="https://coursera.org/share/d6d4b9c8125ac11f4132a6012dbcef5f" target="_blank" rel="noopener">
+        <div class="cert-icon-wrap"><i class="fas fa-certificate"></i></div>
+        <div class="cert-info">
+          <h4>Software Development Lifecycle</h4>
+          <div class="cert-issuer">University of Minnesota &middot; Coursera</div>
+          <div class="cert-link-row">
+            <i class="fas fa-external-link-alt"></i> View Certificate
+          </div>
+        </div>
+      </a>
+      <a class="cert-item" href="https://coursera.org/share/e13540f572707149f36db01d7e93e34c" target="_blank" rel="noopener">
+        <div class="cert-icon-wrap"><i class="fas fa-code"></i></div>
+        <div class="cert-info">
+          <h4>Backend Development</h4>
+          <div class="cert-issuer">Microsoft &middot; Coursera</div>
+          <div class="cert-link-row">
+            <i class="fas fa-external-link-alt"></i> View Certificate
+          </div>
+        </div>
+      </a>
+      <a class="cert-item" href="https://www.freecodecamp.org/certification/viet455/foundational-c-sharp-with-microsoft" target="_blank" rel="noopener">
+        <div class="cert-icon-wrap"><i class="fab fa-microsoft"></i></div>
+        <div class="cert-info">
+          <h4>Foundational C# with Microsoft</h4>
+          <div class="cert-issuer">Microsoft &middot; freeCodeCamp</div>
+          <div class="cert-link-row">
+            <i class="fas fa-external-link-alt"></i> View Certificate
+          </div>
+        </div>
+      </a>
+    </div>
+  `;
 }
 
-function loadLanguagePreference() {
-    const saved = localStorage.getItem('preferredLanguage');
-    const savedTheme = localStorage.getItem('theme');
-
-    if (saved) {
-        currentLang = saved;
-        updateLanguage();
-        updateToggleButton();
-    }
-
-    if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const themeToggle = document.querySelector('.theme-toggle');
-        if (themeToggle) {
-            themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-        }
-    }
+function buildContactContent() {
+  return `
+    <div class="contact-list">
+      <a class="contact-row" href="mailto:lqviet455@gmail.com">
+        <div class="contact-icon-wrap"><i class="fas fa-envelope"></i></div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">lqviet455@gmail.com</div>
+        </div>
+      </a>
+      <a class="contact-row" href="tel:+84353081770">
+        <div class="contact-icon-wrap"><i class="fas fa-phone"></i></div>
+        <div>
+          <div class="contact-label">Phone</div>
+          <div class="contact-value">+84 353 081 770</div>
+        </div>
+      </a>
+      <a class="contact-row" href="https://github.com/Lqviet45" target="_blank" rel="noopener">
+        <div class="contact-icon-wrap"><i class="fab fa-github"></i></div>
+        <div>
+          <div class="contact-label">GitHub</div>
+          <div class="contact-value">github.com/Lqviet45</div>
+        </div>
+      </a>
+      <a class="contact-row" href="https://linkedin.com/in/le-viet-a03721240" target="_blank" rel="noopener">
+        <div class="contact-icon-wrap"><i class="fab fa-linkedin"></i></div>
+        <div>
+          <div class="contact-label">LinkedIn</div>
+          <div class="contact-value">linkedin.com/in/le-viet-a03721240</div>
+        </div>
+      </a>
+      <a class="contact-row" href="https://facebook.com/le.quoc.viet.692602" target="_blank" rel="noopener">
+        <div class="contact-icon-wrap"><i class="fab fa-facebook"></i></div>
+        <div>
+          <div class="contact-label">Facebook</div>
+          <div class="contact-value">facebook.com/le.quoc.viet.692602</div>
+        </div>
+      </a>
+    </div>
+  `;
 }
 
-// Animations
-function initializeAnimations() {
-    // Check if GSAP is loaded
-    if (typeof gsap === 'undefined') {
-        console.warn('GSAP is not loaded');
-        return;
-    }
-
-    gsap.registerPlugin(ScrollTrigger, TextPlugin);
-
-    // Hero animations
-    const tl = gsap.timeline();
-    tl.to('.hero-text h1', { opacity: 1, y: 0, duration: 1, ease: "power3.out" })
-        .to('.subtitle', { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.5")
-        .to('.description', { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.3")
-        .to('.cta-button', { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.2 }, "-=0.3");
-
-    // Typing effect for subtitle
-    const subtitleElement = document.querySelector('.subtitle');
-    if (subtitleElement) {
-        gsap.to(subtitleElement, {
-            text: currentLang === 'en' ? "Backend Developer" : "Lập Trình Viên Backend",
-            duration: 2,
-            ease: "power2.inOut",
-            delay: 1
-        });
-    }
-
-    // Floating elements animation
-    gsap.to('.floating-element', {
-        y: -30,
-        duration: 3,
-        ease: "power1.inOut",
-        yoyo: true,
-        repeat: -1,
-        stagger: 0.5
-    });
+function buildRecycleContent() {
+  return `
+    <div class="recycle-header">
+      <i class="fas fa-trash-alt"></i>
+      <p>These ideas didn't survive the code review</p>
+    </div>
+    <div class="recycle-list">
+      <div class="recycle-file"><i class="fas fa-file-code"></i><span>spaghetti_code_v1.java</span></div>
+      <div class="recycle-file"><i class="fas fa-file-code"></i><span>fix_for_real_this_time.java</span></div>
+      <div class="recycle-file"><i class="fas fa-file-alt"></i><span>TODO_fix_later.txt</span></div>
+      <div class="recycle-file"><i class="fas fa-file"></i><span>sleep_8h_per_day.exe</span></div>
+      <div class="recycle-file"><i class="fas fa-file-code"></i><span>works_on_my_machine.config</span></div>
+    </div>
+  `;
 }
 
-function setupScrollAnimations() {
-    // Check if GSAP and ScrollTrigger are loaded
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-        console.warn('GSAP or ScrollTrigger is not loaded');
-        return;
+/* ==============================================
+   Window Management
+   ============================================== */
+function openApp(id) {
+  if (openWindows[id]) {
+    const { el } = openWindows[id];
+    if (el.classList.contains('minimized')) {
+      el.classList.remove('minimized');
     }
-
-    // Enhanced Section animations with reverse
-    gsap.utils.toArray('.section').forEach((section) => {
-        gsap.set(section, { y: 100, opacity: 0 });
-
-        ScrollTrigger.create({
-            trigger: section,
-            start: "top 85%",
-            end: "bottom 15%",
-            onEnter: () => {
-                gsap.to(section, {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1,
-                    ease: "power3.out"
-                });
-            },
-            onLeave: () => {
-                gsap.to(section, {
-                    y: -50,
-                    opacity: 0.3,
-                    duration: 0.5,
-                    ease: "power2.in"
-                });
-            },
-            onEnterBack: () => {
-                gsap.to(section, {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: "power3.out"
-                });
-            },
-            onLeaveBack: () => {
-                gsap.to(section, {
-                    y: 100,
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.in"
-                });
-            }
-        });
-    });
-
-    // Enhanced Skill cards animation with reverse
-    ScrollTrigger.batch(".skill-card", {
-        onEnter: (elements) => {
-            gsap.to(elements, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                stagger: 0.15,
-                duration: 1.2,
-                ease: "back.out(1.2)"
-            });
-        },
-        onLeave: (elements) => {
-            gsap.to(elements, {
-                opacity: 0.3,
-                y: -30,
-                scale: 0.95,
-                stagger: 0.1,
-                duration: 0.5,
-                ease: "power2.in"
-            });
-        },
-        onEnterBack: (elements) => {
-            gsap.to(elements, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                stagger: 0.1,
-                duration: 0.8,
-                ease: "back.out(1.1)"
-            });
-        },
-        onLeaveBack: (elements) => {
-            gsap.to(elements, {
-                opacity: 0,
-                y: 50,
-                scale: 0.9,
-                stagger: 0.1,
-                duration: 0.5,
-                ease: "power2.in"
-            });
-        },
-        start: "top 90%",
-        end: "bottom 10%"
-    });
-
-    // Enhanced Certificate cards animation with reverse
-    ScrollTrigger.batch(".certificate-card", {
-        onEnter: (elements) => {
-            gsap.to(elements, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                stagger: 0.2,
-                duration: 1.1,
-                ease: "back.out(1.2)"
-            });
-        },
-        onLeave: (elements) => {
-            gsap.to(elements, {
-                opacity: 0.3,
-                y: -30,
-                scale: 0.95,
-                stagger: 0.1,
-                duration: 0.5,
-                ease: "power2.in"
-            });
-        },
-        onEnterBack: (elements) => {
-            gsap.to(elements, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                stagger: 0.15,
-                duration: 0.8,
-                ease: "back.out(1.1)"
-            });
-        },
-        onLeaveBack: (elements) => {
-            gsap.to(elements, {
-                opacity: 0,
-                y: 50,
-                scale: 0.9,
-                stagger: 0.1,
-                duration: 0.5,
-                ease: "power2.in"
-            });
-        },
-        start: "top 90%",
-        end: "bottom 10%"
-    });
-
-    // Enhanced Project cards animation with reverse
-    ScrollTrigger.batch(".project-card", {
-        onEnter: (elements) => {
-            gsap.to(elements, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                stagger: 0.25,
-                duration: 1.2,
-                ease: "back.out(1.1)"
-            });
-        },
-        onLeave: (elements) => {
-            gsap.to(elements, {
-                opacity: 0.3,
-                y: -30,
-                scale: 0.95,
-                stagger: 0.15,
-                duration: 0.5,
-                ease: "power2.in"
-            });
-        },
-        onEnterBack: (elements) => {
-            gsap.to(elements, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                stagger: 0.2,
-                duration: 0.8,
-                ease: "back.out(1.1)"
-            });
-        },
-        onLeaveBack: (elements) => {
-            gsap.to(elements, {
-                opacity: 0,
-                y: 50,
-                scale: 0.9,
-                stagger: 0.15,
-                duration: 0.5,
-                ease: "power2.in"
-            });
-        },
-        start: "top 90%",
-        end: "bottom 10%"
-    });
-
-    // Enhanced Skill level animations with reverse
-    document.querySelectorAll('.skill-level').forEach(level => {
-        const percentage = level.getAttribute('data-level');
-
-        ScrollTrigger.create({
-            trigger: level,
-            start: "top 90%",
-            end: "bottom 10%",
-            onEnter: () => {
-                gsap.to(level, {
-                    '--skill-width': percentage + '%',
-                    duration: 1.5,
-                    ease: "power2.out"
-                });
-            },
-            onLeave: () => {
-                gsap.to(level, {
-                    '--skill-width': '0%',
-                    duration: 0.5,
-                    ease: "power2.in"
-                });
-            },
-            onEnterBack: () => {
-                gsap.to(level, {
-                    '--skill-width': percentage + '%',
-                    duration: 1,
-                    ease: "power2.out"
-                });
-            },
-            onLeaveBack: () => {
-                gsap.to(level, {
-                    '--skill-width': '0%',
-                    duration: 0.5,
-                    ease: "power2.in"
-                });
-            }
-        });
-    });
-
-    // Enhanced Experience timeline animations
-    ScrollTrigger.batch(".timeline-item", {
-        onEnter: (elements) => {
-            gsap.to(elements, {
-                opacity: 1,
-                x: 0,
-                duration: 1,
-                stagger: 0.3,
-                ease: "power3.out"
-            });
-        },
-        onLeave: (elements) => {
-            gsap.to(elements, {
-                opacity: 0.3,
-                x: -50,
-                duration: 0.5,
-                stagger: 0.1,
-                ease: "power2.in"
-            });
-        },
-        onEnterBack: (elements) => {
-            gsap.to(elements, {
-                opacity: 1,
-                x: 0,
-                duration: 0.8,
-                stagger: 0.2,
-                ease: "power3.out"
-            });
-        },
-        onLeaveBack: (elements) => {
-            gsap.to(elements, {
-                opacity: 0,
-                x: 50,
-                duration: 0.5,
-                stagger: 0.1,
-                ease: "power2.in"
-            });
-        },
-        start: "top 85%",
-        end: "bottom 15%"
-    });
-
-    // Set initial states for timeline items
-    gsap.set(".timeline-item", { opacity: 0, x: 50 });
+    bringToFront(el, id);
+    return;
+  }
+  const config = APP_CONFIGS[id];
+  if (!config) return;
+  createWindow(id, config);
 }
 
-// Form handling
-function handleFormSubmit(e) {
+function createWindow(id, config) {
+  const container = document.getElementById('windows-container');
+  const vw = window.innerWidth;
+  const vh = window.innerHeight - 48; // above taskbar
+
+  const w = Math.min(config.width, vw - 40);
+  const h = Math.min(config.height, vh - 40);
+
+  // Offset each new window slightly
+  const count = Object.keys(openWindows).length;
+  const left = Math.max(120, Math.min((vw - w) / 2 + count * 24, vw - w - 20));
+  const top  = Math.max(20,  Math.min((vh - h) / 2 + count * 24, vh - h - 20));
+
+  const win = document.createElement('div');
+  win.className = 'win';
+  win.setAttribute('data-app', id);
+  win.style.cssText = `width:${w}px;height:${h}px;left:${left}px;top:${top}px;`;
+
+  win.innerHTML = `
+    <div class="win-titlebar" id="titlebar-${id}">
+      <div class="win-controls">
+        <button class="win-ctrl close"    onclick="closeWindow('${id}')"></button>
+        <button class="win-ctrl minimize" onclick="minimizeWindow('${id}')"></button>
+        <button class="win-ctrl maximize" onclick="maximizeWindow('${id}')"></button>
+      </div>
+      <span class="win-title-icon"><i class="${config.icon}" style="color:${config.iconColor}"></i></span>
+      <span class="win-title">${config.title}</span>
+    </div>
+    <div class="win-body" id="body-${id}">
+      ${config.content()}
+    </div>
+    <div class="win-resizer" id="resizer-${id}"></div>
+  `;
+
+  container.appendChild(win);
+
+  win.addEventListener('mousedown', (e) => {
+    // Don't bring to front when clicking controls
+    if (!e.target.classList.contains('win-ctrl')) {
+      bringToFront(win, id);
+    }
+  });
+
+  makeDraggable(win, win.querySelector('.win-titlebar'));
+  makeResizable(win, win.querySelector('.win-resizer'));
+  bringToFront(win, id);
+
+  openWindows[id] = { el: win, config };
+  addTaskbarItem(id, config);
+
+  // Terminal needs special init after DOM insertion
+  if (id === 'terminal') {
+    setTimeout(() => initTerminal(), 50);
+  }
+}
+
+function closeWindow(id) {
+  const entry = openWindows[id];
+  if (!entry) return;
+  const { el } = entry;
+  el.classList.add('closing');
+  setTimeout(() => {
+    el.remove();
+    delete openWindows[id];
+    delete maximizedWindows[id];
+    removeTaskbarItem(id);
+  }, 180);
+}
+
+function minimizeWindow(id) {
+  const entry = openWindows[id];
+  if (!entry) return;
+  entry.el.classList.add('minimized');
+  // Update taskbar item to inactive
+  const tbItem = document.getElementById(`tb-${id}`);
+  if (tbItem) tbItem.classList.remove('active');
+}
+
+function maximizeWindow(id) {
+  const entry = openWindows[id];
+  if (!entry) return;
+  const { el } = entry;
+
+  if (maximizedWindows[id]) {
+    // Restore
+    const saved = maximizedWindows[id];
+    el.style.left   = saved.left;
+    el.style.top    = saved.top;
+    el.style.width  = saved.width;
+    el.style.height = saved.height;
+    el.classList.remove('maximized');
+    delete maximizedWindows[id];
+  } else {
+    // Save + maximize
+    maximizedWindows[id] = {
+      left:   el.style.left,
+      top:    el.style.top,
+      width:  el.style.width,
+      height: el.style.height
+    };
+    el.classList.add('maximized');
+  }
+}
+
+function bringToFront(win, id) {
+  globalZ++;
+  win.style.zIndex = globalZ;
+  // Remove focused from all windows
+  document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'));
+  win.classList.add('focused');
+  // Sync taskbar
+  document.querySelectorAll('.taskbar-item').forEach(btn => btn.classList.remove('active'));
+  const tbItem = document.getElementById(`tb-${id}`);
+  if (tbItem) tbItem.classList.add('active');
+}
+
+/* ==============================================
+   Drag & Resize
+   ============================================== */
+function makeDraggable(win, handle) {
+  let startX, startY, startLeft, startTop;
+  let dragging = false;
+
+  handle.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('win-ctrl')) return;
+    if (win.classList.contains('maximized')) return;
+    dragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = parseInt(win.style.left) || 0;
+    startTop  = parseInt(win.style.top)  || 0;
     e.preventDefault();
-    const submitBtn = e.target.querySelector('.submit-btn');
-    if (!submitBtn) return;
+  });
 
-    const originalText = submitBtn.innerHTML;
+  document.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const newLeft = startLeft + dx;
+    const newTop  = startTop  + dy;
 
-    // Loading state
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    submitBtn.disabled = true;
+    // Constrain to viewport
+    const maxLeft = window.innerWidth  - (parseInt(win.style.width)  || 200);
+    const maxTop  = window.innerHeight - 48 - 40; // keep titlebar visible
+    win.style.left = Math.max(-100, Math.min(newLeft, maxLeft + 100)) + 'px';
+    win.style.top  = Math.max(0,    Math.min(newTop,  maxTop)) + 'px';
+  });
 
-    // Simulate form submission
-    setTimeout(() => {
-        submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-        submitBtn.style.background = '#4caf50';
-
-        setTimeout(() => {
-            submitBtn.innerHTML = originalText;
-            submitBtn.style.background = '';
-            submitBtn.disabled = false;
-            e.target.reset();
-        }, 2000);
-    }, 2000);
+  document.addEventListener('mouseup', () => { dragging = false; });
 }
 
-// Hover effects
-document.addEventListener('DOMContentLoaded', () => {
-    // Button hover effects
-    document.querySelectorAll('.cta-button').forEach(button => {
-        button.addEventListener('mouseenter', () => {
-            if (typeof gsap !== 'undefined') {
-                gsap.to(button, { scale: 1.05, duration: 0.3, ease: "power2.out" });
-            }
-        });
-        button.addEventListener('mouseleave', () => {
-            if (typeof gsap !== 'undefined') {
-                gsap.to(button, { scale: 1, duration: 0.3, ease: "power2.out" });
-            }
-        });
-    });
+function makeResizable(win, resizer) {
+  let startX, startY, startW, startH;
+  let resizing = false;
 
-    // Card hover effects
-    document.querySelectorAll('.skill-card, .certificate-card, .project-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            if (typeof gsap !== 'undefined') {
-                gsap.to(card, { y: -10, duration: 0.3, ease: "power2.out" });
-            }
-        });
-        card.addEventListener('mouseleave', () => {
-            if (typeof gsap !== 'undefined') {
-                gsap.to(card, { y: 0, duration: 0.3, ease: "power2.out" });
-            }
-        });
-    });
-});
+  resizer.addEventListener('mousedown', (e) => {
+    resizing = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startW = parseInt(win.style.width)  || win.offsetWidth;
+    startH = parseInt(win.style.height) || win.offsetHeight;
+    e.preventDefault();
+    e.stopPropagation();
+  });
 
-// Responsive handling
-let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-        if (typeof ScrollTrigger !== 'undefined') {
-            ScrollTrigger.refresh();
+  document.addEventListener('mousemove', (e) => {
+    if (!resizing) return;
+    const newW = Math.max(320, startW + (e.clientX - startX));
+    const newH = Math.max(200, startH + (e.clientY - startY));
+    win.style.width  = newW + 'px';
+    win.style.height = newH + 'px';
+  });
+
+  document.addEventListener('mouseup', () => { resizing = false; });
+}
+
+/* ==============================================
+   Taskbar Items
+   ============================================== */
+function addTaskbarItem(id, config) {
+  const container = document.getElementById('taskbar-items');
+  const btn = document.createElement('button');
+  btn.className = 'taskbar-item';
+  btn.id = `tb-${id}`;
+  btn.innerHTML = `<i class="${config.icon}" style="color:${config.iconColor}"></i><span>${config.title}</span>`;
+  btn.addEventListener('click', () => handleTaskbarClick(id));
+  container.appendChild(btn);
+}
+
+function removeTaskbarItem(id) {
+  const el = document.getElementById(`tb-${id}`);
+  if (el) el.remove();
+}
+
+function handleTaskbarClick(id) {
+  const entry = openWindows[id];
+  if (!entry) return;
+  const { el } = entry;
+
+  if (el.classList.contains('minimized')) {
+    el.classList.remove('minimized');
+    bringToFront(el, id);
+  } else if (el.classList.contains('focused')) {
+    minimizeWindow(id);
+  } else {
+    bringToFront(el, id);
+  }
+}
+
+/* ==============================================
+   File Detail Toggle (Experience)
+   ============================================== */
+function toggleFileDetail(itemId) {
+  const item = document.getElementById(itemId);
+  if (!item) return;
+
+  const isOpen = item.classList.contains('open');
+
+  // Close all items first
+  document.querySelectorAll('.file-item').forEach(fi => {
+    fi.classList.remove('open');
+    const detail = fi.querySelector('.file-detail');
+    if (detail) detail.classList.remove('visible');
+  });
+
+  // Open clicked if it was closed
+  if (!isOpen) {
+    item.classList.add('open');
+    const detail = item.querySelector('.file-detail');
+    if (detail) detail.classList.add('visible');
+  }
+}
+
+/* ==============================================
+   Terminal
+   ============================================== */
+const TERMINAL_BANNER = `<div class="t-line t-ascii">  _      ___     __
+ | |    / _ \\   / /
+ | |   | | | | | |
+ | |___| |_| | \\ \\__
+ |_____\\__\\__/  \\___/</div>
+<div class="t-line t-accent" style="margin-bottom:6px">Le Quoc Viet — Backend Developer</div>
+<div class="t-line t-output">Type <span class="t-success">'help'</span> for available commands.</div>
+<div class="t-line" style="margin-bottom:8px"></div>`;
+
+const COMMANDS = {
+  help() {
+    return `<div class="t-line t-bold">Available commands:</div>
+<div class="t-line t-output">  <span class="t-success">whoami</span>        — About me</div>
+<div class="t-line t-output">  <span class="t-success">ls</span>            — List portfolio contents</div>
+<div class="t-line t-output">  <span class="t-success">cat about.txt</span> — About info</div>
+<div class="t-line t-output">  <span class="t-success">cat skills.txt</span>— Full skill list</div>
+<div class="t-line t-output">  <span class="t-success">cat exp.txt</span>   — Work experience</div>
+<div class="t-line t-output">  <span class="t-success">cat contact.txt</span>— Contact info</div>
+<div class="t-line t-output">  <span class="t-success">open &lt;app&gt;</span>    — Open an app window</div>
+<div class="t-line t-output">  <span class="t-success">date</span>           — Current date & time</div>
+<div class="t-line t-output">  <span class="t-success">neofetch</span>      — System info</div>
+<div class="t-line t-output">  <span class="t-success">clear</span>         — Clear terminal</div>`;
+  },
+
+  whoami() {
+    return `<div class="t-line t-bold">Le Quoc Viet</div>
+<div class="t-line t-output">Role  : Backend Developer @ Sacombank</div>
+<div class="t-line t-output">Stack : Java, Spring Boot, Oracle, Redis, Airflow, K8s</div>
+<div class="t-line t-output">Edu   : FPT University — GPA 7.92/10</div>`;
+  },
+
+  ls() {
+    return `<div class="t-line t-output">portfolio/</div>
+<div class="t-line t-output">├── About_Me.txt</div>
+<div class="t-line t-output">├── Experience/</div>
+<div class="t-line t-output">│   ├── Sacombank_CoreSL.log</div>
+<div class="t-line t-output">│   └── AmazingTech.log</div>
+<div class="t-line t-output">├── Projects/</div>
+<div class="t-line t-output">│   ├── FPTU_ExamSystem/</div>
+<div class="t-line t-output">│   └── GymManagement/</div>
+<div class="t-line t-output">├── skills.json</div>
+<div class="t-line t-output">├── Certificates/</div>
+<div class="t-line t-output">├── Contact.lnk</div>
+<div class="t-line t-output">└── Recycle Bin/</div>`;
+  },
+
+  'cat about.txt'() {
+    return `<div class="t-line t-bold">Le Quoc Viet</div>
+<div class="t-line t-output">Backend Developer @ Sacombank</div>
+<div class="t-line t-output">Graduated from FPT University (GPA: 7.92/10).</div>
+<div class="t-line t-output">Currently working on CoreSL — a microservices-based core banking</div>
+<div class="t-line t-output">system for Certificate of Deposit management.</div>`;
+  },
+
+  'cat skills.txt'() {
+    return `<div class="t-line t-bold">Technical Skills</div>
+<div class="t-line t-output">Backend  : Java, Spring Boot, ASP.NET Core, C#, Node.js</div>
+<div class="t-line t-output">Database : Oracle, SQL Server, PostgreSQL, Redis</div>
+<div class="t-line t-output">DevOps   : Git, Docker, Kubernetes/OpenShift, Apache Airflow</div>
+<div class="t-line t-output">Frontend : HTML5, CSS3, JavaScript, React</div>`;
+  },
+
+  'cat exp.txt'() {
+    return `<div class="t-line t-bold">Work Experience</div>
+<div class="t-line t-output" style="margin-top:4px">[ Sacombank — CoreSL Project ] Present</div>
+<div class="t-line t-output">  CD issuance, buying, selling APIs (PaymentHub/T24)</div>
+<div class="t-line t-output">  Apache Airflow DAGs — bulk CD pipeline (aiohttp + Redis)</div>
+<div class="t-line t-output">  Distributed locking, OpenFeign integrations, K8s/OpenShift</div>
+<div class="t-line t-output">  Security fixes via BlackDuck & Coverity</div>
+<div class="t-line t-output" style="margin-top:6px">[ Amazing Tech ] 9 months</div>
+<div class="t-line t-output">  Node.js tax invoice API (Odoo + Malaysian gov)</div>
+<div class="t-line t-output">  Water plant management (Dapper + stored procs)</div>
+<div class="t-line t-output">  Construction pile tracking app</div>`;
+  },
+
+  'cat contact.txt'() {
+    return `<div class="t-line t-output">Email    : lqviet455@gmail.com</div>
+<div class="t-line t-output">Phone    : +84 353 081 770</div>
+<div class="t-line t-output">GitHub   : github.com/Lqviet45</div>
+<div class="t-line t-output">LinkedIn : linkedin.com/in/le-viet-a03721240</div>
+<div class="t-line t-output">Facebook : facebook.com/le.quoc.viet.692602</div>`;
+  },
+
+  date() {
+    const now = new Date();
+    return `<div class="t-line t-output">${now.toString()}</div>`;
+  },
+
+  neofetch() {
+    return `<div class="t-line t-ascii">      ██████
+    ██░░░░░░██
+   ██░░░░░░░░██   <span class="t-bold t-accent">lqviet@portfolio</span>
+   ██░░░░░░░░██   ─────────────────────
+   ██░░░░░░░░██   <span class="t-info">OS</span>: Portfolio OS 1.0
+    ██░░░░░░██    <span class="t-info">CPU</span>: Java / Spring Boot
+      ██████      <span class="t-info">RAM</span>: 7.92 GPA / 10 GPA</div>
+<div class="t-line t-output">  <span class="t-info">Uptime</span>  : 2+ years</div>
+<div class="t-line t-output">  <span class="t-info">Shell</span>   : Portfolio Terminal</div>
+<div class="t-line t-output">  <span class="t-info">Theme</span>   : Glassmorphism Dark</div>
+<div class="t-line t-output">  <span class="t-info">Kernel</span>  : Vanilla JS</div>`;
+  },
+
+  clear: '__CLEAR__'
+};
+
+function initTerminal() {
+  const output = document.getElementById('terminal-output');
+  const input  = document.getElementById('terminal-input');
+  if (!output || !input) return;
+
+  // Print banner
+  output.innerHTML = TERMINAL_BANNER;
+
+  const history = [];
+  let histIdx = -1;
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const raw = input.value.trim();
+      input.value = '';
+      histIdx = -1;
+
+      if (!raw) return;
+      history.unshift(raw);
+
+      // Echo the command
+      appendLine(output, `<div class="t-line"><span class="t-prompt">lqviet@portfolio:~$</span> <span class="t-cmd">${escapeHtml(raw)}</span></div>`);
+
+      // Look up command
+      const key = raw.toLowerCase();
+      const handler = COMMANDS[key];
+
+      if (handler === '__CLEAR__') {
+        output.innerHTML = '';
+        return;
+      }
+
+      if (typeof handler === 'function') {
+        appendLine(output, handler());
+      } else if (key.startsWith('open ')) {
+        const appId = key.slice(5).trim();
+        if (APP_CONFIGS[appId]) {
+          appendLine(output, `<div class="t-line t-success">Opening ${appId}...</div>`);
+          openApp(appId);
+        } else {
+          appendLine(output, `<div class="t-line t-error">open: unknown app '${escapeHtml(appId)}'. Try: about, experience, projects, skills, certificates, contact, recycle</div>`);
         }
+      } else {
+        appendLine(output, `<div class="t-line t-error">command not found: ${escapeHtml(raw)}. Type 'help'</div>`);
+      }
 
-        // Recreate particles for mobile
-        if (window.innerWidth < 768) {
-            const particles = document.querySelectorAll('.particle');
-            particles.forEach(particle => particle.remove());
-            createParticles();
-        }
-    }, 250);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    if (e.key === 'ArrowUp') {
+      if (histIdx < history.length - 1) {
+        histIdx++;
+        input.value = history[histIdx] || '';
+      }
+      e.preventDefault();
+    }
+    if (e.key === 'ArrowDown') {
+      if (histIdx > 0) {
+        histIdx--;
+        input.value = history[histIdx] || '';
+      } else {
+        histIdx = -1;
+        input.value = '';
+      }
+      e.preventDefault();
+    }
+  });
+
+  input.focus();
+}
+
+function appendLine(output, html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  output.appendChild(div);
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/* ==============================================
+   Start Menu
+   ============================================== */
+function toggleStartMenu() {
+  const menu = document.getElementById('start-menu');
+  const btn  = document.getElementById('start-btn');
+  const isHidden = menu.classList.contains('hidden');
+  menu.classList.toggle('hidden');
+  btn.classList.toggle('active', isHidden);
+}
+
+function closeStartMenu() {
+  const menu = document.getElementById('start-menu');
+  const btn  = document.getElementById('start-btn');
+  menu.classList.add('hidden');
+  btn.classList.remove('active');
+}
+
+// Close start menu when clicking outside
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('start-menu');
+  const btn  = document.getElementById('start-btn');
+  if (!menu || !btn) return;
+  if (!menu.classList.contains('hidden') &&
+      !menu.contains(e.target) &&
+      !btn.contains(e.target)) {
+    closeStartMenu();
+  }
 });
 
-// Performance optimization
-window.addEventListener('load', () => {
-    // Preload images
-    const images = ['face-img.png'];
-    images.forEach(src => {
-        const img = new Image();
-        img.src = src;
+/* ==============================================
+   Theme Toggle
+   ============================================== */
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  localStorage.setItem('theme', currentTheme);
+
+  const isDark = currentTheme === 'dark';
+  const icon = isDark ? 'fas fa-moon' : 'fas fa-sun';
+
+  const trayBtn = document.getElementById('tray-theme');
+  if (trayBtn) trayBtn.innerHTML = `<i class="${icon}"></i>`;
+
+  const smBtn = document.getElementById('sm-theme-btn');
+  if (smBtn) smBtn.innerHTML = `<i class="${icon}"></i> Theme`;
+}
+
+/* ==============================================
+   Language Toggle (cosmetic)
+   ============================================== */
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'vi' : 'en';
+  localStorage.setItem('lang', currentLang);
+  const flag = currentLang === 'en' ? '🇺🇸' : '🇻🇳';
+  const trayFlag = document.getElementById('tray-flag');
+  if (trayFlag) trayFlag.textContent = flag;
+  const smBtn = document.getElementById('sm-lang-btn');
+  if (smBtn) smBtn.innerHTML = `<span>${flag}</span> Lang`;
+}
+
+/* ==============================================
+   Clock
+   ============================================== */
+function updateClock() {
+  const now = new Date();
+  const hh  = String(now.getHours()).padStart(2, '0');
+  const mm  = String(now.getMinutes()).padStart(2, '0');
+  const days   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dayStr = days[now.getDay()];
+  const monStr = months[now.getMonth()];
+  const dd     = String(now.getDate()).padStart(2, '0');
+
+  const timeEl = document.getElementById('clock-time');
+  const dateEl = document.getElementById('clock-date');
+  if (timeEl) timeEl.textContent = `${hh}:${mm}`;
+  if (dateEl) dateEl.textContent = `${dayStr} ${monStr} ${dd}`;
+}
+
+/* ==============================================
+   Particles
+   ============================================== */
+function createParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+  const count = 40;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const left  = Math.random() * 100;
+    const dur   = (Math.random() * 12 + 10).toFixed(1);
+    const delay = (Math.random() * 16).toFixed(1);
+    const drift = (Math.random() - 0.5) * 120;
+    p.style.cssText = `left:${left}%;--dur:${dur}s;--delay:-${delay}s;--drift:${drift}px;`;
+    container.appendChild(p);
+  }
+}
+
+/* ==============================================
+   Desktop Icon Selection
+   ============================================== */
+function setupDesktopIconSelection() {
+  const icons = document.querySelectorAll('.desktop-icon');
+  icons.forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      icons.forEach(i => i.classList.remove('selected'));
+      icon.classList.add('selected');
+      e.stopPropagation();
     });
-
-    // Initialize lazy loading for images
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    if (img.dataset.src) {
-                        img.src = img.dataset.src;
-                        img.classList.remove('lazy');
-                        imageObserver.unobserve(img);
-                    }
-                }
-            });
-        });
-
-        document.querySelectorAll('img[data-src]').forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-});
-
-// Skill level animation on scroll
-function animateSkillLevels() {
-    document.querySelectorAll('.skill-level').forEach((level, index) => {
-        const percentage = level.getAttribute('data-level');
-        if (percentage) {
-            setTimeout(() => {
-                level.style.setProperty('--skill-width', percentage + '%');
-            }, index * 200);
-        }
-    });
+  });
+  document.getElementById('wallpaper').addEventListener('click', () => {
+    icons.forEach(i => i.classList.remove('selected'));
+  });
 }
 
-// Initialize intersection observer for skill levels
-function initializeSkillLevelObserver() {
-    if ('IntersectionObserver' in window) {
-        const skillObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const skillLevel = entry.target.querySelector('.skill-level');
-                    if (skillLevel) {
-                        const percentage = skillLevel.getAttribute('data-level');
-                        skillLevel.style.setProperty('--skill-width', percentage + '%');
-                    }
-                } else {
-                    // Reset when leaving viewport
-                    const skillLevel = entry.target.querySelector('.skill-level');
-                    if (skillLevel) {
-                        skillLevel.style.setProperty('--skill-width', '0%');
-                    }
-                }
-            });
-        }, { threshold: 0.5 });
-
-        document.querySelectorAll('.skill-card').forEach(card => {
-            skillObserver.observe(card);
-        });
-    }
-}
-
-// Add smooth reveal animations for sections
-function addRevealAnimations() {
-    const sections = document.querySelectorAll('.section');
-
-    if ('IntersectionObserver' in window) {
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in', 'visible');
-                } else {
-                    // Remove classes when leaving viewport for re-animation
-                    entry.target.classList.remove('fade-in', 'visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        sections.forEach(section => {
-            section.classList.add('fade-in');
-            sectionObserver.observe(section);
-        });
-    }
-}
-
-// Initialize all observers and animations
-document.addEventListener('DOMContentLoaded', () => {
-    initializeSkillLevelObserver();
-    addRevealAnimations();
-});
-
-// Utility function to check if element is in viewport
-function isInViewport(element) {
-    const rect = element.getBoundingClientRect();
-    return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-}
-
-// Add loading state management
-function showLoading(element) {
-    if (element) {
-        element.classList.add('loading');
-    }
-}
-
-function hideLoading(element) {
-    if (element) {
-        element.classList.remove('loading');
-    }
-}
-
-// Error handling for animations
-function safeAnimate(target, properties, options = {}) {
-    try {
-        if (typeof gsap !== 'undefined' && target) {
-            return gsap.to(target, { ...properties, ...options });
-        }
-    } catch (error) {
-        console.warn('Animation error:', error);
-    }
-    return null;
-}
-
-// Enhanced scroll-based particle effects
-let particleAnimations = [];
-
-function createEnhancedParticles() {
-    const particleContainer = document.querySelector('.particles');
-    if (!particleContainer) return;
-
-    // Clear existing particles
-    particleContainer.innerHTML = '';
-    particleAnimations.forEach(anim => anim.kill());
-    particleAnimations = [];
-
-    const particleCount = window.innerWidth < 768 ? 20 : 35;
-
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-
-        // Create GSAP animation for each particle
-        const anim = gsap.to(particle, {
-            y: `-=${Math.random() * 200 + 100}px`,
-            x: `+=${(Math.random() - 0.5) * 100}px`,
-            opacity: Math.random() * 0.5 + 0.2,
-            duration: Math.random() * 15 + 10,
-            ease: "none",
-            repeat: -1,
-            yoyo: true,
-            delay: Math.random() * 5
-        });
-
-        particleAnimations.push(anim);
-        particleContainer.appendChild(particle);
-    }
-}
-
-// Update particles based on scroll
-let lastScrollY = 0;
-window.addEventListener('scroll', () => {
-    const scrollY = window.pageYOffset;
-    const scrollDelta = scrollY - lastScrollY;
-
-    // Update particle movement based on scroll direction
-    particleAnimations.forEach((anim, index) => {
-        if (anim && anim.target) {
-            const currentY = gsap.getProperty(anim.target, 'y');
-            gsap.set(anim.target, {
-                y: currentY + scrollDelta * 0.1 * (index % 2 === 0 ? 1 : -1)
-            });
-        }
-    });
-
-    lastScrollY = scrollY;
-});
-
-// Initialize enhanced effects
-window.addEventListener('load', () => {
-    if (typeof gsap !== 'undefined') {
-        createEnhancedParticles();
-    }
-});
-
-// FIXED Music Player Class
+/* ==============================================
+   Music Player
+   ============================================== */
 class MusicPlayer {
-    constructor() {
-        this.audio = document.getElementById('audioPlayer');
-        this.isPlaying = false;
-        this.currentTrack = 0;
-        this.isMinimized = false;
+  constructor() {
+    this.audio = document.getElementById('audioPlayer');
+    if (!this.audio) return;
+    this.audio.src = 'music/la-vaguelette.mp3';
+    this.audio.volume = 0.3;
+  }
 
-        // Your playlist - update with your actual music files
-        this.playlist = [
-            {
-                title: "La vaguelette",
-                artist: "Genshin Impact",
-                src: "music/la-vaguelette.mp3", // Your actual file path
-                duration: "2:30"
-            },
-            // {
-            //     title: "Your Song 2",
-            //     artist: "Artist Name",
-            //     src: "music/song2.mp3",
-            //     duration: "3:45"
-            // },
-            // {
-            //     title: "Your Song 3",
-            //     artist: "Artist Name",
-            //     src: "music/song3.mp3",
-            //     duration: "4:20"
-            // }
-        ];
-
-        this.initializePlayer();
-        this.setupEventListeners();
-        this.renderPlaylist();
-        if (this.playlist.length > 0) {
-            this.loadTrack(0);
-        }
+  toggle() {
+    if (!this.audio) return;
+    if (musicPlaying) {
+      this.audio.pause();
+      musicPlaying = false;
+    } else {
+      this.audio.play().catch(() => {});
+      musicPlaying = true;
     }
-
-    initializePlayer() {
-        this.audio.volume = 0.3;
-    }
-
-    setupEventListeners() {
-        // FIXED: Minimize button event
-        const minimizeBtn = document.getElementById('minimizeBtn');
-        if (minimizeBtn) {
-            minimizeBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent event bubbling
-                this.toggleMinimize();
-            });
-        }
-
-        // FIXED: Click on minimized player to expand
-        const musicPlayer = document.getElementById('musicPlayer');
-        if (musicPlayer) {
-            musicPlayer.addEventListener('click', (e) => {
-                if (this.isMinimized) {
-                    // Only expand if clicking on the player itself
-                    if (e.target === musicPlayer ||
-                        e.target === minimizeBtn ||
-                        e.target.closest('.minimize-btn')) {
-                        this.toggleMinimize();
-                    }
-                }
-            });
-        }
-
-        // Play/Pause button
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        if (playPauseBtn) {
-            playPauseBtn.addEventListener('click', () => {
-                this.togglePlayPause();
-            });
-        }
-
-        // Previous/Next buttons
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                this.previousTrack();
-            });
-        }
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                this.nextTrack();
-            });
-        }
-
-        // Volume control
-        const volumeSlider = document.getElementById('volumeSlider');
-        if (volumeSlider) {
-            volumeSlider.addEventListener('input', (e) => {
-                this.audio.volume = e.target.value / 100;
-            });
-        }
-
-        // Progress bar
-        const progressBar = document.getElementById('progressBar');
-        if (progressBar) {
-            progressBar.addEventListener('click', (e) => {
-                const rect = e.target.getBoundingClientRect();
-                const percent = (e.clientX - rect.left) / rect.width;
-                this.audio.currentTime = percent * this.audio.duration;
-            });
-        }
-
-        // Audio events
-        this.audio.addEventListener('timeupdate', () => {
-            this.updateProgress();
-        });
-
-        this.audio.addEventListener('ended', () => {
-            this.nextTrack();
-        });
-
-        this.audio.addEventListener('loadedmetadata', () => {
-            this.updateDuration();
-        });
-    }
-
-    renderPlaylist() {
-        const playlistContainer = document.getElementById('playlist');
-        if (!playlistContainer) return;
-
-        playlistContainer.innerHTML = '';
-
-        this.playlist.forEach((track, index) => {
-            const playlistItem = document.createElement('div');
-            playlistItem.className = 'playlist-item';
-            playlistItem.innerHTML = `
-                <i class="fas fa-music"></i>
-                <div style="flex: 1; margin-left: 10px;">
-                    <div style="font-size: 0.85rem; font-weight: 500; color: var(--text-color);">${track.title}</div>
-                    <div style="font-size: 0.75rem; color: var(--text-secondary);">${track.artist}</div>
-                </div>
-                <div style="font-size: 0.75rem; color: var(--text-secondary);">${track.duration}</div>
-            `;
-
-            playlistItem.addEventListener('click', () => {
-                this.loadTrack(index);
-                if (this.isPlaying) {
-                    this.audio.play();
-                }
-            });
-
-            playlistContainer.appendChild(playlistItem);
-        });
-    }
-
-    loadTrack(index) {
-        this.currentTrack = index;
-        const track = this.playlist[index];
-
-        this.audio.src = track.src;
-        const trackTitle = document.getElementById('trackTitle');
-        const trackArtist = document.getElementById('trackArtist');
-
-        if (trackTitle) trackTitle.textContent = track.title;
-        if (trackArtist) trackArtist.textContent = track.artist;
-
-        // Update playlist active state
-        document.querySelectorAll('.playlist-item').forEach((item, i) => {
-            item.classList.toggle('active', i === index);
-        });
-    }
-
-    togglePlayPause() {
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        if (!playPauseBtn) return;
-
-        if (this.isPlaying) {
-            this.audio.pause();
-            this.isPlaying = false;
-            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-        } else {
-            this.audio.play().then(() => {
-                this.isPlaying = true;
-                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            }).catch((error) => {
-                console.error('Error playing audio:', error);
-                // Show user-friendly message
-                this.showNotification('Audio file not found or cannot be played');
-            });
-        }
-    }
-
-    previousTrack() {
-        this.currentTrack = (this.currentTrack - 1 + this.playlist.length) % this.playlist.length;
-        this.loadTrack(this.currentTrack);
-        if (this.isPlaying) {
-            this.audio.play();
-        }
-    }
-
-    nextTrack() {
-        this.currentTrack = (this.currentTrack + 1) % this.playlist.length;
-        this.loadTrack(this.currentTrack);
-        if (this.isPlaying) {
-            this.audio.play();
-        }
-    }
-
-    updateProgress() {
-        if (this.audio.duration) {
-            const percent = (this.audio.currentTime / this.audio.duration) * 100;
-            const progressFill = document.getElementById('progressFill');
-            const currentTime = document.getElementById('currentTime');
-
-            if (progressFill) {
-                progressFill.style.width = percent + '%';
-            }
-            if (currentTime) {
-                currentTime.textContent = this.formatTime(this.audio.currentTime);
-            }
-        }
-    }
-
-    updateDuration() {
-        const totalTime = document.getElementById('totalTime');
-        if (totalTime && this.audio.duration) {
-            totalTime.textContent = this.formatTime(this.audio.duration);
-        }
-    }
-
-    formatTime(seconds) {
-        if (isNaN(seconds)) return '0:00';
-        const minutes = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${minutes}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    // FIXED: Toggle minimize function
-    toggleMinimize() {
-        this.isMinimized = !this.isMinimized;
-        const player = document.getElementById('musicPlayer');
-        const minimizeBtn = document.getElementById('minimizeBtn');
-
-        if (!player || !minimizeBtn) return;
-
-        if (this.isMinimized) {
-            player.classList.add('minimized');
-            minimizeBtn.innerHTML = '<i class="fas fa-expand"></i>';
-        } else {
-            player.classList.remove('minimized');
-            minimizeBtn.innerHTML = '<i class="fas fa-minus"></i>';
-        }
-    }
-
-    // Utility function to show notifications
-    showNotification(message) {
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 107, 107, 0.9);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            z-index: 1001;
-            font-size: 0.9rem;
-            animation: slideIn 0.3s ease;
-        `;
-        notification.textContent = message;
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }, 3000);
-    }
+    const btn = document.getElementById('tray-music');
+    if (btn) btn.classList.toggle('playing', musicPlaying);
+  }
 }
 
-// UPDATED: Initialize music player with proper error handling
-// document.addEventListener('DOMContentLoaded', () => {
-//     // Initialize existing portfolio functionality
-//     if (typeof initializePortfolio === 'function') {
-//         initializePortfolio();
-//     }
-//
-//     // Initialize music player with delay to ensure DOM is ready
-//     setTimeout(() => {
-//         try {
-//             const musicPlayerElement = document.getElementById('musicPlayer');
-//             if (musicPlayerElement) {
-//                 new MusicPlayer();
-//                 console.log('Music player initialized successfully');
-//             } else {
-//                 console.warn('Music player element not found');
-//             }
-//         } catch (error) {
-//             console.error('Error initializing music player:', error);
-//         }
-//     }, 1000);
-// });
+let player;
+function toggleMusic() {
+  if (!player) player = new MusicPlayer();
+  player.toggle();
+}
 
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        try {
-            const musicPlayerElement = document.getElementById('musicPlayer');
-            if (musicPlayerElement) {
-                new MusicPlayer();
-                console.log('Music player initialized');
-            }
-        } catch (error) {
-            console.error('Music player error:', error);
-        }
-    }, 1000);
+/* ==============================================
+   Boot Sequence
+   ============================================== */
+function bootSequence() {
+  const boot = document.getElementById('boot-screen');
+  if (!boot) return;
+  setTimeout(() => {
+    boot.classList.add('fade-out');
+    setTimeout(() => boot.remove(), 800);
+  }, 2200);
+}
+
+/* ==============================================
+   Init
+   ============================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  // Apply saved theme
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  if (currentTheme === 'light') {
+    const trayBtn = document.getElementById('tray-theme');
+    if (trayBtn) trayBtn.innerHTML = '<i class="fas fa-sun"></i>';
+  }
+
+  // Apply saved lang
+  const savedFlag = currentLang === 'en' ? '🇺🇸' : '🇻🇳';
+  const trayFlag = document.getElementById('tray-flag');
+  if (trayFlag) trayFlag.textContent = savedFlag;
+
+  createParticles();
+  updateClock();
+  setInterval(updateClock, 1000);
+  setupDesktopIconSelection();
+  bootSequence();
 });
