@@ -1,729 +1,148 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Quoc Viet - Portfolio</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-    <!-- Import CSS files in correct order -->
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/hero.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/forms.css">
-    <link rel="stylesheet" href="css/effects.css">
-
-    <!-- External CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- GSAP Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le Quoc Viet — Portfolio</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/desktop.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-<!-- Particles Background -->
-<div class="particles"></div>
 
-<!-- Floating Elements -->
-<div class="floating-elements">
-    <div class="floating-element element-1"></div>
-    <div class="floating-element element-2"></div>
-    <div class="floating-element element-3"></div>
-    <div class="floating-element element-4"></div>
-    <div class="floating-element element-5"></div>
-</div>
+<div id="desktop">
 
-<!-- Header -->
-<header>
-    <nav>
-        <div class="logo">
-            <span class="logo-text">LQV</span>
-            <div class="logo-dot"></div>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#about" data-lang="nav-about">About</a></li>
-            <li><a href="#skills" data-lang="nav-skills">Skills</a></li>
-            <li><a href="#experience" data-lang="nav-experience">Experience</a></li>
-            <li><a href="#projects" data-lang="nav-projects">Projects</a></li>
-            <li><a href="#certificates" data-lang="nav-certificates">Certificates</a></li>
-            <li><a href="#contact" data-lang="nav-contact">Contact</a></li>
-        </ul>
-        <div class="header-controls">
-            <div class="language-toggle">
-                <button id="lang-toggle" class="lang-btn">
-                    <span class="flag">🇻🇳</span>
-                    <span class="lang-text">VI</span>
-                </button>
-            </div>
-            <button class="theme-toggle">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
-        <button class="menu-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </nav>
-</header>
-
-<!-- Hero Section -->
-<section class="hero">
-    <div class="hero-background">
-        <div class="grid-overlay"></div>
-        <div class="gradient-orb orb-1"></div>
-        <div class="gradient-orb orb-2"></div>
-        <div class="gradient-orb orb-3"></div>
+  <!-- Boot Screen -->
+  <div id="boot-screen">
+    <div class="boot-logo">LQV</div>
+    <div class="boot-subtitle">Portfolio OS — Loading...</div>
+    <div class="boot-bar-wrap">
+      <div class="boot-bar"></div>
     </div>
-    <div class="hero-content">
-        <div class="profile-container">
-            <div class="profile-image">
-                <img src="face-img.png" alt="Profile Picture" class="profile-img" loading="lazy">
-                <div class="profile-ring"></div>
-            </div>
-            <div class="status-indicator">
-                <div class="status-dot"></div>
-                <span data-lang="status-available">Available for work</span>
-            </div>
-        </div>
-        <div class="hero-text">
-            <h1 data-lang="hero-title">Le Quoc Viet</h1>
-            <div class="subtitle-container">
-                <p class="subtitle" data-lang="hero-subtitle">Backend Developer</p>
-                <div class="typing-cursor"></div>
-            </div>
-            <p class="description" data-lang="hero-description">
-                Passionate about building scalable backend systems with experience in microservices architecture.
-                Currently developing a core banking platform using Java, Spring Boot, and Oracle, specializing in
-                high-throughput transaction processing and distributed systems.
-            </p>
-            <div class="hero-buttons">
-                <a href="#contact" class="cta-button primary" data-lang="cta-contact">
-                    <span>Let's Work Together</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-                <a href="#projects" class="cta-button secondary" data-lang="cta-projects">
-                    <span>View Projects</span>
-                    <i class="fas fa-eye"></i>
-                </a>
-            </div>
-        </div>
+  </div>
+
+  <!-- Wallpaper -->
+  <div id="wallpaper">
+    <div class="particles" id="particles"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Desktop Icons -->
+  <div id="desktop-icons">
+    <div class="desktop-icon" data-app="about" ondblclick="openApp('about')">
+      <div class="icon-img"><i class="fas fa-user-circle" style="color:#6366f1"></i></div>
+      <span>About_Me.txt</span>
     </div>
-    <!--    <div class="scroll-indicator">-->
-    <!--        <div class="scroll-line"></div>-->
-    <!--        <span data-lang="scroll-text">Scroll to explore</span>-->
-    <!--    </div>-->
-</section>
-
-<!-- About Section -->
-<section id="about" class="section">
-    <div class="container">
-        <div class="section-header">
-            <h2 data-lang="about-title">About Me</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="about-content">
-            <div class="about-text">
-                <p data-lang="about-description">
-                    Graduated with a Bachelor's in Information Technology from FPT University (GPA: 7.92/10). Currently
-                    working as a Backend Developer on CoreSL — a microservices-based core banking system for Certificate
-                    of Deposit management using Java, Spring Boot, Oracle, and Redis. Previously built
-                    production-level backend systems at Amazing Tech across tax invoicing, water management, and
-                    construction domains.
-                </p>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-number">2+</div>
-                        <div class="stat-label" data-lang="stat-experience">Years Experience</div>
-                    </div>
-<!--                    <div class="stat-item">-->
-<!--                        <div class="stat-number">10+</div>-->
-<!--                        <div class="stat-label" data-lang="stat-projects">Projects Completed</div>-->
-<!--                    </div>-->
-                    <div class="stat-item">
-                        <div class="stat-number">7.92</div>
-                        <div class="stat-label" data-lang="stat-gpa">GPA Score</div>
-                    </div>
-                </div>
-            </div>
-            <div class="about-visual">
-                <div class="code-snippet">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <span>Developer.java</span>
-                    </div>
-                    <div class="code-content">
-                        <div class="code-line">
-                            <span class="code-keyword">public class</span>
-                            <span class="code-class">Developer</span>
-                            <span class="code-punctuation"> {</span>
-                        </div>
-                        <div class="code-line code-indent">
-                            <span class="code-keyword">String</span>
-                            <span class="code-property">name</span>
-                            <span class="code-punctuation"> = </span>
-                            <span class="code-string">"Le Quoc Viet"</span>
-                            <span class="code-punctuation">;</span>
-                        </div>
-                        <div class="code-line code-indent">
-                            <span class="code-keyword">String</span>
-                            <span class="code-property">role</span>
-                            <span class="code-punctuation"> = </span>
-                            <span class="code-string">"Backend Developer"</span>
-                            <span class="code-punctuation">;</span>
-                        </div>
-                        <div class="code-line code-indent">
-                            <span class="code-keyword">boolean</span>
-                            <span class="code-property">isPassionate</span>
-                            <span class="code-punctuation"> = </span>
-                            <span class="code-boolean">true</span>
-                            <span class="code-punctuation">;</span>
-                        </div>
-                        <div class="code-line">
-                            <span class="code-punctuation">}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="desktop-icon" data-app="experience" ondblclick="openApp('experience')">
+      <div class="icon-img"><i class="fas fa-folder" style="color:#f59e0b"></i></div>
+      <span>Experience/</span>
     </div>
-</section>
-
-<!-- Skills Section -->
-<section id="skills" class="section">
-    <div class="container">
-        <div class="section-header">
-            <h2 data-lang="skills-title">Technical Skills</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="skills-grid">
-            <div class="skill-category">
-                <div class="skill-card">
-                    <div class="skill-icon">
-                        <i class="fas fa-server"></i>
-                    </div>
-                    <h3 data-lang="backend-title">Backend Development</h3>
-                    <div class="skill-list">
-                        <div class="skill-item">
-                            <i class="fab fa-java"></i>
-                            <span>Java</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-java"></i>
-                            <span>Spring Boot</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-microsoft"></i>
-                            <span>ASP.NET Core</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-code"></i>
-                            <span>C#</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="skill-category">
-                <div class="skill-card">
-                    <div class="skill-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <h3 data-lang="database-title">Database</h3>
-                    <div class="skill-list">
-                        <div class="skill-item">
-                            <i class="fas fa-database"></i>
-                            <span>Oracle</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-database"></i>
-                            <span>SQL Server</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-database"></i>
-                            <span>PostgreSQL</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-memory"></i>
-                            <span>Redis</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="skill-category">
-                <div class="skill-card">
-                    <div class="skill-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <h3 data-lang="tools-title">Tools & Technologies</h3>
-                    <div class="skill-list">
-                        <div class="skill-item">
-                            <i class="fab fa-git-alt"></i>
-                            <span>Git</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-docker"></i>
-                            <span>Docker</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-dharmachakra"></i>
-                            <span>Kubernetes/OpenShift</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-wind"></i>
-                            <span>Apache Airflow</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="skill-category">
-                <div class="skill-card">
-                    <div class="skill-icon">
-                        <i class="fas fa-laptop-code"></i>
-                    </div>
-                    <h3 data-lang="frontend-title">Frontend</h3>
-                    <div class="skill-list">
-                        <div class="skill-item">
-                            <i class="fab fa-html5"></i>
-                            <span>HTML5</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-css3-alt"></i>
-                            <span>CSS3</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-js"></i>
-                            <span>JavaScript</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-react"></i>
-                            <span>React</span>
-                            <div class="skill-level" data-level="100"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="desktop-icon" data-app="projects" ondblclick="openApp('projects')">
+      <div class="icon-img"><i class="fas fa-folder-open" style="color:#f59e0b"></i></div>
+      <span>Projects/</span>
     </div>
-</section>
-
-<!-- Experience Section -->
-<section id="experience" class="section">
-    <div class="container">
-        <div class="section-header">
-            <h2 data-lang="experience-title">Experience</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <div class="experience-card">
-                        <div class="experience-header">
-                            <h3 data-lang="exp2-title">Backend Developer</h3>
-                            <div class="company-info">
-                                <span class="company" data-lang="exp2-company">Sacombank</span>
-                                <span class="date" data-lang="exp2-date">Present</span>
-                            </div>
-                        </div>
-                        <div class="experience-description">
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-landmark"></i>
-                                </div>
-                                <p data-lang="exp2-desc1">
-                                    Developed CD issuance API with PaymentHub/T24 integration. Built CD buying API with
-                                    interest-rate-based pricing formula, lot locking mechanism, and Redis-based
-                                    idempotency. Developed CD selling API supporting 3 sell modes (by quantity, by
-                                    amount, sell all) with a prioritization algorithm based on maturity and purchase date.
-                                </p>
-                            </div>
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-robot"></i>
-                                </div>
-                                <p data-lang="exp2-desc2">
-                                    Built Apache Airflow DAGs for automated bulk CD purchasing: 4-step pipeline with lot
-                                    allocation algorithm by customer segment. Optimized DAG performance by migrating to
-                                    async batch processing (aiohttp + semaphore) and moving large inter-task datasets
-                                    (&gt;2,000 records) from XCom to Redis.
-                                </p>
-                            </div>
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-network-wired"></i>
-                                </div>
-                                <p data-lang="exp2-desc3">
-                                    Integrated ODS (balance inquiry), PaymentHub/T24, and interest rate API via
-                                    OpenFeign. Implemented distributed locking and built configuration management APIs
-                                    for buy/sell limits and interest rate tables. Fixed security vulnerabilities
-                                    identified by BlackDuck and Coverity. Deployed on Kubernetes/OpenShift.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <div class="experience-card">
-                        <div class="experience-header">
-                            <h3 data-lang="exp1-title">Backend Developer</h3>
-                            <div class="company-info">
-                                <span class="company" data-lang="exp1-company">Amazing Tech</span>
-                                <span class="date" data-lang="exp1-date">9 months</span>
-                            </div>
-                        </div>
-                        <div class="experience-description">
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-receipt"></i>
-                                </div>
-                                <p data-lang="exp1-desc1">
-                                    Developed a Node.js web API for creating tax invoices for businesses, integrating
-                                    with Odoo for data storage and facilitating connections with the Malaysian
-                                    government. Implemented robust OTP validation for enhanced security.
-                                </p>
-                            </div>
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-tint"></i>
-                                </div>
-                                <p data-lang="exp1-desc2">
-                                    Built a comprehensive water plant management system. Designed and implemented APIs
-                                    for complex data queries and statistical reports with Excel export functionality.
-                                    Optimized performance using Dapper and stored procedures.
-                                </p>
-                            </div>
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-building"></i>
-                                </div>
-                                <p data-lang="exp1-desc3">
-                                    Developed a web application for tracking and managing concrete piles in construction
-                                    projects. Collaborated with stakeholders to gather requirements and designed the
-                                    initial database structure and feature specifications.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="desktop-icon" data-app="skills" ondblclick="openApp('skills')">
+      <div class="icon-img"><i class="fas fa-code" style="color:#a855f7"></i></div>
+      <span>skills.json</span>
     </div>
-</section>
-
-<!-- Projects Section -->
-<section id="projects" class="section">
-    <div class="container">
-        <div class="section-header">
-            <h2 data-lang="projects-title">Featured Projects</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-header">
-<!--                    <div class="project-links">-->
-<!--                        <a href="#" class="project-link" title="View GitHub Repository">-->
-<!--                            <i class="fab fa-github"></i>-->
-<!--                        </a>-->
-<!--                        <a href="#" class="project-link" title="Live Demo">-->
-<!--                            <i class="fas fa-external-link-alt"></i>-->
-<!--                        </a>-->
-<!--                    </div>-->
-                </div>
-                <div class="project-content">
-                    <h3 data-lang="project1-title">FPTU Examination System</h3>
-                    <p data-lang="project1-desc">
-                        A comprehensive mobile and web system for FPTU Examination Office with AI chatbot integration.
-                        Built with modern architecture patterns and real-time features.
-                    </p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">ASP.NET Core</span>
-                        <span class="tech-tag">React</span>
-                        <span class="tech-tag">SQL Server</span>
-                        <span class="tech-tag">SignalR</span>
-                    </div>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-header">
-<!--                    <div class="project-links">-->
-<!--                        <a href="#" class="project-link" title="View GitHub Repository">-->
-<!--                            <i class="fab fa-github"></i>-->
-<!--                        </a>-->
-<!--                        <a href="#" class="project-link" title="Live Demo">-->
-<!--                            <i class="fas fa-external-link-alt"></i>-->
-<!--                        </a>-->
-<!--                    </div>-->
-                </div>
-                <div class="project-content">
-                    <h3 data-lang="project2-title">Gym Management System</h3>
-                    <p data-lang="project2-desc">
-                        Full-stack gym management system handling members, subscriptions, and operations with integrated
-                        payment processing and admin interface.
-                    </p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">ASP.NET Core</span>
-                        <span class="tech-tag">PostgreSQL</span>
-                        <span class="tech-tag">NextJS</span>
-                        <span class="tech-tag">PayOS</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="desktop-icon" data-app="terminal" ondblclick="openApp('terminal')">
+      <div class="icon-img"><i class="fas fa-terminal" style="color:#22c55e"></i></div>
+      <span>Terminal</span>
     </div>
-</section>
-
-<!-- Certificates Section -->
-<section id="certificates" class="section">
-    <div class="container">
-        <div class="section-header">
-            <h2 data-lang="certificates-title">Certificates & Achievements</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="certificates-grid">
-            <div class="certificate-card">
-                <div class="certificate-header">
-                    <div class="certificate-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <div class="certificate-badge">
-                        <span data-lang="cert-verified">Verified</span>
-                    </div>
-                </div>
-                <div class="certificate-content">
-                    <h3 data-lang="cert1-title">Software Development Lifecycle</h3>
-                    <div class="certificate-meta">
-                        <span class="issuer" data-lang="cert1-issuer">University of Minnesota in Coursera</span>
-                    </div>
-                    <p data-lang="cert1-desc">Software Development Processes and Methodologies.</p>
-                    <a href="https://coursera.org/share/d6d4b9c8125ac11f4132a6012dbcef5f" class="cert-link"
-                       data-lang="cert-view">
-                        <span>View Certificate</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="certificate-card">
-                <div class="certificate-header">
-                    <div class="certificate-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <div class="certificate-badge">
-                        <span data-lang="cert-verified">Verified</span>
-                    </div>
-                </div>
-                <div class="certificate-content">
-                    <h3 data-lang="cert2-title">Backend Development</h3>
-                    <div class="certificate-meta">
-                        <span class="issuer" data-lang="cert2-issuer">Microsoft in Coursera</span>
-                    </div>
-                    <p data-lang="cert2-desc">Comprehensive course covering backend development fundamentals, including
-                        databases, APIs, and server-side programming.</p>
-                    <a href="https://coursera.org/share/e13540f572707149f36db01d7e93e34c" class="cert-link"
-                       data-lang="cert-view">
-                        <span>View Certificate</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="certificate-card">
-                <div class="certificate-header">
-                    <div class="certificate-icon">
-                        <i class="fab fa-microsoft"></i>
-                    </div>
-                    <div class="certificate-badge">
-                        <span data-lang="cert-verified">Verified</span>
-                    </div>
-                </div>
-                <div class="certificate-content">
-                    <h3 data-lang="cert3-title">C# Programming</h3>
-                    <div class="certificate-meta">
-                        <span class="issuer" data-lang="cert3-issuer">Microsoft in FreeCodeCamp</span>
-                    </div>
-                    <p data-lang="cert3-desc">Introduction to C# programming language, covering syntax, data types, and
-                        basic programming concepts.</p>
-                    <a href="https://www.freecodecamp.org/certification/viet455/foundational-c-sharp-with-microsoft"
-                       class="cert-link" data-lang="cert-view">
-                        <span>View Certificate</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+    <div class="desktop-icon" data-app="certificates" ondblclick="openApp('certificates')">
+      <div class="icon-img"><i class="fas fa-certificate" style="color:#f59e0b"></i></div>
+      <span>Certificates/</span>
     </div>
-</section>
-
-<!-- Contact Section -->
-<section id="contact" class="section">
-    <div class="container">
-        <div class="section-header">
-            <h2 data-lang="contact-title">Let's Connect</h2>
-            <div class="section-line"></div>
-            <p data-lang="contact-subtitle">Ready to bring your ideas to life? Let's discuss your next project.</p>
-        </div>
-        <div class="contact-content">
-            <div class="contact-info">
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="contact-details">
-                        <h4 data-lang="contact-email-title">Email</h4>
-                        <a href="mailto:lqviet455@gmail.com">lqviet455@gmail.com</a>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <div class="contact-details">
-                        <h4 data-lang="contact-phone-title">Phone</h4>
-                        <a href="tel:+84353081770">+84 353 081 770</a>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fab fa-facebook"></i>
-                    </div>
-                    <div class="contact-details">
-                        <h4 data-lang="contact-facebook-title">Facebook</h4>
-                        <a href="https://facebook.com/yourprofile" target="_blank">
-                            Le Quoc Viet
-                        </a>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fab fa-github"></i>
-                    </div>
-                    <div class="contact-details">
-                        <h4 data-lang="contact-github-title">GitHub</h4>
-                        <a href="https://github.com/Lqviet45" target="_blank">@Lqviet45</a>
-                    </div>
-                </div>
-            </div>
-            <div class="contact-form">
-                <form id="contact-form">
-                    <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder=" " required>
-                        <label for="name" data-lang="form-name">Your Name</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder=" " required>
-                        <label for="email" data-lang="form-email">Your Email</label>
-                    </div>
-                    <div class="form-group">
-                        <textarea id="message" name="message" rows="5" placeholder=" " required></textarea>
-                        <label for="message" data-lang="form-message">Your Message</label>
-                    </div>
-                    <button type="submit" class="submit-btn" data-lang="form-submit">
-                        <span>Send Message</span>
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
+    <div class="desktop-icon" data-app="contact" ondblclick="openApp('contact')">
+      <div class="icon-img"><i class="fas fa-address-card" style="color:#a855f7"></i></div>
+      <span>Contact.lnk</span>
     </div>
-</section>
-
-<!-- Footer -->
-<footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-left">
-                <p data-lang="footer-text">&copy; 2025 Le Quoc Viet. All rights reserved.</p>
-            </div>
-            <div class="footer-right">
-                <div class="social-links">
-                    <a href="https://linkedin.com/in/le-viet-a03721240" target="_blank" class="social-link">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="https://github.com/Lqviet45" target="_blank" class="social-link">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://www.facebook.com/le.quoc.viet.692602/" target="_blank" class="social-link">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+    <div class="desktop-icon" data-app="recycle" ondblclick="openApp('recycle')">
+      <div class="icon-img"><i class="fas fa-trash-alt" style="color:#6b7280"></i></div>
+      <span>Recycle Bin</span>
     </div>
-</footer>
+  </div>
 
-<!-- Music Player -->
-<div class="music-player" id="musicPlayer">
-    <div class="player-header">
-        <span class="player-title">🎵 Now Playing</span>
-        <button class="minimize-btn" id="minimizeBtn">
-            <i class="fas fa-minus"></i>
-        </button>
+  <!-- Windows Container -->
+  <div id="windows-container"></div>
+
+  <!-- Start Menu -->
+  <div id="start-menu" class="hidden">
+    <div class="sm-profile">
+      <img src="face-img.png" alt="Avatar" class="sm-avatar">
+      <div class="sm-info">
+        <div class="sm-name">Le Quoc Viet</div>
+        <div class="sm-role">Backend Developer @ Sacombank</div>
+      </div>
     </div>
-
-    <div class="player-content">
-        <div class="track-info">
-            <div class="track-title" id="trackTitle">Select a song</div>
-            <div class="track-artist" id="trackArtist">No artist</div>
-        </div>
-
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="time-display">
-                <span id="currentTime">0:00</span>
-                <span id="totalTime">0:00</span>
-            </div>
-        </div>
-
-        <div class="player-controls">
-            <button class="control-btn" id="prevBtn">
-                <i class="fas fa-step-backward"></i>
-            </button>
-            <button class="play-pause-btn" id="playPauseBtn">
-                <i class="fas fa-play"></i>
-            </button>
-            <button class="control-btn" id="nextBtn">
-                <i class="fas fa-step-forward"></i>
-            </button>
-        </div>
-
-        <div class="volume-control">
-            <i class="fas fa-volume-down"></i>
-            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="30">
-            <i class="fas fa-volume-up"></i>
-        </div>
-
-        <div class="playlist" id="playlist"></div>
+    <div class="sm-grid">
+      <button class="sm-app" onclick="openApp('about');closeStartMenu()">
+        <i class="fas fa-user-circle"></i><span>About</span>
+      </button>
+      <button class="sm-app" onclick="openApp('experience');closeStartMenu()">
+        <i class="fas fa-folder"></i><span>Experience</span>
+      </button>
+      <button class="sm-app" onclick="openApp('projects');closeStartMenu()">
+        <i class="fas fa-folder-open"></i><span>Projects</span>
+      </button>
+      <button class="sm-app" onclick="openApp('skills');closeStartMenu()">
+        <i class="fas fa-code"></i><span>Skills</span>
+      </button>
+      <button class="sm-app" onclick="openApp('terminal');closeStartMenu()">
+        <i class="fas fa-terminal"></i><span>Terminal</span>
+      </button>
+      <button class="sm-app" onclick="openApp('certificates');closeStartMenu()">
+        <i class="fas fa-certificate"></i><span>Certs</span>
+      </button>
+      <button class="sm-app" onclick="openApp('contact');closeStartMenu()">
+        <i class="fas fa-address-card"></i><span>Contact</span>
+      </button>
+      <button class="sm-app" onclick="openApp('recycle');closeStartMenu()">
+        <i class="fas fa-trash-alt"></i><span>Recycle</span>
+      </button>
     </div>
-</div>
+    <div class="sm-footer">
+      <button class="sm-footer-btn" id="sm-theme-btn" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i> Theme
+      </button>
+      <button class="sm-footer-btn" id="sm-lang-btn" onclick="toggleLang()">
+        <span>🇻🇳</span> Lang
+      </button>
+    </div>
+  </div>
 
-<!-- Hidden audio element -->
-<audio id="audioPlayer" preload="metadata"></audio>
+  <!-- Taskbar -->
+  <div id="taskbar">
+    <button id="start-btn" onclick="toggleStartMenu()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/>
+      </svg>
+    </button>
+    <div id="taskbar-items"></div>
+    <div id="system-tray">
+      <button class="tray-btn" id="tray-theme" title="Toggle theme" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="tray-btn" id="tray-lang" title="Toggle language" onclick="toggleLang()">
+        <span id="tray-flag">🇻🇳</span>
+      </button>
+      <button class="tray-btn tray-music" id="tray-music" title="Music" onclick="toggleMusic()">
+        <i class="fas fa-music"></i>
+      </button>
+      <div id="tray-clock">
+        <span id="clock-time">00:00</span>
+        <span id="clock-date">Mon 01</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- #desktop -->
+
+<audio id="audioPlayer" loop></audio>
 <script src="app.js"></script>
 </body>
 </html>
