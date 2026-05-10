@@ -65,6 +65,10 @@
       <div class="icon-img"><i class="fas fa-trash-alt" style="color:#6b7280"></i></div>
       <span>Recycle Bin</span>
     </div>
+    <div class="desktop-icon" data-app="browser" ondblclick="openApp('browser')">
+      <div class="icon-img"><i class="fas fa-globe" style="color:#3b82f6"></i></div>
+      <span>Browser.app</span>
+    </div>
   </div>
 
   <!-- Windows Container -->
@@ -103,6 +107,9 @@
       </button>
       <button class="sm-app" onclick="openApp('recycle');closeStartMenu()">
         <i class="fas fa-trash-alt"></i><span>Recycle</span>
+      </button>
+      <button class="sm-app" onclick="openApp('browser');closeStartMenu()">
+        <i class="fas fa-globe"></i><span>Browser</span>
       </button>
     </div>
     <div class="sm-footer">
