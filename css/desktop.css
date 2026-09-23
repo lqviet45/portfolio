@@ -203,10 +203,11 @@ body {
   bottom: calc(var(--taskbar-height) + 16px);
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
   gap: 8px;
   z-index: 10;
   align-items: center;
-  width: 88px;
 }
 
 .desktop-icon {
