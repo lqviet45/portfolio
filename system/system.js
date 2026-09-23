@@ -1,6 +1,6 @@
 /* ==============================================
    LQV/SYS — a portfolio you can send requests through
-   Vanilla JS, no framework
+   Vanilla JS, no framework · EN / VI
    ============================================== */
 
 'use strict';
@@ -15,92 +15,252 @@ const hex = n => Array.from({ length: n }, () => Math.floor(Math.random() * 16).
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 /* ==============================================
+   i18n
+   ============================================== */
+const LANGS = ['en', 'vi'];
+let LANG = detectLang();
+
+function detectLang() {
+  const q = new URLSearchParams(location.search).get('lang');
+  if (LANGS.includes(q)) return q;
+  try {
+    const saved = localStorage.getItem('lqv-sys-lang');
+    if (LANGS.includes(saved)) return saved;
+  } catch { /* storage unavailable */ }
+  return (navigator.language || '').toLowerCase().startsWith('vi') ? 'vi' : 'en';
+}
+
+/* L('english', 'tiếng việt') — inline pair */
+const L = (en, vi) => (LANG === 'vi' ? vi : en);
+/* tr({en, vi}) — localized value, plain values pass through */
+const tr = v => (v && typeof v === 'object' && !Array.isArray(v) && 'en' in v ? (v[LANG] ?? v.en) : v);
+
+/* Static strings in index.html, keyed by data-i18n (innerHTML) */
+const STATIC = {
+  'region':        ['region', 'vùng'],
+  'classic':       ['classic&nbsp;OS&nbsp;↗', 'bản&nbsp;OS&nbsp;cổ&nbsp;điển&nbsp;↗'],
+  'eyebrow.a':     ['service manifest', 'service manifest'],
+  'eyebrow.owner': ['owner', 'chủ sở hữu'],
+  'lede': [
+    'Backend developer. I build systems where money moves <em>exactly once</em> — core-banking microservices at <b>Sacombank</b>, in Java/Spring Boot and .NET/C#.',
+    'Backend developer. Tôi xây những hệ thống mà tiền chỉ được chuyển <em>đúng một lần</em> — microservices core-banking tại <b>Sacombank</b>, bằng Java/Spring Boot và .NET/C#.'
+  ],
+  'hint': [
+    'This page <em>is</em> the system. Click any node, fire a request, or break it on purpose.',
+    'Trang này <em>chính là</em> hệ thống. Bấm vào node bất kỳ, gửi request, hoặc cố tình phá nó.'
+  ],
+  'contact':       ['contact →', 'liên hệ →'],
+  'stat.uptime':   ['uptime (since 2023-12)', 'uptime (từ 12/2023)'],
+  'stat.platforms':['core-banking platforms', 'nền tảng core-banking'],
+  'stat.partners': ['partner banks integrated', 'ngân hàng đối tác đã tích hợp'],
+  'stat.requests': ['requests this session', 'request trong phiên này'],
+  'topology':      ['topology', 'sơ đồ'],
+  'legend.sync':   ['sync', 'đồng bộ'],
+  'legend.async':  ['async', 'bất đồng bộ'],
+  'legend.fail':   ['failed', 'lỗi'],
+  'topo.foot': [
+    '↑ click a node to inspect it · packets are real clicks on this page, plus some ambient traffic',
+    '↑ bấm vào một node để xem chi tiết · mỗi gói tin là một cú click thật trên trang, cộng thêm chút traffic nền'
+  ],
+  'tab.trace':     ['trace <span class="muted">· career waterfall</span>', 'trace <span class="muted">· dòng thời gian sự nghiệp</span>'],
+  'tab.events':    ['kafka <span class="muted">· career.events</span>', 'kafka <span class="muted">· career.events</span>'],
+  'tab.console':   ['console <span class="muted">· curl it</span>', 'console <span class="muted">· thử curl</span>'],
+  'trace.hint':    ['click a span for attributes', 'bấm vào span để xem thuộc tính'],
+  'send':          ['send', 'gửi'],
+  'footer':        ['built with vanilla JS, no frameworks were harmed', 'viết bằng vanilla JS, không framework nào bị tổn hại']
+};
+
+const ARIA = {
+  'theme':   ['Toggle theme', 'Đổi giao diện sáng/tối'],
+  'lang':    ['Chuyển sang tiếng Việt', 'Switch to English'],
+  'close':   ['Close', 'Đóng'],
+  'topo':    ["Interactive system topology of Le Quoc Viet's career", 'Sơ đồ hệ thống tương tác về sự nghiệp của Lê Quốc Việt'],
+  'api':     ['API path', 'Đường dẫn API']
+};
+
+function applyStatic() {
+  const i = LANG === 'vi' ? 1 : 0;
+  document.documentElement.lang = LANG;
+  $$('[data-i18n]').forEach(el => {
+    const pair = STATIC[el.dataset.i18n];
+    if (pair) el.innerHTML = pair[i];
+  });
+  $$('[data-i18n-aria]').forEach(el => {
+    const pair = ARIA[el.dataset.i18nAria];
+    if (pair) { el.setAttribute('aria-label', pair[i]); el.title = pair[i]; }
+  });
+  $('#lang-btn').textContent = LANG === 'vi' ? 'EN' : 'VI';
+  $('#chaos-state').textContent = chaosOn ? L('ON', 'BẬT') : L('off', 'tắt');
+  $('#events-toggle').textContent = evPaused ? L('resume', 'tiếp tục') : L('pause', 'tạm dừng');
+}
+
+function setLang(lang) {
+  LANG = lang;
+  try { localStorage.setItem('lqv-sys-lang', lang); } catch { /* ignore */ }
+  applyStatic();
+  updateClusterStatus();
+  if (selected) select(selected, { silent: true });
+  renderTrace();
+  setupConsoleIntro(true);
+  tickClock();
+  emit('i18n.changed', `{lang:"${lang}"}`, 'user');
+}
+
+/* ==============================================
    Profile data (source: CV)
    ============================================== */
 const PROFILE = {
-  name: 'Le Quoc Viet',
+  name: { en: 'Le Quoc Viet', vi: 'Lê Quốc Việt' },
   role: 'Backend Developer — Java / Spring Boot · .NET / C#',
   company: 'Sacombank',
-  location: 'Bac Son, Trang Bom, Dong Nai, Vietnam',
+  location: { en: 'Bac Son, Trang Bom, Dong Nai, Vietnam', vi: 'Bắc Sơn, Trảng Bom, Đồng Nai, Việt Nam' },
   email: 'lqviet455@gmail.com',
   phone: '+84 353 081 770',
   github: 'https://github.com/lqviet45',
   linkedin: 'https://www.linkedin.com/in/le-quoc-viet-a03721240',
-  summary: 'Junior Backend Developer with ~2 years of hands-on experience across Java/Spring Boot and .NET/C#. ' +
-    'Currently building core-banking microservices at Sacombank, across two platforms — CoreCD/CoreSL ' +
-    '(certificate-of-deposit trading) and the MCS Bill System (virtual-account partner integration) — working with ' +
-    'Saga orchestration, the Outbox pattern, idempotent APIs, Oracle, Redis, Kafka and IBM MQ.',
-  education: { school: 'FPT University, HCM City', degree: 'Bachelor of IT — Software Engineering', gpa: '7.92/10 (3.16/4)', graduated: '05/2025' },
+  summary: {
+    en: 'Junior Backend Developer with ~2 years of hands-on experience across Java/Spring Boot and .NET/C#. ' +
+      'Currently building core-banking microservices at Sacombank, across two platforms — CoreCD/CoreSL ' +
+      '(certificate-of-deposit trading) and the MCS Bill System (virtual-account partner integration) — working with ' +
+      'Saga orchestration, the Outbox pattern, idempotent APIs, Oracle, Redis, Kafka and IBM MQ.',
+    vi: 'Junior Backend Developer với ~2 năm kinh nghiệm thực tế trên Java/Spring Boot và .NET/C#. ' +
+      'Hiện đang xây dựng microservices core-banking tại Sacombank trên hai nền tảng — CoreCD/CoreSL ' +
+      '(giao dịch chứng chỉ tiền gửi) và MCS Bill System (tích hợp tài khoản định danh với đối tác) — làm việc với ' +
+      'Saga orchestration, Outbox pattern, API idempotent, Oracle, Redis, Kafka và IBM MQ.'
+  },
+  summary2: {
+    en: 'Designs and ships distributed systems end-to-end, including a personal multi-tenant notification platform. ' +
+      'Comfortable with clean architecture, RESTful API design, CI/CD and containerized deployment — and committed to continuous learning.',
+    vi: 'Thiết kế và triển khai hệ thống phân tán end-to-end, bao gồm một nền tảng thông báo đa tenant do tôi tự làm. ' +
+      'Quen với clean architecture, thiết kế RESTful API, CI/CD và triển khai bằng container — và luôn học hỏi không ngừng.'
+  },
+  education: {
+    school: { en: 'FPT University, HCM City', vi: 'Đại học FPT, TP.HCM' },
+    degree: { en: 'Bachelor of IT — Software Engineering', vi: 'Cử nhân CNTT — Kỹ thuật phần mềm' },
+    gpa: '7.92/10 (3.16/4)',
+    graduated: '05/2025'
+  },
   certs: [
     { name: 'Software Development Lifecycle', by: 'Coursera', url: 'https://coursera.org/share/d6d4b9c8125ac11f4132a6012dbcef5f' },
     { name: 'Microsoft Back-End Developer', by: 'Coursera', url: 'https://coursera.org/share/e13540f572707149f36db01d7e93e34c' },
     { name: 'Foundational C# with Microsoft', by: 'freeCodeCamp', url: 'https://www.freecodecamp.org/certification/viet455/foundational-c-sharp-with-microsoft' }
   ],
-  skills: {
-    'Languages': ['Java', 'C#', 'JavaScript', 'SQL', 'HTML/CSS'],
-    'Frameworks & Libraries': ['Spring Boot', 'Spring Cloud OpenFeign', 'ASP.NET Core', 'Dapper', 'ReactJS', 'Next.js'],
-    'Databases': ['Oracle', 'PostgreSQL', 'SQL Server', 'Redis', 'MongoDB'],
-    'Messaging & APIs': ['REST API', 'gRPC', 'IBM MQ/JMS', 'Apache Kafka', 'RabbitMQ'],
-    'Tools & DevOps': ['Docker', 'Kubernetes', 'Helm', 'GitLab CI/CD', 'Apache Airflow', 'Kong', 'Git', 'Postman', 'Swagger'],
-    'Patterns': ['Saga', 'Outbox', 'Idempotency', 'CQRS', 'Clean Architecture', 'Circuit Breaker'],
-    'Soft skills': ['Team coordination', 'Problem-solving', 'Self-learning']
-  },
+  skills: [
+    { group: { en: 'Languages', vi: 'Ngôn ngữ' }, items: ['Java', 'C#', 'JavaScript', 'SQL', 'HTML/CSS'] },
+    { group: { en: 'Frameworks & Libraries', vi: 'Framework & thư viện' }, items: ['Spring Boot', 'Spring Cloud OpenFeign', 'ASP.NET Core', 'Dapper', 'ReactJS', 'Next.js'] },
+    { group: { en: 'Databases', vi: 'Cơ sở dữ liệu' }, items: ['Oracle', 'PostgreSQL', 'SQL Server', 'Redis', 'MongoDB'] },
+    { group: { en: 'Messaging & APIs', vi: 'Messaging & API' }, items: ['REST API', 'gRPC', 'IBM MQ/JMS', 'Apache Kafka', 'RabbitMQ'] },
+    { group: { en: 'Tools & DevOps', vi: 'Công cụ & DevOps' }, items: ['Docker', 'Kubernetes', 'Helm', 'GitLab CI/CD', 'Apache Airflow', 'Kong', 'Git', 'Postman', 'Swagger'] },
+    { group: { en: 'Patterns', vi: 'Pattern' }, items: ['Saga', 'Outbox', 'Idempotency', 'CQRS', 'Clean Architecture', 'Circuit Breaker'] }
+  ],
+  softSkills: [
+    { en: 'Team coordination', vi: 'Phối hợp nhóm' },
+    { en: 'Problem-solving', vi: 'Giải quyết vấn đề' },
+    { en: 'Self-learning', vi: 'Tự học' }
+  ],
   hot: new Set(['Java', 'C#', 'Spring Boot', 'ASP.NET Core', 'Oracle', 'Redis', 'Apache Kafka', 'IBM MQ/JMS', 'gRPC', 'Saga', 'Outbox', 'Idempotency']),
   experience: [
     {
       id: 'corecd', company: 'Sacombank', title: 'Backend Developer', product: 'CoreCD/CoreSL',
-      subtitle: 'Certificate-of-Deposit Trading Platform', period: '01/2026 – Present', now: true,
+      subtitle: { en: 'Certificate-of-Deposit Trading Platform', vi: 'Nền tảng giao dịch chứng chỉ tiền gửi' },
+      period: { en: '01/2026 – Present', vi: '01/2026 – Hiện tại' }, now: true,
       tech: ['Java', 'Spring Boot', 'Saga', 'Outbox', 'Oracle', 'Redis', 'IBM MQ', 'Airflow', 'T24', 'PaymentHub'],
-      bullets: [
-        'Delivered production microservices covering the full CD lifecycle — registration, issuance, primary/secondary trading, settlement — integrated with T24 Core Banking and PaymentHub.',
-        'Customer registration & lifecycle — corporate/retail buy-register with account and CIF validation, contract generation, and cancellation (auto sell-off of remaining holdings for retail).',
-        'CD purchase flow end-to-end — dual-channel order intake (MQ + REST), buyer account verification, PaymentHub settlement and automatic rollback on failure — Saga orchestration with Redis-based idempotency for exactly-once processing.',
-        'Early-redemption & sell flow — multi-criteria pre-maturity sale simulation (full / partial / by-amount), interest & fee calculation, auto-sell below threshold, settlement at maturity.',
-        'Outbox-pattern event publishing in lot-management, CD-lot reconciliation/ODS sync with Apache Airflow DAGs, Redis-cached purchase/sale reporting.'
-      ]
+      bullets: {
+        en: [
+          'Delivered production microservices covering the full CD lifecycle — registration, issuance, primary/secondary trading, settlement — integrated with T24 Core Banking and PaymentHub.',
+          'Customer registration & lifecycle — corporate/retail buy-register with account and CIF validation, contract generation, and cancellation (auto sell-off of remaining holdings for retail).',
+          'CD purchase flow end-to-end — dual-channel order intake (MQ + REST), buyer account verification, PaymentHub settlement and automatic rollback on failure — Saga orchestration with Redis-based idempotency for exactly-once processing.',
+          'Early-redemption & sell flow — multi-criteria pre-maturity sale simulation (full / partial / by-amount), interest & fee calculation, auto-sell below threshold, settlement at maturity.',
+          'Outbox-pattern event publishing in lot-management, CD-lot reconciliation/ODS sync with Apache Airflow DAGs, Redis-cached purchase/sale reporting.'
+        ],
+        vi: [
+          'Xây dựng các microservice production bao trọn vòng đời chứng chỉ tiền gửi (CD) — đăng ký, phát hành, giao dịch sơ cấp/thứ cấp, tất toán — tích hợp với T24 Core Banking và PaymentHub.',
+          'Luồng đăng ký & vòng đời khách hàng — đăng ký mua cho khách doanh nghiệp/cá nhân kèm kiểm tra tài khoản và CIF, sinh hợp đồng, huỷ đăng ký (tự động bán hết phần nắm giữ còn lại với khách cá nhân).',
+          'Luồng mua CD end-to-end — nhận lệnh qua hai kênh (MQ + REST), xác minh tài khoản người mua, thanh toán qua PaymentHub và tự động rollback khi lỗi — dùng Saga orchestration cùng idempotency trên Redis để xử lý exactly-once.',
+          'Luồng tất toán trước hạn & bán — mô phỏng bán trước hạn đa tiêu chí (toàn phần / một phần / theo số tiền), tính lãi & phí, tự động bán khi dưới ngưỡng, tất toán khi đáo hạn.',
+          'Publish sự kiện theo Outbox pattern trong lot-management, đối soát lô CD/đồng bộ ODS bằng Apache Airflow DAG, báo cáo mua/bán có cache Redis.'
+        ]
+      }
     },
     {
       id: 'mcs', company: 'Sacombank', title: 'Backend Developer', product: 'MCS Bill System',
-      subtitle: 'Virtual-Account Partner Integration Platform', period: '01/2026 – Present', now: true,
+      subtitle: { en: 'Virtual-Account Partner Integration Platform', vi: 'Nền tảng tích hợp tài khoản định danh với đối tác' },
+      period: { en: '01/2026 – Present', vi: '01/2026 – Hiện tại' }, now: true,
       tech: ['gRPC', 'IBM MQ', 'Adapter layer', 'OAuth2', 'RSA-SHA256'],
-      bullets: [
-        'Virtual-account (VA) integration platform — inquiry, deposit-notify and outgoing-core flows unified behind a gRPC facade, with an IBM MQ request/reply layer dispatching to partner adapters and fallback routing to the legacy system.',
-        'Integrated 6 partner banks / payment gateways (SHB, LienVietPostBank, PVI, NganLuong, Vimo, GSM) through a common adapter layer, incl. OAuth2 token exchange and RSA-SHA256 request signing for SHB.'
-      ]
+      bullets: {
+        en: [
+          'Virtual-account (VA) integration platform — inquiry, deposit-notify and outgoing-core flows unified behind a gRPC facade, with an IBM MQ request/reply layer dispatching to partner adapters and fallback routing to the legacy system.',
+          'Integrated 6 partner banks / payment gateways (SHB, LienVietPostBank, PVI, NganLuong, Vimo, GSM) through a common adapter layer, incl. OAuth2 token exchange and RSA-SHA256 request signing for SHB.'
+        ],
+        vi: [
+          'Nền tảng tích hợp tài khoản định danh (VA) — các luồng truy vấn, báo có (deposit-notify) và outgoing-core gom sau một gRPC facade, với lớp request/reply IBM MQ điều phối tới adapter của đối tác và định tuyến dự phòng về hệ thống cũ.',
+          'Tích hợp 6 ngân hàng / cổng thanh toán đối tác (SHB, LienVietPostBank, PVI, NganLuong, Vimo, GSM) qua một lớp adapter chung, gồm trao đổi token OAuth2 và ký request RSA-SHA256 cho SHB.'
+        ]
+      }
     },
     {
-      id: 'amazing', company: 'Amazing Tech', title: 'Back-end Developer', product: 'Tax-invoicing & water-factory systems',
-      subtitle: 'Outsourcing · API modules', period: '12/2023 – 05/2024', now: false,
+      id: 'amazing', company: 'Amazing Tech', title: 'Back-end Developer',
+      product: { en: 'Tax-invoicing & water-factory systems', vi: 'Hệ thống hoá đơn thuế & nhà máy nước' },
+      subtitle: { en: 'Outsourcing · API modules', vi: 'Outsourcing · module API' }, period: '12/2023 – 05/2024', now: false,
       tech: ['ASP.NET Core', 'C#', 'SQL Server', 'Dapper', 'Stored Procedures'],
-      bullets: [
-        'Shipped API modules powering a tax-invoicing system and a water-factory management system, integrating external systems and cutting query latency with SQL Stored Procedures.',
-        'Built complex reporting modules with Excel export, partnering with the frontend team to define API contracts.'
-      ]
+      bullets: {
+        en: [
+          'Shipped API modules powering a tax-invoicing system and a water-factory management system, integrating external systems and cutting query latency with SQL Stored Procedures.',
+          'Built complex reporting modules with Excel export, partnering with the frontend team to define API contracts.'
+        ],
+        vi: [
+          'Phát triển các module API cho hệ thống hoá đơn thuế và hệ thống quản lý nhà máy nước, tích hợp hệ thống bên ngoài và giảm độ trễ truy vấn bằng SQL Stored Procedure.',
+          'Xây dựng các module báo cáo phức tạp có xuất Excel, phối hợp với team frontend để thống nhất API contract.'
+        ]
+      }
     }
   ],
   projects: [
     {
-      id: 'nhub', name: 'Notification Hub', kind: 'Multi-tenant notification platform · personal', period: '2025 – Present',
+      id: 'nhub', name: 'Notification Hub',
+      kind: { en: 'Multi-tenant notification platform · personal', vi: 'Nền tảng thông báo đa tenant · dự án cá nhân' },
+      period: { en: '2025 – Present', vi: '2025 – nay' },
       tech: ['.NET 8', 'Kong', 'Kafka', 'gRPC', 'AMQP', 'OpenTelemetry', 'Polly', 'Redis', 'Blazor'],
-      bullets: [
-        'Designed and shipped solo — Kong gateway, auth, ingestion (REST + gRPC + legacy AMQP), routing, templating, tracking, per-channel workers (email/SMS/push) and a Blazor admin console. Architecture through infra.',
-        'OAuth2 client-credentials with RS256/JWKS, including zero-downtime signing-key rotation validated via a dual-key overlap window.',
-        'Reliable delivery: outbox-relay → Kafka → channel workers, HMAC-signed callbacks, end-to-end tracing (OpenTelemetry, W3C trace-context across HTTP and Kafka), Polly circuit-breaker/retry/bulkhead with Redis fail-open caching.'
-      ]
+      bullets: {
+        en: [
+          'Designed and shipped solo — Kong gateway, auth, ingestion (REST + gRPC + legacy AMQP), routing, templating, tracking, per-channel workers (email/SMS/push) and a Blazor admin console. Architecture through infra.',
+          'OAuth2 client-credentials with RS256/JWKS, including zero-downtime signing-key rotation validated via a dual-key overlap window.',
+          'Reliable delivery: outbox-relay → Kafka → channel workers, HMAC-signed callbacks, end-to-end tracing (OpenTelemetry, W3C trace-context across HTTP and Kafka), Polly circuit-breaker/retry/bulkhead with Redis fail-open caching.'
+        ],
+        vi: [
+          'Tự thiết kế và triển khai một mình — Kong gateway, auth, ingestion (REST + gRPC + AMQP legacy), routing, templating, tracking, worker cho từng kênh (email/SMS/push) và trang quản trị Blazor. Từ kiến trúc đến hạ tầng.',
+          'OAuth2 client-credentials với RS256/JWKS, gồm xoay khoá ký không downtime, kiểm chứng bằng cửa sổ chồng lấp hai khoá.',
+          'Giao nhận tin cậy: outbox-relay → Kafka → channel worker, callback ký HMAC, tracing end-to-end (OpenTelemetry, W3C trace-context qua HTTP và Kafka), circuit-breaker/retry/bulkhead bằng Polly cùng cache Redis fail-open.'
+        ]
+      }
     },
     {
-      id: 'fedom', name: 'FEDOM-AI', kind: 'Exam & proctor management · capstone · back-end', period: '2025',
+      id: 'fedom', name: 'FEDOM-AI',
+      kind: { en: 'Exam & proctor management · capstone · back-end', vi: 'Quản lý thi & giám thị · đồ án tốt nghiệp · back-end' },
+      period: '2025',
       tech: ['ASP.NET Core', 'CQRS', 'MediatR', 'Spring AI (RAG)', 'SignalR', 'RabbitMQ', 'Quartz'],
-      bullets: [
-        'Directed the backend architecture with CQRS + MediatR Clean Architecture.',
-        'Integrated a RAG-based Spring AI chatbot and SignalR real-time support.',
-        'Moved Excel-import processing off the request thread with an async RabbitMQ + Quartz-scheduled pipeline.'
-      ]
+      bullets: {
+        en: [
+          'Directed the backend architecture with CQRS + MediatR Clean Architecture.',
+          'Integrated a RAG-based Spring AI chatbot and SignalR real-time support.',
+          'Moved Excel-import processing off the request thread with an async RabbitMQ + Quartz-scheduled pipeline.'
+        ],
+        vi: [
+          'Định hướng kiến trúc backend theo CQRS + MediatR Clean Architecture.',
+          'Tích hợp chatbot RAG bằng Spring AI và hỗ trợ real-time qua SignalR.',
+          'Đưa xử lý import Excel ra khỏi request thread bằng pipeline bất đồng bộ RabbitMQ + Quartz.'
+        ]
+      }
     },
     {
-      id: 'gym', name: 'Gym Management System', kind: 'Full-stack side project', period: 'earlier',
+      id: 'gym', name: 'Gym Management System',
+      kind: { en: 'Full-stack side project', vi: 'Dự án full-stack' },
+      period: { en: 'earlier', vi: 'trước đó' },
       tech: ['ASP.NET Core', 'Next.js', 'PostgreSQL', 'PayOS'],
-      bullets: ['Members, subscriptions and operations with integrated PayOS payments and an admin interface.']
+      bullets: {
+        en: ['Members, subscriptions and operations with integrated PayOS payments and an admin interface.'],
+        vi: ['Quản lý hội viên, gói tập và vận hành, tích hợp thanh toán PayOS cùng trang quản trị.']
+      }
     }
   ]
 };
@@ -178,7 +338,7 @@ function drawTopology() {
   for (const [id, n] of Object.entries(NODES)) {
     const g = svg('g', {
       class: 'node', tabindex: 0, role: 'button', 'data-node': id,
-      'aria-label': `${n.label} (${n.kind}) — inspect`
+      'aria-label': `${n.label} (${n.kind})`
     }, gNodes);
     const left = n.x - n.w / 2, top = n.y - n.h / 2;
 
@@ -329,7 +489,7 @@ function startAmbient() {
    Inspector
    ============================================== */
 const kv = obj => `<dl class="kv">${Object.entries(obj).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
-const tags = (arr, hotSet) => `<div class="tags">${arr.map(t => `<span class="tag${hotSet && hotSet.has(t) ? ' hot' : ''}">${esc(t)}</span>`).join('')}</div>`;
+const tags = (arr, hotSet) => `<div class="tags">${arr.map(t => `<span class="tag${hotSet && hotSet.has(t) ? ' hot' : ''}">${esc(tr(t))}</span>`).join('')}</div>`;
 const list = arr => `<ul>${arr.map(b => `<li>${esc(b)}</li>`).join('')}</ul>`;
 const link = (href, text) => `<a href="${href}" target="_blank" rel="noopener">${esc(text)}</a>`;
 
@@ -337,24 +497,30 @@ const TRACE_ID = hex(32);
 
 const INSPECT = {
   you: () => ({
-    kind: 'client · that’s you',
-    title: 'Hello, visitor',
+    kind: L('client · that’s you', 'client · chính là bạn'),
+    title: L('Hello, visitor', 'Chào bạn'),
     route: '',
     html: `
-      <p>You’re the client. This page renders my career as a running system — every click is a request
-      that travels through the gateway, hits a service, and emits an event onto Kafka.</p>
+      <p>${L(
+        'You’re the client. This page renders my career as a running system — every click is a request that travels through the gateway, hits a service, and emits an event onto Kafka.',
+        'Bạn là client. Trang này dựng sự nghiệp của tôi thành một hệ thống đang chạy — mỗi cú click là một request đi qua gateway, tới một service và phát một event lên Kafka.'
+      )}</p>
       ${kv({
         'trace-id': `<code>${TRACE_ID.slice(0, 16)}…</code>`,
-        'timezone': esc(Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown'),
+        [L('timezone', 'múi giờ')]: esc(Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown'),
         'viewport': `${window.innerWidth}×${window.innerHeight}`,
-        'requests': `<span id="you-req">${reqCount}</span> this session`
+        'requests': `<span id="you-req">${reqCount}</span> ${L('this session', 'trong phiên này')}`
       })}
-      <h4>Things to try</h4>
+      <h4>${L('Things to try', 'Thử xem')}</h4>
       <ul>
-        <li>Click <b>career-svc</b> for my experience, <b>projects-svc</b> for side projects.</li>
-        <li>Press <b>POST /hire</b> — it runs a real-looking Saga with idempotency.</li>
-        <li>Turn on <b>chaos monkey</b>, then hire me again. Watch the compensation.</li>
-        <li>Open the <b>console</b> tab and <code>curl /health</code>.</li>
+        <li>${L('Click <b>career-svc</b> for my experience, <b>projects-svc</b> for side projects.',
+                'Bấm <b>career-svc</b> để xem kinh nghiệm, <b>projects-svc</b> để xem dự án.')}</li>
+        <li>${L('Press <b>POST /hire</b> — it runs a real-looking Saga with idempotency.',
+                'Nhấn <b>POST /hire</b> — nó chạy một Saga trông như thật, có cả idempotency.')}</li>
+        <li>${L('Turn on <b>chaos monkey</b>, then hire me again. Watch the compensation.',
+                'Bật <b>chaos monkey</b> rồi tuyển tôi lần nữa. Xem Saga bù trừ (compensation).')}</li>
+        <li>${L('Open the <b>console</b> tab and <code>curl /health</code>.',
+                'Mở tab <b>console</b> và thử <code>curl /health</code>.')}</li>
       </ul>`
   }),
 
@@ -363,7 +529,8 @@ const INSPECT = {
     title: 'kong-gw',
     route: '<span class="verb">ANY</span> /*',
     html: `
-      <p>Entry point for every request on this page. Same gateway I run in front of Notification Hub.</p>
+      <p>${L('Entry point for every request on this page. Same gateway I run in front of Notification Hub.',
+             'Cổng vào của mọi request trên trang này. Cũng là loại gateway tôi đặt trước Notification Hub.')}</p>
       <table class="sql">
         <tr><th>route</th><th>upstream</th></tr>
         <tr><td>GET /about</td><td>identity-svc</td></tr>
@@ -376,60 +543,61 @@ const INSPECT = {
       </table>
       <h4>Plugins</h4>
       ${tags(['correlation-id', 'rate-limiting', 'oauth2 (client-credentials)', 'circuit-breaker'])}
-      <p class="sub">Circuit state per upstream is visible in <code>GET /health</code>.</p>`
+      <p class="sub">${L('Circuit state per upstream is visible in <code>GET /health</code>.',
+                         'Trạng thái circuit của từng upstream xem ở <code>GET /health</code>.')}</p>`
   }),
 
   identity: () => ({
     kind: 'service · identity-svc',
-    title: 'About',
+    title: L('About', 'Giới thiệu'),
     route: '<span class="verb">GET</span> /about',
     html: `
-      <p>${esc(PROFILE.summary)}</p>
-      <p>Designs and ships distributed systems end-to-end, including a personal multi-tenant notification platform.
-      Comfortable with clean architecture, RESTful API design, CI/CD and containerized deployment — and committed to continuous learning.</p>
+      <p>${esc(tr(PROFILE.summary))}</p>
+      <p>${esc(tr(PROFILE.summary2))}</p>
       ${kv({
-        name: esc(PROFILE.name),
-        role: esc(PROFILE.role),
-        at: 'Sacombank · core banking',
-        based: esc(PROFILE.location),
-        education: `FPT University · Software Engineering · GPA ${esc(PROFILE.education.gpa)}`
+        [L('name', 'tên')]: esc(tr(PROFILE.name)),
+        [L('role', 'vai trò')]: esc(PROFILE.role),
+        [L('at', 'đang làm')]: 'Sacombank · core banking',
+        [L('based', 'nơi ở')]: esc(tr(PROFILE.location)),
+        [L('education', 'học vấn')]: `${L('FPT University · Software Engineering', 'Đại học FPT · Kỹ thuật phần mềm')} · GPA ${esc(PROFILE.education.gpa)}`
       })}
-      <h4>Soft skills</h4>
-      ${tags(PROFILE.skills['Soft skills'])}`
+      <h4>${L('Soft skills', 'Kỹ năng mềm')}</h4>
+      ${tags(PROFILE.softSkills)}`
   }),
 
   career: () => ({
     kind: 'service · career-svc',
-    title: 'Experience',
+    title: L('Experience', 'Kinh nghiệm'),
     route: '<span class="verb">GET</span> /experience',
     html: PROFILE.experience.map(x => `
       <div class="entry${x.now ? ' now' : ''}">
-        <h4>${esc(x.title)} @ ${esc(x.company)} — ${esc(x.product)}</h4>
-        <div class="sub">${esc(x.subtitle)} · ${esc(x.period)}</div>
-        ${list(x.bullets)}
+        <h4>${esc(x.title)} @ ${esc(x.company)} — ${esc(tr(x.product))}</h4>
+        <div class="sub">${esc(tr(x.subtitle))} · ${esc(tr(x.period))}</div>
+        ${list(tr(x.bullets))}
         ${tags(x.tech)}
       </div>`).join('')
   }),
 
   projects: () => ({
     kind: 'service · projects-svc',
-    title: 'Projects',
+    title: L('Projects', 'Dự án'),
     route: '<span class="verb">GET</span> /projects',
     html: PROFILE.projects.map(p => `
       <div class="entry${p.id === 'nhub' ? ' now' : ''}">
         <h4>${esc(p.name)}</h4>
-        <div class="sub">${esc(p.kind)} · ${esc(p.period)}</div>
-        ${list(p.bullets)}
+        <div class="sub">${esc(tr(p.kind))} · ${esc(tr(p.period))}</div>
+        ${list(tr(p.bullets))}
         ${tags(p.tech)}
       </div>`).join('')
   }),
 
   skills: () => ({
     kind: 'service · skills-svc',
-    title: 'Skills',
+    title: L('Skills', 'Kỹ năng'),
     route: '<span class="verb">GET</span> /skills',
-    html: Object.entries(PROFILE.skills).map(([k, v]) => `<h4>${esc(k)}</h4>${tags(v, PROFILE.hot)}`).join('') +
-      `<p class="sub">highlighted = used in production right now</p>`
+    html: PROFILE.skills.map(g => `<h4>${esc(tr(g.group))}</h4>${tags(g.items, PROFILE.hot)}`).join('') +
+      `<h4>${L('Soft skills', 'Kỹ năng mềm')}</h4>${tags(PROFILE.softSkills)}` +
+      `<p class="sub">${L('highlighted = used in production right now', 'tô màu = đang dùng trên production')}</p>`
   }),
 
   kafka: () => ({
@@ -437,15 +605,15 @@ const INSPECT = {
     title: 'career.events',
     route: '',
     html: `
-      <p>Every milestone is an event on this topic. Append-only, ordered, replayable — like a good ledger
-      (and like the Outbox relays I build at work).</p>
-      ${kv({ partitions: '1', retention: 'forever', 'consumer-group': 'visitors', producers: 'career-svc, projects-svc, skills-svc, you' })}
-      <p><button class="btn" data-tab-open="events">tail the topic →</button></p>`
+      <p>${L('Every milestone is an event on this topic. Append-only, ordered, replayable — like a good ledger (and like the Outbox relays I build at work).',
+             'Mỗi cột mốc là một event trên topic này. Chỉ ghi thêm, có thứ tự, phát lại được — như một cuốn sổ cái tốt (và như các Outbox relay tôi làm ở công ty).')}</p>
+      ${kv({ partitions: '1', retention: L('forever', 'mãi mãi'), 'consumer-group': 'visitors', producers: `career-svc, projects-svc, skills-svc, ${L('you', 'bạn')}` })}
+      <p><button class="btn" data-tab-open="events">${L('tail the topic →', 'xem topic →')}</button></p>`
   }),
 
   redis: () => ({
     kind: 'cache · redis',
-    title: 'Hot keys',
+    title: L('Hot keys', 'Key nóng'),
     route: '<span class="verb">GET</span> /cache',
     html: `
       <p class="q">redis-cli --scan --pattern 'profile:*'</p>
@@ -456,24 +624,25 @@ const INSPECT = {
         <tr><td>profile:partners</td><td>SHB, LienVietPostBank, PVI, NganLuong, Vimo, GSM</td></tr>
         <tr><td>profile:platforms</td><td>CoreCD/CoreSL, MCS Bill</td></tr>
         <tr><td>idempotency:hire:*</td><td>TTL 86400</td></tr>
-        <tr><td>lock:coffee-machine</td><td>held by lqviet · TTL 30s</td></tr>
+        <tr><td>lock:coffee-machine</td><td>${L('held by lqviet · TTL 30s', 'lqviet đang giữ · TTL 30s')}</td></tr>
       </table>
-      <p class="sub">Fail-open: when a service is down, you still get stale-but-true facts from here.</p>`
+      <p class="sub">${L('Fail-open: when a service is down, you still get stale-but-true facts from here.',
+                         'Fail-open: khi một service sập, bạn vẫn nhận được thông tin cũ-nhưng-đúng từ đây.')}</p>`
   }),
 
   oracle: () => ({
     kind: 'records · oracle',
-    title: 'Education',
+    title: L('Education', 'Học vấn'),
     route: '<span class="verb">GET</span> /education',
     html: `
       <p class="q">SELECT * FROM education;</p>
       <table class="sql">
-        <tr><th>school</th><th>degree</th><th>gpa</th><th>grad</th></tr>
-        <tr><td>${esc(PROFILE.education.school)}</td><td>${esc(PROFILE.education.degree)}</td><td>${esc(PROFILE.education.gpa)}</td><td>${esc(PROFILE.education.graduated)}</td></tr>
+        <tr><th>${L('school', 'trường')}</th><th>${L('degree', 'bằng')}</th><th>gpa</th><th>${L('grad', 'tốt nghiệp')}</th></tr>
+        <tr><td>${esc(tr(PROFILE.education.school))}</td><td>${esc(tr(PROFILE.education.degree))}</td><td>${esc(PROFILE.education.gpa)}</td><td>${esc(PROFILE.education.graduated)}</td></tr>
       </table>
       <p class="q">SELECT name, issuer FROM certifications;</p>
       <table class="sql">
-        <tr><th>name</th><th>issuer</th></tr>
+        <tr><th>${L('name', 'tên')}</th><th>${L('issuer', 'đơn vị cấp')}</th></tr>
         ${PROFILE.certs.map(c => `<tr><td>${link(c.url, c.name)}</td><td>${esc(c.by)}</td></tr>`).join('')}
       </table>
       <p class="sub">3 rows selected. COMMIT complete.</p>`
@@ -481,15 +650,16 @@ const INSPECT = {
 
   notify: () => ({
     kind: 'worker · notify-worker',
-    title: 'Contact',
+    title: L('Contact', 'Liên hệ'),
     route: '<span class="verb">GET</span> /contact',
     html: `
-      <p>Pick a channel — the worker delivers exactly once (well, I reply at least once).</p>
+      <p>${L('Pick a channel — the worker delivers exactly once (well, I reply at least once).',
+             'Chọn một kênh — worker giao đúng một lần (còn tôi thì trả lời ít nhất một lần).')}</p>
       <a class="contact-row" href="mailto:${PROFILE.email}"><span><span class="ch">email</span><br>${esc(PROFILE.email)}</span><span class="arrow">→</span></a>
-      <a class="contact-row" href="tel:+84353081770"><span><span class="ch">phone</span><br>${esc(PROFILE.phone)}</span><span class="arrow">→</span></a>
+      <a class="contact-row" href="tel:+84353081770"><span><span class="ch">${L('phone', 'điện thoại')}</span><br>${esc(PROFILE.phone)}</span><span class="arrow">→</span></a>
       <a class="contact-row" href="${PROFILE.github}" target="_blank" rel="noopener"><span><span class="ch">github</span><br>github.com/lqviet45</span><span class="arrow">↗</span></a>
       <a class="contact-row" href="${PROFILE.linkedin}" target="_blank" rel="noopener"><span><span class="ch">linkedin</span><br>in/le-quoc-viet-a03721240</span><span class="arrow">↗</span></a>
-      <p class="sub">📍 ${esc(PROFILE.location)}</p>`
+      <p class="sub">📍 ${esc(tr(PROFILE.location))}</p>`
   })
 };
 
@@ -501,16 +671,16 @@ function select(id, { silent = false } = {}) {
   $('#insp-title').textContent = d.title;
   $('#insp-route').innerHTML = d.route;
   $('#insp-body').innerHTML = d.html;
-  $('#insp-body').scrollTop = 0;
   if (silent) return;
 
+  $('#insp-body').scrollTop = 0;
   request(id);
-  emit(`http.request`, `GET ${NODES[id].route || '/' + NODES[id].label} ← visitor`, 'user');
+  emit('http.request', `GET ${NODES[id].route || '/' + NODES[id].label} ← visitor`, 'user');
   if (window.innerWidth <= 1000) $('#inspector').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
 }
 
 /* ==============================================
-   Kafka event stream
+   Kafka event stream (event log stays in English, like real logs)
    ============================================== */
 const EVENTS = [
   ['job.started', '{company:"Amazing Tech", role:"Back-end Developer", at:"2023-12"}'],
@@ -567,7 +737,7 @@ function startEvents() {
   setInterval(next, 2400);
   $('#events-toggle').addEventListener('click', e => {
     evPaused = !evPaused;
-    e.target.textContent = evPaused ? 'resume' : 'pause';
+    e.target.textContent = evPaused ? L('resume', 'tiếp tục') : L('pause', 'tạm dừng');
   });
 }
 
@@ -581,23 +751,25 @@ const NOW_M = NOW.getFullYear() * 12 + NOW.getMonth() + NOW.getDate() / 31;
 function fmtDur(months) {
   const m = Math.floor(months);
   const y = Math.floor(m / 12), r = m % 12;
+  if (LANG === 'vi') return y ? `${y} năm ${r} tháng` : `${r} tháng`;
   return y ? `${y}y ${r}mo` : `${r}mo`;
 }
 
 const SPANS = [
   { name: 'career', svc: 'lqviet', start: '2023-12', depth: 0, cls: '',
     attrs: { 'span.kind': 'server', 'status': 'OK', 'languages': 'java, c#', 'location': 'vn-south' },
-    notes: ['Root span — everything below is a child of this.'] },
+    notes: { en: ['Root span — everything below is a child of this.'], vi: ['Span gốc — mọi thứ bên dưới đều là con của nó.'] } },
   { name: 'backend.developer', svc: 'amazing-tech', start: '2023-12', end: '2024-05', depth: 1, cls: 'work',
     attrs: { 'period': '12/2023 – 05/2024', 'stack': 'ASP.NET Core · SQL Server · Dapper' }, notes: PROFILE.experience[2].bullets },
   { name: 'capstone', svc: 'fedom-ai', start: '2025-01', end: '2025-05', label: '2025', depth: 1, cls: 'side',
     attrs: { 'role': 'back-end developer', 'arch': 'CQRS + MediatR' }, notes: PROFILE.projects[1].bullets },
   { mark: '2025-05', name: 'degree.granted', svc: 'fpt-university', depth: 1,
-    attrs: { 'degree': 'B.IT — Software Engineering', 'gpa': PROFILE.education.gpa }, notes: [] },
-  { name: 'personal', svc: 'notification-hub', start: '2025-01', label: '2025 – now', depth: 1, cls: 'side',
-    attrs: { 'runtime': '.NET 8', 'tenancy': 'multi', 'team size': '1 (me)' }, notes: PROFILE.projects[0].bullets },
+    attrs: { 'degree': PROFILE.education.degree, 'gpa': PROFILE.education.gpa }, notes: [] },
+  { name: 'personal', svc: 'notification-hub', start: '2025-01', label: { en: '2025 – now', vi: '2025 – nay' }, depth: 1, cls: 'side',
+    attrs: { 'runtime': '.NET 8', 'tenancy': 'multi', 'team size': { en: '1 (me)', vi: '1 (tôi)' } }, notes: PROFILE.projects[0].bullets },
   { name: 'backend.developer', svc: 'sacombank', start: '2026-01', depth: 1, cls: 'work',
-    attrs: { 'period': '01/2026 – Present', 'domain': 'core banking' }, notes: ['Two platforms in parallel — see child spans.'] },
+    attrs: { 'period': { en: '01/2026 – Present', vi: '01/2026 – Hiện tại' }, 'domain': 'core banking' },
+    notes: { en: ['Two platforms in parallel — see child spans.'], vi: ['Hai nền tảng chạy song song — xem các span con.'] } },
   { name: 'cd-trading', svc: 'coreCD/coreSL', start: '2026-01', depth: 2, cls: 'work',
     attrs: { 'patterns': 'saga · outbox · idempotency', 'integrations': 'T24, PaymentHub, ODS' }, notes: PROFILE.experience[0].bullets },
   { name: 'va-integration', svc: 'mcs-bill', start: '2026-01', depth: 2, cls: 'work',
@@ -607,34 +779,38 @@ const SPANS = [
 function renderTrace() {
   const t0 = ym('2023-10'), t1 = NOW_M + 1;
   const pct = m => ((m - t0) / (t1 - t0)) * 100;
+  const open = new Set($$('.span-row.open').map(r => r.dataset.i));
 
   const ticks = [];
   for (let y = 2024; y * 12 <= t1; y++) ticks.push(`<span class="axis-tick" style="left:${pct(y * 12)}%">${y}</span>`);
-  ticks.push(`<span class="axis-tick" style="left:${pct(NOW_M)}%;color:var(--signal)">now</span>`);
+  ticks.push(`<span class="axis-tick" style="left:${pct(NOW_M)}%;color:var(--signal)">${L('now', 'nay')}</span>`);
 
   let html = `<div class="trace-inner"><div class="trace-axis"><span>service · operation</span><div class="axis-track">${ticks.join('')}</div></div>`;
   SPANS.forEach((s, i) => {
     let bar;
     if (s.mark) {
-      bar = `<span class="span-mark" style="left:${pct(ym(s.mark))}%"><span>🎓 graduated ${s.mark.replace('-', '/')}</span></span>`;
+      const [y, m] = s.mark.split('-');
+      bar = `<span class="span-mark" style="left:${pct(ym(s.mark))}%"><span>🎓 ${L('graduated', 'tốt nghiệp')} ${m}/${y}</span></span>`;
     } else {
       const a = ym(s.start), live = !s.end, b = live ? NOW_M : ym(s.end) + 1;
       const left = pct(a), width = pct(b) - left;
-      const dur = s.label || `${fmtDur(b - a)}${live ? ' · live' : ''}`;
+      const dur = tr(s.label) || `${fmtDur(b - a)}${live ? ` · ${L('live', 'đang chạy')}` : ''}`;
       // label after the bar if there's room, else before it, else inside it
       let durPos = `left:calc(${left + width}% + 10px)`, durCls = '';
       if (left + width > 78) durPos = left > 22 ? `right:${100 - left + 1}%` : (durCls = ' inside', `right:${100 - left - width + 1.5}%`);
       bar = `<span class="span-bar ${s.cls}${live ? ' live' : ''}" style="left:${left}%;width:${width}%;animation-delay:${i * 90}ms"></span>
              <span class="span-dur${durCls}" style="${durPos}">${esc(dur)}</span>`;
     }
+    const notes = tr(s.notes);
+    const isOpen = open.has(String(i));
     html += `
-      <div class="span-row" style="--depth:${s.depth}" tabindex="0" role="button" aria-expanded="false">
+      <div class="span-row${isOpen ? ' open' : ''}" data-i="${i}" style="--depth:${s.depth}" tabindex="0" role="button" aria-expanded="${isOpen}">
         <div class="span-name"><span class="tw">▸</span><span class="svc">${esc(s.svc)}</span> ${esc(s.name)}</div>
         <div class="span-track">${bar}</div>
       </div>
       <div class="span-attrs" style="--depth:${s.depth}">
-        ${kv(Object.fromEntries(Object.entries(s.attrs).map(([k, v]) => [k, esc(v)])))}
-        ${s.notes.length ? list(s.notes) : ''}
+        ${kv(Object.fromEntries(Object.entries(s.attrs).map(([k, v]) => [k, esc(tr(v))])))}
+        ${notes.length ? list(notes) : ''}
       </div>`;
   });
   html += '</div>';
@@ -646,8 +822,8 @@ function renderTrace() {
 
   $$('.span-row', trace).forEach(row => {
     const toggle = () => {
-      const open = row.classList.toggle('open');
-      row.setAttribute('aria-expanded', open);
+      const isOpen = row.classList.toggle('open');
+      row.setAttribute('aria-expanded', isOpen);
     };
     row.addEventListener('click', toggle);
     row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
@@ -678,14 +854,15 @@ function updateClusterStatus() {
   const led = $('#cluster-led');
   const txt = $('#cluster-status');
   if (down.size) {
+    const names = [...down].map(d => NODES[d].label).join(', ');
     led.className = 'led warn';
-    txt.textContent = `degraded · ${[...down].map(d => NODES[d].label).join(', ')} down`;
+    txt.textContent = L(`degraded · ${names} down`, `suy giảm · ${names} đang sập`);
   } else if (chaosOn) {
     led.className = 'led warn';
-    txt.textContent = 'chaos monkey loose';
+    txt.textContent = L('chaos monkey loose', 'chaos monkey đang phá');
   } else {
     led.className = 'led ok';
-    txt.textContent = 'all systems nominal';
+    txt.textContent = L('all systems nominal', 'mọi hệ thống ổn định');
   }
 }
 
@@ -694,14 +871,14 @@ function chaosStrike() {
   if (!alive.length) return;
   const victim = pick(alive);
   setDown(victim, true);
-  floatTag(victim, '☠ killed');
+  floatTag(victim, L('☠ killed', '☠ bị hạ'));
   emit('chaos.kill', `{target:"${NODES[victim].label}"}`, 'err');
   emit('breaker.open', `{upstream:"${NODES[victim].label}", fallback:"redis (fail-open)"}`, 'err');
   setTimeout(() => {
     emit('breaker.half_open', `{upstream:"${NODES[victim].label}", probe:1}`);
     setTimeout(() => {
       setDown(victim, false);
-      floatTag(victim, 'recovered', true);
+      floatTag(victim, L('recovered', 'đã hồi phục'), true);
       emit('breaker.closed', `{upstream:"${NODES[victim].label}"}`);
     }, 1200);
   }, 3400);
@@ -710,7 +887,7 @@ function chaosStrike() {
 function toggleChaos(force) {
   chaosOn = typeof force === 'boolean' ? force : !chaosOn;
   $('#chaos-btn').classList.toggle('on', chaosOn);
-  $('#chaos-state').textContent = chaosOn ? 'ON' : 'off';
+  $('#chaos-state').textContent = chaosOn ? L('ON', 'BẬT') : L('off', 'tắt');
   clearInterval(chaosTimer);
   if (chaosOn) {
     emit('chaos.enabled', '{by:"visitor", blast_radius:"services"}', 'user');
@@ -730,15 +907,21 @@ let sagaRunning = false;
 let committedKey = null;
 
 const SAGA_STEPS = [
-  { name: 'idempotency.acquire', svc: 'redis', note: 'SET hire:{key} NX EX 86400', comp: 'idempotency.release',
+  { name: 'idempotency.acquire', svc: 'redis', note: () => 'SET hire:{key} NX EX 86400', comp: 'idempotency.release',
     anim: async () => { await travel('you', 'gw', 'sync'); ping('gw'); ping('redis'); } },
-  { name: 'role.match', svc: 'skills-svc', note: 'java/spring ∪ .net/c# ∪ distributed systems → 100%', comp: 'role.match (no-op)',
+  { name: 'role.match', svc: 'skills-svc', comp: 'role.match (no-op)',
+    note: () => L('java/spring ∪ .net/c# ∪ distributed systems → 100%', 'java/spring ∪ .net/c# ∪ hệ thống phân tán → 100%'),
     anim: async () => { await travel('gw', 'skills', 'sync'); ping('skills'); } },
-  { name: 'candidate.reserve', svc: 'career-svc', note: 'reserving 1× backend developer', comp: 'candidate.release',
+  { name: 'candidate.reserve', svc: 'career-svc', comp: 'candidate.release',
+    note: () => L('reserving 1× backend developer', 'giữ chỗ 1× backend developer'),
     anim: async () => { await travel('gw', 'career', 'sync'); ping('career'); } },
-  { name: 'offer.notify', svc: 'notify-worker', note: 'outbox → kafka → email channel', comp: null,
+  { name: 'offer.notify', svc: 'notify-worker', comp: null,
+    note: () => L('outbox → kafka → email channel', 'outbox → kafka → kênh email'),
     anim: async () => { await travel('career', 'kafka', 'async'); ping('kafka'); await travel('kafka', 'notify', 'async'); ping('notify'); } }
 ];
+
+const mailtoHref = () =>
+  `mailto:${PROFILE.email}?subject=${encodeURIComponent(L('Let’s talk — from your portfolio', 'Trao đổi cơ hội — từ portfolio của bạn'))}`;
 
 function sagaRow(i, state, extra = '') {
   const icons = { pending: '○', run: '◐', done: '✓', fail: '✗', comp: '↺' };
@@ -746,7 +929,7 @@ function sagaRow(i, state, extra = '') {
   const li = $(`#saga-steps li[data-i="${i}"]`);
   li.className = state === 'pending' ? '' : state;
   const label = state === 'comp' ? s.comp : s.name;
-  li.innerHTML = `<span class="ic">${icons[state]}</span><span>${esc(label)}<span class="note">${esc(extra || s.note)}</span></span><span class="svc">${esc(s.svc)}</span>`;
+  li.innerHTML = `<span class="ic">${icons[state]}</span><span>${esc(label)}<span class="note">${esc(extra || s.note())}</span></span><span class="svc">${esc(s.svc)}</span>`;
 }
 
 function openSaga() {
@@ -766,12 +949,14 @@ async function runSaga({ newKey = false } = {}) {
     $('#saga-key').textContent = `Idempotency-Key: ${committedKey}`;
     $('#saga-steps').innerHTML = '';
     $('#saga-result').innerHTML = `
-      <div class="big warn">409 — already committed</div>
-      <p>Redis <code>SET NX</code> returned 0: this hire was already processed in this session.
-      Exactly-once, as promised. (That’s literally what I build at work.)</p>
+      <div class="big warn">${L('409 — already committed', '409 — đã commit rồi')}</div>
+      <p>${L(
+        'Redis <code>SET NX</code> returned 0: this hire was already processed in this session. Exactly-once, as promised. (That’s literally what I build at work.)',
+        'Redis <code>SET NX</code> trả về 0: lượt tuyển này đã được xử lý trong phiên. Đúng một lần, như đã hứa. (Đây chính là thứ tôi làm ở công ty.)'
+      )}</p>
       <div class="actions">
-        <a class="btn primary" href="mailto:${PROFILE.email}?subject=${encodeURIComponent('Let’s talk — from your portfolio')}">email me</a>
-        <button class="btn" id="saga-newkey">retry with a new key</button>
+        <a class="btn primary" href="${mailtoHref()}">${L('email me', 'gửi email')}</a>
+        <button class="btn" id="saga-newkey">${L('retry with a new key', 'thử lại với key mới')}</button>
       </div>`;
     $('#saga-newkey').addEventListener('click', () => runSaga({ newKey: true }));
     emit('saga.duplicate', `{key:"${committedKey}", result:409}`, 'user');
@@ -794,16 +979,16 @@ async function runSaga({ newKey = false } = {}) {
     await Promise.all([SAGA_STEPS[i].anim(), sleep(REDUCED ? 150 : 650)]);
 
     if (i === failAt && attempt === 1) {
-      sagaRow(i, 'fail', 'career-svc down — chaos monkey strikes');
-      floatTag('career', '✗ step failed');
+      sagaRow(i, 'fail', L('career-svc down — chaos monkey strikes', 'career-svc sập — chaos monkey ra tay'));
+      floatTag('career', L('✗ step failed', '✗ bước lỗi'));
       emit('saga.step_failed', `{step:"${SAGA_STEPS[i].name}", attempt:1}`, 'err');
       await sleep(REDUCED ? 100 : 600);
       for (let j = i - 1; j >= 0; j--) {
-        sagaRow(j, 'comp', 'compensating…');
+        sagaRow(j, 'comp', L('compensating…', 'đang bù trừ…'));
         await sleep(REDUCED ? 100 : 480);
         emit('saga.compensated', `{step:"${SAGA_STEPS[j].name}"}`);
       }
-      sagaRow(i, 'pending', 'retry · exponential backoff 400ms → 800ms');
+      sagaRow(i, 'pending', L('retry · exponential backoff 400ms → 800ms', 'thử lại · backoff luỹ thừa 400ms → 800ms'));
       emit('saga.retry', '{attempt:2, backoff_ms:800}');
       await sleep(REDUCED ? 100 : 900);
       if (down.has('career')) setDown('career', false);
@@ -819,13 +1004,14 @@ async function runSaga({ newKey = false } = {}) {
   floatTag('notify', '201 created', true);
   emit('saga.committed', `{key:"${key}", attempts:${attempt}}`, 'user');
   $('#saga-result').innerHTML = `
-    <div class="big ok">201 Created — hire committed${compensated ? ' (after compensation)' : ''}.</div>
+    <div class="big ok">${L('201 Created — hire committed', '201 Created — đã chốt tuyển dụng')}${compensated ? L(' (after compensation)', ' (sau khi bù trừ)') : ''}.</div>
     <p>${compensated
-      ? 'A step failed, the saga rolled back what it had done, retried with backoff, and committed exactly once. '
-      : 'All four steps committed. '}The last step is the human one — my inbox:</p>
+      ? L('A step failed, the saga rolled back what it had done, retried with backoff, and committed exactly once. ',
+          'Một bước bị lỗi, saga đã hoàn tác những gì đã làm, thử lại với backoff và commit đúng một lần. ')
+      : L('All four steps committed. ', 'Cả bốn bước đã commit. ')}${L('The last step is the human one — my inbox:', 'Bước cuối là bước của con người — hộp thư của tôi:')}</p>
     <div class="actions">
-      <a class="btn primary" href="mailto:${PROFILE.email}?subject=${encodeURIComponent('Let’s talk — from your portfolio')}">email me</a>
-      <button class="btn" id="saga-copy">copy email</button>
+      <a class="btn primary" href="${mailtoHref()}">${L('email me', 'gửi email')}</a>
+      <button class="btn" id="saga-copy">${L('copy email', 'copy email')}</button>
       <a class="btn ghost" href="${PROFILE.linkedin}" target="_blank" rel="noopener">linkedin ↗</a>
     </div>`;
   $('#saga-copy').addEventListener('click', copyEmail);
@@ -834,7 +1020,7 @@ async function runSaga({ newKey = false } = {}) {
 async function copyEmail() {
   try {
     await navigator.clipboard.writeText(PROFILE.email);
-    toast('copied lqviet455@gmail.com');
+    toast(L(`copied ${PROFILE.email}`, `đã copy ${PROFILE.email}`));
   } catch {
     toast(PROFILE.email);
   }
@@ -850,7 +1036,7 @@ function toast(msg) {
 }
 
 /* ==============================================
-   Console (curl lqv.sys)
+   Console (curl lqv.sys) — JSON keys stay English, prose is localized
    ============================================== */
 function health() {
   const svc = {};
@@ -864,20 +1050,23 @@ function health() {
 }
 
 const API = {
-  'GET /': () => [200, { service: 'lqv.sys', owner: PROFILE.name, routes: ['/about', '/experience', '/projects', '/skills', '/education', '/contact', '/health', 'POST /hire', 'POST /chaos'] }, 'gw'],
-  'GET /about': () => [200, { name: PROFILE.name, role: PROFILE.role, company: PROFILE.company, location: PROFILE.location, summary: PROFILE.summary }, 'identity'],
-  'GET /experience': () => [200, PROFILE.experience.map(x => ({ company: x.company, product: x.product, title: x.title, period: x.period, tech: x.tech })), 'career'],
-  'GET /projects': () => [200, PROFILE.projects.map(p => ({ name: p.name, kind: p.kind, period: p.period, tech: p.tech })), 'projects'],
-  'GET /skills': () => [200, Object.fromEntries(Object.entries(PROFILE.skills)), 'skills'],
-  'GET /education': () => [200, { ...PROFILE.education, certifications: PROFILE.certs.map(c => `${c.name} (${c.by})`) }, 'oracle'],
+  'GET /': () => [200, { service: 'lqv.sys', owner: tr(PROFILE.name), routes: ['/about', '/experience', '/projects', '/skills', '/education', '/contact', '/health', 'POST /hire', 'POST /chaos'] }, 'gw'],
+  'GET /about': () => [200, { name: tr(PROFILE.name), role: PROFILE.role, company: PROFILE.company, location: tr(PROFILE.location), summary: tr(PROFILE.summary) }, 'identity'],
+  'GET /experience': () => [200, PROFILE.experience.map(x => ({ company: x.company, product: tr(x.product), title: x.title, period: tr(x.period), tech: x.tech })), 'career'],
+  'GET /projects': () => [200, PROFILE.projects.map(p => ({ name: p.name, kind: tr(p.kind), period: tr(p.period), tech: p.tech })), 'projects'],
+  'GET /skills': () => [200, Object.fromEntries(PROFILE.skills.map(g => [tr(g.group), g.items])), 'skills'],
+  'GET /education': () => [200, {
+    school: tr(PROFILE.education.school), degree: tr(PROFILE.education.degree), gpa: PROFILE.education.gpa, graduated: PROFILE.education.graduated,
+    certifications: PROFILE.certs.map(c => `${c.name} (${c.by})`)
+  }, 'oracle'],
   'GET /contact': () => [200, { email: PROFILE.email, phone: PROFILE.phone, github: PROFILE.github, linkedin: PROFILE.linkedin }, 'notify'],
-  'GET /cache': () => [200, { 'profile:stack': 'java|spring-boot|dotnet|csharp', 'profile:gpa': PROFILE.education.gpa, 'lock:coffee-machine': 'held by lqviet (TTL 30s)' }, 'redis'],
+  'GET /cache': () => [200, { 'profile:stack': 'java|spring-boot|dotnet|csharp', 'profile:gpa': PROFILE.education.gpa, 'lock:coffee-machine': L('held by lqviet (TTL 30s)', 'lqviet đang giữ (TTL 30s)') }, 'redis'],
   'GET /health': () => [down.size ? 503 : 200, health(), 'gw'],
-  'GET /hire': () => [405, { error: 'Method Not Allowed', hint: 'try: POST /hire' }, 'gw'],
-  'POST /hire': () => { setTimeout(() => runSaga(), 300); return [202, { accepted: true, saga: 'HireLeQuocViet', note: 'opening orchestrator…' }, 'gw']; },
+  'GET /hire': () => [405, { error: 'Method Not Allowed', hint: L('try: POST /hire', 'thử: POST /hire') }, 'gw'],
+  'POST /hire': () => { setTimeout(() => runSaga(), 300); return [202, { accepted: true, saga: 'HireLeQuocViet', note: L('opening orchestrator…', 'đang mở orchestrator…') }, 'gw']; },
   'POST /chaos': () => { toggleChaos(); return [200, { chaosMonkey: chaosOn }, 'gw']; },
   'DELETE /chaos': () => { toggleChaos(false); return [200, { chaosMonkey: false }, 'gw']; },
-  'GET /coffee': () => [418, { error: "I'm a teapot", note: 'but I do run on coffee' }, 'gw']
+  'GET /coffee': () => [418, { error: "I'm a teapot", note: L('but I do run on coffee', 'nhưng tôi chạy bằng cà phê') }, 'gw']
 };
 
 const ROUTE_TO_NODE = { '/about': 'identity', '/experience': 'career', '/projects': 'projects', '/skills': 'skills' };
@@ -921,14 +1110,18 @@ async function runConsole(raw) {
     const svcId = ROUTE_TO_NODE[path];
     if (svcId && down.has(svcId)) {
       status = 503;
-      body = { error: 'Service Unavailable', circuit: 'OPEN', fallback: 'served stale from redis', hint: 'chaos monkey got it — try again in a few seconds' };
+      body = {
+        error: 'Service Unavailable', circuit: 'OPEN',
+        fallback: L('served stale from redis', 'trả dữ liệu cũ từ redis'),
+        hint: L('chaos monkey got it — try again in a few seconds', 'chaos monkey vừa hạ nó — thử lại sau vài giây')
+      };
       node = 'redis';
     }
   } else {
     const known = Object.keys(API).map(k => k.split(' ')[1]);
     const guess = known.find(k => k.includes(path.slice(1, 4)) && path.length > 1);
     status = 404;
-    body = { error: 'Not Found', path, ...(guess ? { 'did you mean': guess } : {}), hint: 'GET / lists all routes' };
+    body = { error: 'Not Found', path, ...(guess ? { [L('did you mean', 'ý bạn là')]: guess } : {}), hint: L('GET / lists all routes', 'GET / liệt kê mọi route') };
     node = 'gw';
   }
 
@@ -948,9 +1141,20 @@ async function runConsole(raw) {
   emit('http.request', `${method} ${path} → ${status}`, ok ? 'user' : 'user err');
 }
 
-function setupConsole() {
+function setupConsoleIntro(onlyIfPristine = false) {
   const out = $('#console-out');
-  out.innerHTML = `<div class="status">lqv.sys api · type a path (e.g. <b>/experience</b>) or a full <b>curl -X POST /hire</b>. <b>/clear</b> clears.</div>`;
+  const intro = out.querySelector('.intro-line');
+  if (onlyIfPristine && !intro) return;
+  const html = L(
+    'lqv.sys api · type a path (e.g. <b>/experience</b>) or a full <b>curl -X POST /hire</b>. <b>/clear</b> clears.',
+    'lqv.sys api · gõ một path (vd. <b>/experience</b>) hoặc cả lệnh <b>curl -X POST /hire</b>. <b>/clear</b> để xoá.'
+  );
+  if (intro) intro.innerHTML = html;
+  else out.innerHTML = `<div class="status intro-line">${html}</div>`;
+}
+
+function setupConsole() {
+  setupConsoleIntro();
   const form = $('#console-form');
   const input = $('#console-input');
   const history = [];
@@ -984,15 +1188,17 @@ const START = new Date(2023, 11, 1);
 
 function tickClock() {
   const now = new Date();
-  $('#clock').textContent = now.toTimeString().slice(0, 8);
+  const hms = now.toTimeString().slice(0, 8);
+  $('#clock').textContent = hms;
 
   let y = now.getFullYear() - START.getFullYear();
   let m = now.getMonth() - START.getMonth();
   let d = now.getDate() - START.getDate();
   if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
   if (m < 0) { y--; m += 12; }
-  const hms = now.toTimeString().slice(0, 8);
-  $('#uptime').textContent = `${y}y ${m}mo ${d}d ${hms}`;
+  $('#uptime').textContent = LANG === 'vi'
+    ? `${y} năm ${m} tháng ${d} ngày ${hms}`
+    : `${y}y ${m}mo ${d}d ${hms}`;
 
   const you = $('#you-req');
   if (you) you.textContent = reqCount;
@@ -1016,10 +1222,12 @@ function setupTheme() {
    ============================================== */
 function boot() {
   setupTheme();
+  applyStatic();
   drawTopology();
   renderTrace();
   setupConsole();
   startEvents();
+  updateClusterStatus();
   select('identity', { silent: true });
 
   $('#year').textContent = NOW.getFullYear();
@@ -1027,6 +1235,7 @@ function boot() {
   tickClock();
   setInterval(tickClock, 1000);
 
+  $('#lang-btn').addEventListener('click', () => setLang(LANG === 'vi' ? 'en' : 'vi'));
   $('#hire-btn').addEventListener('click', () => runSaga());
   $('#chaos-btn').addEventListener('click', () => toggleChaos());
   $('#saga-close').addEventListener('click', closeSaga);

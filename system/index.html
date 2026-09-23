@@ -8,7 +8,7 @@
 <link rel="icon" href="../favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz@0,6..72;1,6..72&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="system.css">
 </head>
 <body>
@@ -19,10 +19,11 @@
     <span class="pill" title="cluster status"><i class="led ok" id="cluster-led"></i><span id="cluster-status">all systems nominal</span></span>
   </div>
   <div class="bar-right">
-    <span class="muted hide-sm">region <b>vn-south-1</b></span>
+    <span class="muted hide-sm"><span data-i18n="region">region</span> <b>vn-south-1</b></span>
     <span class="muted hide-sm" id="clock">--:--:--</span>
-    <a class="bar-link" href="../">classic&nbsp;OS&nbsp;↗</a>
-    <button class="bar-btn" id="theme-btn" aria-label="Toggle theme">◐</button>
+    <a class="bar-link" href="../" data-i18n="classic">classic&nbsp;OS&nbsp;↗</a>
+    <button class="bar-btn lang-btn" id="lang-btn" data-i18n-aria="lang" aria-label="Chuyển sang tiếng Việt">VI</button>
+    <button class="bar-btn" id="theme-btn" data-i18n-aria="theme" aria-label="Toggle theme">◐</button>
   </div>
 </header>
 
@@ -31,22 +32,22 @@
   <!-- ====== Intro ====== -->
   <section class="intro">
     <div class="intro-text">
-      <p class="eyebrow">service manifest · <span id="manifest-ver">v2026</span> · owner: lqviet45</p>
+      <p class="eyebrow"><span data-i18n="eyebrow.a">service manifest</span> · <span id="manifest-ver">v2026</span> · <span data-i18n="eyebrow.owner">owner</span>: lqviet45</p>
       <h1>Le Quoc Viet<span class="caret">_</span></h1>
-      <p class="lede">Backend developer. I build systems where money moves <em>exactly once</em> —
+      <p class="lede" data-i18n="lede">Backend developer. I build systems where money moves <em>exactly once</em> —
         core-banking microservices at <b>Sacombank</b>, in Java/Spring Boot and .NET/C#.</p>
-      <p class="hint">This page <em>is</em> the system. Click any node, fire a request, or break it on purpose.</p>
+      <p class="hint" data-i18n="hint">This page <em>is</em> the system. Click any node, fire a request, or break it on purpose.</p>
       <div class="actions">
         <button class="btn primary" id="hire-btn"><span class="verb">POST</span> /hire</button>
         <button class="btn" id="chaos-btn"><span class="skull">☠</span> chaos monkey: <b id="chaos-state">off</b></button>
-        <button class="btn ghost" data-node="notify">contact →</button>
+        <button class="btn ghost" data-node="notify" data-i18n="contact">contact →</button>
       </div>
     </div>
     <dl class="stats">
-      <div><dt>uptime (since 2023-12)</dt><dd id="uptime">—</dd></div>
-      <div><dt>core-banking platforms</dt><dd>2</dd></div>
-      <div><dt>partner banks integrated</dt><dd>6</dd></div>
-      <div><dt>requests this session</dt><dd id="req-count">0</dd></div>
+      <div><dt data-i18n="stat.uptime">uptime (since 2023-12)</dt><dd id="uptime">—</dd></div>
+      <div><dt data-i18n="stat.platforms">core-banking platforms</dt><dd>2</dd></div>
+      <div><dt data-i18n="stat.partners">partner banks integrated</dt><dd>6</dd></div>
+      <div><dt data-i18n="stat.requests">requests this session</dt><dd id="req-count">0</dd></div>
     </dl>
   </section>
 
@@ -54,17 +55,17 @@
   <section class="stage">
     <div class="topo-card">
       <div class="card-head">
-        <span>topology <span class="muted">· career-cluster</span></span>
+        <span><span data-i18n="topology">topology</span> <span class="muted">· career-cluster</span></span>
         <span class="legend">
-          <span><i class="lg sync"></i>sync</span>
-          <span><i class="lg async"></i>async</span>
-          <span><i class="lg fail"></i>failed</span>
+          <span><i class="lg sync"></i><span data-i18n="legend.sync">sync</span></span>
+          <span><i class="lg async"></i><span data-i18n="legend.async">async</span></span>
+          <span><i class="lg fail"></i><span data-i18n="legend.fail">failed</span></span>
         </span>
       </div>
       <div class="topo-scroll">
-        <svg id="topo" viewBox="0 0 920 540" role="img" aria-label="Interactive system topology of Le Quoc Viet's career"></svg>
+        <svg id="topo" viewBox="0 0 920 540" role="img" data-i18n-aria="topo" aria-label="Interactive system topology of Le Quoc Viet's career"></svg>
       </div>
-      <p class="topo-foot muted">↑ click a node to inspect it · packets are real clicks on this page, plus some ambient traffic</p>
+      <p class="topo-foot muted" data-i18n="topo.foot">↑ click a node to inspect it · packets are real clicks on this page, plus some ambient traffic</p>
     </div>
 
     <aside class="inspector" id="inspector" aria-live="polite">
@@ -73,7 +74,7 @@
           <div class="insp-kind" id="insp-kind">client</div>
           <div class="insp-title" id="insp-title">you</div>
         </div>
-        <button class="insp-close" id="insp-close" aria-label="Close inspector">×</button>
+        <button class="insp-close" id="insp-close" data-i18n-aria="close" aria-label="Close">×</button>
       </div>
       <div class="insp-route" id="insp-route"></div>
       <div class="insp-body" id="insp-body"></div>
@@ -83,9 +84,9 @@
   <!-- ====== Lower tabs ====== -->
   <section class="lower">
     <div class="tabs" role="tablist">
-      <button class="tab active" data-tab="trace" role="tab">trace <span class="muted">· career waterfall</span></button>
-      <button class="tab" data-tab="events" role="tab">kafka <span class="muted">· career.events</span></button>
-      <button class="tab" data-tab="console" role="tab">console <span class="muted">· curl it</span></button>
+      <button class="tab active" data-tab="trace" role="tab" data-i18n="tab.trace">trace <span class="muted">· career waterfall</span></button>
+      <button class="tab" data-tab="events" role="tab" data-i18n="tab.events">kafka <span class="muted">· career.events</span></button>
+      <button class="tab" data-tab="console" role="tab" data-i18n="tab.console">console <span class="muted">· curl it</span></button>
     </div>
 
     <div class="panel active" id="panel-trace">
@@ -93,7 +94,7 @@
         <span>trace_id <b id="trace-id">—</b></span>
         <span>service <b>lqviet.career</b></span>
         <span>spans <b id="span-count">—</b></span>
-        <span class="muted">click a span for attributes</span>
+        <span class="muted" data-i18n="trace.hint">click a span for attributes</span>
       </div>
       <div class="trace" id="trace"></div>
     </div>
@@ -110,15 +111,15 @@
       <div class="console" id="console-out"></div>
       <form class="console-in" id="console-form" autocomplete="off">
         <span class="prompt">$ curl lqv.sys</span>
-        <input id="console-input" type="text" spellcheck="false" placeholder="/experience" aria-label="API path">
-        <button class="mini" type="submit">send</button>
+        <input id="console-input" type="text" spellcheck="false" placeholder="/experience" data-i18n-aria="api" aria-label="API path">
+        <button class="mini" type="submit" data-i18n="send">send</button>
       </form>
       <div class="chips" id="console-chips"></div>
     </div>
   </section>
 
   <footer class="foot">
-    <span>© <span id="year">2026</span> Le Quoc Viet · built with vanilla JS, no frameworks were harmed</span>
+    <span>© <span id="year">2026</span> Le Quoc Viet · <span data-i18n="footer">built with vanilla JS, no frameworks were harmed</span></span>
     <span><a href="https://github.com/lqviet45" target="_blank" rel="noopener">github</a> ·
       <a href="https://www.linkedin.com/in/le-quoc-viet-a03721240" target="_blank" rel="noopener">linkedin</a> ·
       <a href="mailto:lqviet455@gmail.com">email</a></span>
@@ -133,7 +134,7 @@
         <div class="insp-kind">saga orchestrator</div>
         <div class="saga-title" id="saga-title">HireLeQuocViet</div>
       </div>
-      <button class="insp-close" id="saga-close" aria-label="Close">×</button>
+      <button class="insp-close" id="saga-close" data-i18n-aria="close" aria-label="Close">×</button>
     </div>
     <div class="saga-key muted" id="saga-key"></div>
     <ol class="saga-steps" id="saga-steps"></ol>

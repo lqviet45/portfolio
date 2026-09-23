@@ -22,6 +22,9 @@
   color-scheme: light;
 }
 
+/* Instrument Serif has no Vietnamese glyphs — swap the display serif in VI */
+:root[lang="vi"] { --serif: 'Newsreader', 'Instrument Serif', Georgia, serif; }
+
 :root[data-theme="dark"] {
   --paper: #11100d;
   --paper-2: #191813;
@@ -95,6 +98,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   width: 28px; height: 28px; font-size: 14px; line-height: 1;
 }
 .bar-btn:hover { border-color: var(--ink); }
+.lang-btn { width: auto; padding: 0 8px; font-size: 11px; font-weight: 600; letter-spacing: .06em; }
 
 @keyframes blink { 50% { opacity: .35; } }
 
@@ -121,7 +125,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   color: var(--muted);
 }
 h1 {
-  font-family: var(--serif);
+  font-family: 'Instrument Serif', var(--serif);
   font-weight: 400;
   font-size: clamp(3rem, 8vw, 6.4rem);
   line-height: .92;
