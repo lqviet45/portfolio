@@ -104,21 +104,26 @@ function buildAboutContent() {
       <img src="face-img.png" alt="Le Quoc Viet" class="about-avatar">
       <div class="about-identity">
         <h2>Le Quoc Viet</h2>
-        <div class="about-role">Backend Developer @ Sacombank</div>
+        <div class="about-role">Backend Developer @ Sacombank · Java / Spring Boot · .NET / C#</div>
       </div>
     </div>
     <div class="about-stats">
-      <div class="stat-box"><span class="stat-val">2+</span><div class="stat-lbl">Years Experience</div></div>
-      <div class="stat-box"><span class="stat-val">7.92</span><div class="stat-lbl">GPA Score</div></div>
-      <div class="stat-box"><span class="stat-val">FPT</span><div class="stat-lbl">University</div></div>
+      <div class="stat-box"><span class="stat-val">~2</span><div class="stat-lbl">Years Experience</div></div>
+      <div class="stat-box"><span class="stat-val">6</span><div class="stat-lbl">Partner Banks Integrated</div></div>
+      <div class="stat-box"><span class="stat-val">7.92</span><div class="stat-lbl">GPA · FPT University</div></div>
     </div>
     <p class="about-desc">
-      Graduated with a Bachelor's in Information Technology from FPT University (GPA: 7.92/10).
-      Currently working as a Backend Developer on CoreSL — a microservices-based core banking
-      system for Certificate of Deposit management using Java, Spring Boot, Oracle, and Redis.
-      Previously built production-level backend systems at Amazing Tech across tax invoicing,
-      water management, and construction domains. Passionate about building scalable,
-      high-throughput distributed systems.
+      Backend Developer with ~2 years of hands-on experience across Java/Spring Boot and .NET/C#.
+      Currently building core-banking microservices at Sacombank on two platforms —
+      <strong>CoreCD/CoreSL</strong> (certificate-of-deposit trading) and the
+      <strong>MCS Bill System</strong> (virtual-account partner integration) — working with Saga
+      orchestration, the Outbox pattern, idempotent APIs, Oracle, Redis, Kafka and IBM MQ.
+    </p>
+    <p class="about-desc">
+      Outside work I design and ship distributed systems end-to-end, including
+      <strong>Notification Hub</strong> — a multi-tenant notification platform built solo from
+      architecture to infra. Comfortable with clean architecture, RESTful API design, CI/CD and
+      containerized deployment. Graduated in Software Engineering from FPT University (GPA 7.92/10).
     </p>
   `;
 }
@@ -130,35 +135,65 @@ function buildExperienceContent() {
       <i class="fas fa-chevron-right"></i> Work_Experience
     </div>
     <div class="file-list">
-      <div class="file-item" id="exp-sacombank">
-        <div class="file-item-header" onclick="toggleFileDetail('exp-sacombank')">
+      <div class="file-item" id="exp-coresl">
+        <div class="file-item-header" onclick="toggleFileDetail('exp-coresl')">
           <i class="fas fa-file-alt file-icon"></i>
-          <span class="file-name">Sacombank_CoreSL.log</span>
-          <span class="file-date">Present</span>
+          <span class="file-name">Sacombank_CoreCD_CoreSL.log</span>
+          <span class="file-date">01/2026 – Now</span>
           <i class="fas fa-chevron-right file-chevron"></i>
         </div>
         <div class="file-detail">
-          <p><strong style="color:var(--text)">Backend Developer @ Sacombank — CoreSL Project</strong></p>
-          <p>Developed CD issuance API with PaymentHub/T24 integration. Built CD buying API with
-          interest-rate-based pricing formula, lot locking mechanism, and Redis-based idempotency.
-          Developed CD selling API supporting 3 sell modes (by quantity, by amount, sell all)
-          with a prioritization algorithm based on maturity and purchase date.</p>
-          <p>Built Apache Airflow DAGs for automated bulk CD purchasing: 4-step pipeline with lot
-          allocation algorithm by customer segment. Optimized DAG performance by migrating to
-          async batch processing (aiohttp + semaphore) and moving large inter-task datasets
-          (&gt;2,000 records) from XCom to Redis.</p>
-          <p>Integrated ODS (balance inquiry), PaymentHub/T24, and interest rate API via OpenFeign.
-          Implemented distributed locking and built configuration management APIs for buy/sell limits
-          and interest rate tables. Fixed security vulnerabilities identified by BlackDuck and
-          Coverity. Deployed on Kubernetes/OpenShift.</p>
+          <p><strong style="color:var(--text)">Backend Developer @ Sacombank — CoreCD/CoreSL</strong><br>
+          <small>Certificate-of-Deposit Trading Platform</small></p>
+          <p>Delivered production microservices covering the full CD lifecycle — registration,
+          issuance, primary/secondary trading and settlement — integrated with T24 Core Banking
+          and PaymentHub.</p>
+          <p><b>Registration &amp; lifecycle:</b> corporate/retail buy-register with account and CIF
+          validation, contract generation, and cancellation (auto sell-off of remaining holdings for retail).</p>
+          <p><b>Purchase flow:</b> dual-channel order intake (MQ + REST), buyer account verification,
+          PaymentHub settlement and automatic rollback on failure — Saga orchestration with
+          Redis-based idempotency for exactly-once processing.</p>
+          <p><b>Early-redemption &amp; sell flow:</b> multi-criteria pre-maturity sale simulation
+          (full / partial / by-amount), interest &amp; fee calculation, auto-sell below threshold and
+          settlement at maturity.</p>
+          <p><b>Platform:</b> Outbox-pattern event publishing in lot-management, CD-lot
+          reconciliation/ODS sync with Apache Airflow DAGs, Redis-cached purchase/sale reporting.</p>
           <div class="exp-tags">
             <span class="exp-tag">Java</span>
             <span class="exp-tag">Spring Boot</span>
+            <span class="exp-tag">Saga</span>
+            <span class="exp-tag">Outbox</span>
             <span class="exp-tag">Oracle</span>
             <span class="exp-tag">Redis</span>
+            <span class="exp-tag">IBM MQ</span>
             <span class="exp-tag">Airflow</span>
-            <span class="exp-tag">OpenFeign</span>
-            <span class="exp-tag">K8s/OpenShift</span>
+            <span class="exp-tag">T24</span>
+          </div>
+        </div>
+      </div>
+      <div class="file-item" id="exp-mcs">
+        <div class="file-item-header" onclick="toggleFileDetail('exp-mcs')">
+          <i class="fas fa-file-alt file-icon"></i>
+          <span class="file-name">Sacombank_MCS_Bill.log</span>
+          <span class="file-date">01/2026 – Now</span>
+          <i class="fas fa-chevron-right file-chevron"></i>
+        </div>
+        <div class="file-detail">
+          <p><strong style="color:var(--text)">Backend Developer @ Sacombank — MCS Bill System</strong><br>
+          <small>Virtual-Account Partner Integration Platform</small></p>
+          <p>Built the virtual-account (VA) integration platform — inquiry, deposit-notify and
+          outgoing-core flows unified behind a <b>gRPC facade</b>, with an <b>IBM MQ request/reply</b>
+          layer dispatching to partner adapters and fallback routing to the legacy system for
+          accounts outside the new platform.</p>
+          <p>Integrated <b>6 partner banks / payment gateways</b> (SHB, LienVietPostBank, PVI,
+          NganLuong, Vimo, GSM) through a common adapter layer, including OAuth2 token exchange and
+          RSA-SHA256 request signing for SHB.</p>
+          <div class="exp-tags">
+            <span class="exp-tag">gRPC</span>
+            <span class="exp-tag">IBM MQ / JMS</span>
+            <span class="exp-tag">Adapter Pattern</span>
+            <span class="exp-tag">OAuth2</span>
+            <span class="exp-tag">RSA-SHA256</span>
           </div>
         </div>
       </div>
@@ -166,25 +201,22 @@ function buildExperienceContent() {
         <div class="file-item-header" onclick="toggleFileDetail('exp-amazing')">
           <i class="fas fa-file-alt file-icon"></i>
           <span class="file-name">AmazingTech.log</span>
-          <span class="file-date">9 months</span>
+          <span class="file-date">12/2023 – 05/2024</span>
           <i class="fas fa-chevron-right file-chevron"></i>
         </div>
         <div class="file-detail">
-          <p><strong style="color:var(--text)">Backend Developer @ Amazing Tech</strong></p>
-          <p>Developed a Node.js web API for creating tax invoices for businesses, integrating
-          with Odoo for data storage and facilitating connections with the Malaysian government.
-          Implemented robust OTP validation for enhanced security.</p>
-          <p>Built a comprehensive water plant management system. Designed and implemented APIs
-          for complex data queries and statistical reports with Excel export functionality.
-          Optimized performance using Dapper and stored procedures.</p>
-          <p>Developed a web application for tracking and managing concrete piles in construction
-          projects. Collaborated with stakeholders to gather requirements and designed the initial
-          database structure and feature specifications.</p>
+          <p><strong style="color:var(--text)">Back-end Developer @ Amazing Tech</strong></p>
+          <p>Shipped API modules powering a <b>tax-invoicing system</b> and a
+          <b>water-factory management system</b>, integrating external systems and cutting query
+          latency with SQL Stored Procedures.</p>
+          <p>Built complex reporting modules with Excel export, partnering with the frontend team to
+          define API contracts.</p>
           <div class="exp-tags">
-            <span class="exp-tag">Node.js</span>
             <span class="exp-tag">ASP.NET Core</span>
+            <span class="exp-tag">C#</span>
             <span class="exp-tag">SQL Server</span>
             <span class="exp-tag">Dapper</span>
+            <span class="exp-tag">Stored Procedures</span>
           </div>
         </div>
       </div>
@@ -196,14 +228,37 @@ function buildProjectsContent() {
   return `
     <div class="project-grid">
       <div class="project-card">
-        <h3>FPTU Examination System</h3>
-        <p>A comprehensive mobile and web system for FPTU Examination Office with AI chatbot
-        integration. Built with modern architecture patterns and real-time features.</p>
+        <h3>Notification Hub</h3>
+        <p><small>Multi-tenant Notification Platform · Personal · 2025 – Present</small></p>
+        <p>A multi-tenant .NET 8 platform designed and shipped solo — Kong gateway, auth, ingestion
+        (REST + gRPC + legacy AMQP), routing, templating, tracking, per-channel workers
+        (email/SMS/push) and a Blazor admin console.</p>
+        <p>OAuth2 client-credentials with RS256/JWKS and zero-downtime key rotation; outbox-relay →
+        Kafka → channel workers with HMAC-signed callbacks, OpenTelemetry tracing across HTTP and
+        Kafka, and Polly resilience with Redis fail-open caching.</p>
+        <div class="tech-chips">
+          <span class="tech-chip">.NET 8</span>
+          <span class="tech-chip">Kafka</span>
+          <span class="tech-chip">Kong</span>
+          <span class="tech-chip">gRPC</span>
+          <span class="tech-chip">OpenTelemetry</span>
+          <span class="tech-chip">Polly</span>
+          <span class="tech-chip">Blazor</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <h3>FEDOM-AI</h3>
+        <p><small>Internal Exam &amp; Proctor Management · Capstone · 2025</small></p>
+        <p>Directed the backend architecture with CQRS + MediatR Clean Architecture, integrated a
+        RAG-based Spring AI chatbot and SignalR real-time support, and moved Excel imports off the
+        request thread with an async RabbitMQ + Quartz pipeline.</p>
         <div class="tech-chips">
           <span class="tech-chip">ASP.NET Core</span>
-          <span class="tech-chip">React</span>
-          <span class="tech-chip">SQL Server</span>
+          <span class="tech-chip">CQRS</span>
+          <span class="tech-chip">Spring AI</span>
           <span class="tech-chip">SignalR</span>
+          <span class="tech-chip">RabbitMQ</span>
+          <span class="tech-chip">Quartz</span>
         </div>
       </div>
       <div class="project-card">
@@ -222,48 +277,24 @@ function buildProjectsContent() {
 }
 
 function buildSkillsContent() {
+  const block = (label, cls, items) => `
+    <div class="skill-category-block">
+      <div class="skill-cat-label"><span>"${label}"</span>: [</div>
+      <div class="skill-chips">
+        ${items.map(s => `<span class="skill-chip ${cls}">${s}</span>`).join('')}
+      </div>
+    </div>`;
   return `
     <div class="skills-file-header">
       <span style="color:#6366f1">// skills.json</span><br>
       <span style="color:#f59e0b">{</span>
     </div>
-    <div class="skill-category-block">
-      <div class="skill-cat-label"><span>"Backend"</span>: [</div>
-      <div class="skill-chips">
-        <span class="skill-chip backend">Java</span>
-        <span class="skill-chip backend">Spring Boot</span>
-        <span class="skill-chip backend">ASP.NET Core</span>
-        <span class="skill-chip backend">C#</span>
-        <span class="skill-chip backend">Node.js</span>
-      </div>
-    </div>
-    <div class="skill-category-block">
-      <div class="skill-cat-label"><span>"Database"</span>: [</div>
-      <div class="skill-chips">
-        <span class="skill-chip database">Oracle</span>
-        <span class="skill-chip database">SQL Server</span>
-        <span class="skill-chip database">PostgreSQL</span>
-        <span class="skill-chip database">Redis</span>
-      </div>
-    </div>
-    <div class="skill-category-block">
-      <div class="skill-cat-label"><span>"Tools & DevOps"</span>: [</div>
-      <div class="skill-chips">
-        <span class="skill-chip devops">Git</span>
-        <span class="skill-chip devops">Docker</span>
-        <span class="skill-chip devops">Kubernetes/OpenShift</span>
-        <span class="skill-chip devops">Apache Airflow</span>
-      </div>
-    </div>
-    <div class="skill-category-block">
-      <div class="skill-cat-label"><span>"Frontend"</span>: [</div>
-      <div class="skill-chips">
-        <span class="skill-chip frontend">HTML5</span>
-        <span class="skill-chip frontend">CSS3</span>
-        <span class="skill-chip frontend">JavaScript</span>
-        <span class="skill-chip frontend">React</span>
-      </div>
-    </div>
+    ${block('Languages', 'backend', ['Java', 'C#', 'JavaScript', 'SQL', 'HTML/CSS'])}
+    ${block('Frameworks', 'backend', ['Spring Boot', 'Spring Cloud OpenFeign', 'ASP.NET Core', 'Dapper', 'ReactJS', 'Next.js'])}
+    ${block('Databases', 'database', ['Oracle', 'PostgreSQL', 'SQL Server', 'Redis', 'MongoDB'])}
+    ${block('Messaging & APIs', 'frontend', ['REST API', 'gRPC', 'IBM MQ / JMS', 'Apache Kafka', 'RabbitMQ'])}
+    ${block('Tools & DevOps', 'devops', ['Docker', 'Kubernetes', 'Helm', 'GitLab CI/CD', 'Apache Airflow', 'Kong', 'Git', 'Postman', 'Swagger'])}
+    ${block('Patterns', 'backend', ['Saga', 'Outbox', 'Idempotency', 'CQRS', 'Clean Architecture', 'Circuit Breaker'])}
     <div class="skills-file-header" style="margin-top:8px"><span style="color:#f59e0b">}</span></div>
   `;
 }
@@ -336,18 +367,18 @@ function buildContactContent() {
           <div class="contact-value">+84 353 081 770</div>
         </div>
       </a>
-      <a class="contact-row" href="https://github.com/Lqviet45" target="_blank" rel="noopener">
+      <a class="contact-row" href="https://github.com/lqviet45" target="_blank" rel="noopener">
         <div class="contact-icon-wrap"><i class="fab fa-github"></i></div>
         <div>
           <div class="contact-label">GitHub</div>
-          <div class="contact-value">github.com/Lqviet45</div>
+          <div class="contact-value">github.com/lqviet45</div>
         </div>
       </a>
-      <a class="contact-row" href="https://linkedin.com/in/le-viet-a03721240" target="_blank" rel="noopener">
+      <a class="contact-row" href="https://linkedin.com/in/le-quoc-viet-a03721240" target="_blank" rel="noopener">
         <div class="contact-icon-wrap"><i class="fab fa-linkedin"></i></div>
         <div>
           <div class="contact-label">LinkedIn</div>
-          <div class="contact-value">linkedin.com/in/le-viet-a03721240</div>
+          <div class="contact-value">linkedin.com/in/le-quoc-viet-a03721240</div>
         </div>
       </a>
       <a class="contact-row" href="https://facebook.com/le.quoc.viet.692602" target="_blank" rel="noopener">
@@ -488,7 +519,7 @@ function _getBrowserPage(url) {
     return { title: 'GET /api/health — 200 OK', html: _bpApiHealth() };
   if (url.startsWith('localhost:8080/api'))
     return { title: `localhost:8080 — ${url.split('/api')[1]}`, html: _bpApiGeneric(url) };
-  if (url.startsWith('linkedin.com/in/le-viet'))
+  if (url.startsWith('linkedin.com/in/le-'))
     return { title: 'Le Quoc Viet — LinkedIn', html: _bpLinkedIn() };
   if (url.startsWith('facebook.com/le.quoc.viet'))
     return { title: 'Le Quoc Viet — Facebook', html: _bpFacebook() };
@@ -505,18 +536,19 @@ function _bpHome() {
     </div>
     <div class="bp-quicklinks">
       <button class="bp-ql" onclick="navigateBrowser('github.com/lqviet45')"><i class="fab fa-github"></i> GitHub</button>
-      <button class="bp-ql" onclick="navigateBrowser('linkedin.com/in/le-viet-a03721240')"><i class="fab fa-linkedin"></i> LinkedIn</button>
+      <button class="bp-ql" onclick="navigateBrowser('linkedin.com/in/le-quoc-viet-a03721240')"><i class="fab fa-linkedin"></i> LinkedIn</button>
       <button class="bp-ql" onclick="openApp('contact')"><i class="fas fa-envelope"></i> Contact</button>
       <button class="bp-ql" onclick="openApp('terminal')"><i class="fas fa-terminal"></i> Terminal</button>
     </div>
     <div class="bp-work-card">
       <div class="bp-work-label">⚡ Currently building</div>
-      <div class="bp-work-title">CoreSL — Core Banking System</div>
-      <div class="bp-work-company">@ Sacombank · Microservices Architecture</div>
+      <div class="bp-work-title">CoreCD/CoreSL &amp; MCS Bill — Core Banking</div>
+      <div class="bp-work-company">@ Sacombank · CD trading + virtual-account partner integration</div>
       <div class="bp-work-tags">
         <span class="bp-tag">Java</span><span class="bp-tag">Spring Boot</span>
+        <span class="bp-tag">Saga</span><span class="bp-tag">Outbox</span>
         <span class="bp-tag">Oracle</span><span class="bp-tag">Redis</span>
-        <span class="bp-tag">Apache Airflow</span><span class="bp-tag">K8s/OpenShift</span>
+        <span class="bp-tag">IBM MQ</span><span class="bp-tag">gRPC</span>
       </div>
     </div>
     <div class="bp-visitor">👁 Visitor #2,047 — Welcome!</div>
@@ -535,8 +567,8 @@ function _bpGitHub() {
       <div class="gh-sidebar">
         <img src="face-img.png" class="gh-avatar">
         <div class="gh-name">Le Quoc Viet</div>
-        <div class="gh-login">@Lqviet45</div>
-        <div class="gh-bio">Backend Developer · Java · Spring Boot · Building scalable distributed systems</div>
+        <div class="gh-login">@lqviet45</div>
+        <div class="gh-bio">Backend Developer · Java / Spring Boot · .NET / C# · Building distributed systems</div>
         <div class="gh-meta"><i class="fas fa-building"></i> Sacombank</div>
         <div class="gh-meta"><i class="fas fa-graduation-cap"></i> FPT University</div>
         <div class="gh-stats">
@@ -549,13 +581,13 @@ function _bpGitHub() {
         <div class="gh-section-title">📌 Pinned</div>
         <div class="gh-pinned">
           <div class="gh-repo-card">
-            <div class="gh-repo-name"><i class="fas fa-book"></i> FPTU-Examination-System</div>
-            <div class="gh-repo-desc">Mobile & web system for FPTU Exam Office with AI chatbot and real-time features</div>
+            <div class="gh-repo-name"><i class="fas fa-book"></i> Notification-Hub</div>
+            <div class="gh-repo-desc">Multi-tenant .NET 8 notification platform — Kong, Kafka, gRPC, OpenTelemetry, Polly</div>
             <div class="gh-repo-footer"><span style="color:#178600">● C#</span> ⭐ 4 · 🍴 2</div>
           </div>
           <div class="gh-repo-card">
-            <div class="gh-repo-name"><i class="fas fa-book"></i> Gym-Management-System</div>
-            <div class="gh-repo-desc">Full-stack gym management with PayOS payment integration</div>
+            <div class="gh-repo-name"><i class="fas fa-book"></i> FEDOM-AI</div>
+            <div class="gh-repo-desc">Exam &amp; proctor management — CQRS, RAG chatbot, SignalR, RabbitMQ + Quartz</div>
             <div class="gh-repo-footer"><span style="color:#178600">● C#</span> ⭐ 3 · 🍴 1</div>
           </div>
         </div>
@@ -578,7 +610,7 @@ function _bpGitHubGeneral() {
       <div style="font-size:3rem;margin-bottom:16px">🐙</div>
       <p style="color:var(--bp-muted)">Looking for a developer?</p>
       <button class="bp-ql" onclick="navigateBrowser('github.com/lqviet45')" style="margin-top:16px">
-        View @Lqviet45's profile
+        View @lqviet45's profile
       </button>
     </div>
   </div>`;
@@ -608,17 +640,17 @@ function _bpGoogleResults(query) {
       <div class="sr-item" onclick="navigateBrowser('lqviet.dev')">
         <div class="sr-url">🌐 lqviet.dev</div>
         <div class="sr-title">Le Quoc Viet — Portfolio OS</div>
-        <div class="sr-desc">Backend Developer at Sacombank. Building CoreSL — a core banking system for Certificate of Deposit management. Java · Spring Boot · Oracle · Redis · Microservices.</div>
+        <div class="sr-desc">Backend Developer at Sacombank. Building CoreCD/CoreSL (certificate-of-deposit trading) and MCS Bill (virtual-account partner integration). Java · Spring Boot · Saga · Outbox · Kafka · IBM MQ.</div>
       </div>
       <div class="sr-item" onclick="navigateBrowser('github.com/lqviet45')">
-        <div class="sr-url">🐙 github.com/Lqviet45</div>
+        <div class="sr-url">🐙 github.com/lqviet45</div>
         <div class="sr-title">Lqviet45 (Le Quoc Viet) — GitHub</div>
-        <div class="sr-desc">Backend developer. Java • Spring Boot • ASP.NET Core. FPT University graduate. 12 repositories · 48 followers.</div>
+        <div class="sr-desc">Backend developer. Java • Spring Boot • .NET 8 • Kafka. FPT University graduate. Notification-Hub · FEDOM-AI.</div>
       </div>
-      <div class="sr-item" onclick="navigateBrowser('linkedin.com/in/le-viet-a03721240')">
+      <div class="sr-item" onclick="navigateBrowser('linkedin.com/in/le-quoc-viet-a03721240')">
         <div class="sr-url">💼 linkedin.com</div>
         <div class="sr-title">Le Quoc Viet — LinkedIn</div>
-        <div class="sr-desc">Backend Developer at Sacombank | FPT University | Java, Spring Boot, Oracle, Redis, Kubernetes | 500+ connections.</div>
+        <div class="sr-desc">Backend Developer at Sacombank | FPT University | Java, Spring Boot, .NET, Oracle, Redis, Kafka, IBM MQ.</div>
       </div>`;
   } else if (q.includes('java') || q.includes('spring') || q.includes('spring boot')) {
     items = `
@@ -645,7 +677,7 @@ function _bpGoogleResults(query) {
         <div class="sr-desc">SET key value NX PX milliseconds — the correct way to implement distributed locks. Le Quoc Viet uses this in production.</div>
       </div>
       <div class="sr-item" onclick="navigateBrowser('github.com/lqviet45')">
-        <div class="sr-url">🐙 github.com/Lqviet45</div>
+        <div class="sr-url">🐙 github.com/lqviet45</div>
         <div class="sr-title">Le Quoc Viet uses ${query} in production @ Sacombank</div>
         <div class="sr-desc">CoreSL core banking system relies heavily on ${query} for high-throughput transaction processing.</div>
       </div>`;
@@ -870,8 +902,8 @@ function _bpLinkedIn() {
       <div class="li-body">
         <img src="face-img.png" class="li-avatar">
         <h2>Le Quoc Viet</h2>
-        <div class="li-headline">Backend Developer @ Sacombank · Java · Spring Boot · Microservices · Redis</div>
-        <div class="li-location"><i class="fas fa-map-marker-alt"></i> Ho Chi Minh City, Vietnam</div>
+        <div class="li-headline">Backend Developer @ Sacombank · Java / Spring Boot · .NET / C# · Distributed Systems</div>
+        <div class="li-location"><i class="fas fa-map-marker-alt"></i> Dong Nai / Ho Chi Minh City, Vietnam</div>
         <div class="li-connections">🟡 500+ connections</div>
         <div class="li-actions">
           <button class="li-btn-primary">+ Connect</button>
@@ -880,12 +912,12 @@ function _bpLinkedIn() {
       </div>
       <div class="li-section">
         <h3>About</h3>
-        <p>Backend Developer with 2+ years building scalable distributed systems. Currently working on CoreSL at Sacombank — a microservices-based core banking platform for CD management. Strong focus on high-throughput transaction processing and system reliability.</p>
+        <p>Backend Developer with ~2 years across Java/Spring Boot and .NET/C#. Building core-banking microservices at Sacombank — CoreCD/CoreSL (certificate-of-deposit trading) and MCS Bill (virtual-account partner integration) — with Saga orchestration, the Outbox pattern, idempotent APIs, Oracle, Redis, Kafka and IBM MQ.</p>
       </div>
       <div class="li-section">
         <h3>Experience</h3>
-        <div class="li-job"><div class="li-job-icon">🏦</div><div><b>Backend Developer — Sacombank</b><br><small>2024 – Present · Ho Chi Minh City</small></div></div>
-        <div class="li-job"><div class="li-job-icon">💻</div><div><b>Backend Developer — Amazing Tech</b><br><small>2023 – 2024 · 9 months · Ho Chi Minh City</small></div></div>
+        <div class="li-job"><div class="li-job-icon">🏦</div><div><b>Backend Developer — Sacombank</b><br><small>01/2026 – Present · CoreCD/CoreSL · MCS Bill</small></div></div>
+        <div class="li-job"><div class="li-job-icon">💻</div><div><b>Backend Developer — Amazing Tech</b><br><small>12/2023 – 05/2024 · Tax-invoicing · Water-factory management</small></div></div>
       </div>
     </div>
   </div>`;
@@ -898,7 +930,7 @@ function _bpFacebook() {
     <p>This profile is set to Friends only.</p>
     <p style="color:var(--bp-muted);font-size:0.85rem;margin-top:12px">
       Better info available at
-      <a onclick="navigateBrowser('linkedin.com/in/le-viet-a03721240')" style="color:var(--accent);cursor:pointer">LinkedIn</a>
+      <a onclick="navigateBrowser('linkedin.com/in/le-quoc-viet-a03721240')" style="color:var(--accent);cursor:pointer">LinkedIn</a>
       or the <a onclick="openApp('contact')" style="color:var(--accent);cursor:pointer">Contact window</a>.
     </p>
   </div>`;
@@ -1190,6 +1222,7 @@ const COMMANDS = {
 <div class="t-line t-output">  <span class="t-success">cat exp.txt</span>   — Work experience</div>
 <div class="t-line t-output">  <span class="t-success">cat contact.txt</span>— Contact info</div>
 <div class="t-line t-output">  <span class="t-success">open &lt;app&gt;</span>    — Open an app window</div>
+<div class="t-line t-output">  <span class="t-success">ssh lqv.sys</span>   — Portfolio v2: my career as a distributed system</div>
 <div class="t-line t-output">  <span class="t-success">date</span>           — Current date & time</div>
 <div class="t-line t-output">  <span class="t-success">neofetch</span>      — System info</div>
 <div class="t-line t-output">  <span class="t-success">clear</span>         — Clear terminal</div>`;
@@ -1198,7 +1231,7 @@ const COMMANDS = {
   whoami() {
     return `<div class="t-line t-bold">Le Quoc Viet</div>
 <div class="t-line t-output">Role  : Backend Developer @ Sacombank</div>
-<div class="t-line t-output">Stack : Java, Spring Boot, Oracle, Redis, Airflow, K8s</div>
+<div class="t-line t-output">Stack : Java/Spring Boot, .NET/C#, Oracle, Redis, Kafka, IBM MQ</div>
 <div class="t-line t-output">Edu   : FPT University — GPA 7.92/10</div>`;
   },
 
@@ -1206,13 +1239,16 @@ const COMMANDS = {
     return `<div class="t-line t-output">portfolio/</div>
 <div class="t-line t-output">├── About_Me.txt</div>
 <div class="t-line t-output">├── Experience/</div>
-<div class="t-line t-output">│   ├── Sacombank_CoreSL.log</div>
+<div class="t-line t-output">│   ├── Sacombank_CoreCD_CoreSL.log</div>
+<div class="t-line t-output">│   ├── Sacombank_MCS_Bill.log</div>
 <div class="t-line t-output">│   └── AmazingTech.log</div>
 <div class="t-line t-output">├── Projects/</div>
-<div class="t-line t-output">│   ├── FPTU_ExamSystem/</div>
+<div class="t-line t-output">│   ├── NotificationHub/</div>
+<div class="t-line t-output">│   ├── FEDOM-AI/</div>
 <div class="t-line t-output">│   └── GymManagement/</div>
 <div class="t-line t-output">├── skills.json</div>
 <div class="t-line t-output">├── Certificates/</div>
+<div class="t-line t-output">├── lqv.sys</div>
 <div class="t-line t-output">├── Contact.lnk</div>
 <div class="t-line t-output">└── Recycle Bin/</div>`;
   },
@@ -1221,36 +1257,38 @@ const COMMANDS = {
     return `<div class="t-line t-bold">Le Quoc Viet</div>
 <div class="t-line t-output">Backend Developer @ Sacombank</div>
 <div class="t-line t-output">Graduated from FPT University (GPA: 7.92/10).</div>
-<div class="t-line t-output">Currently working on CoreSL — a microservices-based core banking</div>
-<div class="t-line t-output">system for Certificate of Deposit management.</div>`;
+<div class="t-line t-output">Building core-banking microservices: CoreCD/CoreSL (CD trading)</div>
+<div class="t-line t-output">and MCS Bill (virtual-account partner integration).</div>
+<div class="t-line t-output">Saga · Outbox · idempotent APIs · Oracle · Redis · Kafka · IBM MQ</div>`;
   },
 
   'cat skills.txt'() {
     return `<div class="t-line t-bold">Technical Skills</div>
-<div class="t-line t-output">Backend  : Java, Spring Boot, ASP.NET Core, C#, Node.js</div>
-<div class="t-line t-output">Database : Oracle, SQL Server, PostgreSQL, Redis</div>
-<div class="t-line t-output">DevOps   : Git, Docker, Kubernetes/OpenShift, Apache Airflow</div>
-<div class="t-line t-output">Frontend : HTML5, CSS3, JavaScript, React</div>`;
+<div class="t-line t-output">Languages : Java, C#, JavaScript, SQL, HTML/CSS</div>
+<div class="t-line t-output">Frameworks: Spring Boot, OpenFeign, ASP.NET Core, Dapper, React, Next.js</div>
+<div class="t-line t-output">Databases : Oracle, PostgreSQL, SQL Server, Redis, MongoDB</div>
+<div class="t-line t-output">Messaging : REST, gRPC, IBM MQ/JMS, Kafka, RabbitMQ</div>
+<div class="t-line t-output">DevOps    : Docker, Kubernetes, Helm, GitLab CI/CD, Airflow, Kong</div>`;
   },
 
   'cat exp.txt'() {
     return `<div class="t-line t-bold">Work Experience</div>
-<div class="t-line t-output" style="margin-top:4px">[ Sacombank — CoreSL Project ] Present</div>
-<div class="t-line t-output">  CD issuance, buying, selling APIs (PaymentHub/T24)</div>
-<div class="t-line t-output">  Apache Airflow DAGs — bulk CD pipeline (aiohttp + Redis)</div>
-<div class="t-line t-output">  Distributed locking, OpenFeign integrations, K8s/OpenShift</div>
-<div class="t-line t-output">  Security fixes via BlackDuck & Coverity</div>
-<div class="t-line t-output" style="margin-top:6px">[ Amazing Tech ] 9 months</div>
-<div class="t-line t-output">  Node.js tax invoice API (Odoo + Malaysian gov)</div>
-<div class="t-line t-output">  Water plant management (Dapper + stored procs)</div>
-<div class="t-line t-output">  Construction pile tracking app</div>`;
+<div class="t-line t-output" style="margin-top:4px">[ Sacombank — CoreCD/CoreSL ] 01/2026 – Present</div>
+<div class="t-line t-output">  Full CD lifecycle: register, issue, trade, settle (T24 + PaymentHub)</div>
+<div class="t-line t-output">  Purchase Saga w/ Redis idempotency · MQ + REST intake · auto rollback</div>
+<div class="t-line t-output">  Early-redemption simulation · Outbox events · Airflow reconciliation</div>
+<div class="t-line t-output" style="margin-top:6px">[ Sacombank — MCS Bill System ] 01/2026 – Present</div>
+<div class="t-line t-output">  gRPC facade + IBM MQ request/reply · legacy fallback routing</div>
+<div class="t-line t-output">  6 partner banks/gateways · OAuth2 · RSA-SHA256 signing</div>
+<div class="t-line t-output" style="margin-top:6px">[ Amazing Tech ] 12/2023 – 05/2024</div>
+<div class="t-line t-output">  Tax-invoicing &amp; water-factory APIs · stored procs · Excel reports</div>`;
   },
 
   'cat contact.txt'() {
     return `<div class="t-line t-output">Email    : lqviet455@gmail.com</div>
 <div class="t-line t-output">Phone    : +84 353 081 770</div>
-<div class="t-line t-output">GitHub   : github.com/Lqviet45</div>
-<div class="t-line t-output">LinkedIn : linkedin.com/in/le-viet-a03721240</div>
+<div class="t-line t-output">GitHub   : github.com/lqviet45</div>
+<div class="t-line t-output">LinkedIn : linkedin.com/in/le-quoc-viet-a03721240</div>
 <div class="t-line t-output">Facebook : facebook.com/le.quoc.viet.692602</div>`;
   },
 
@@ -1267,10 +1305,16 @@ const COMMANDS = {
    ██░░░░░░░░██   <span class="t-info">OS</span>: Portfolio OS 1.0
     ██░░░░░░██    <span class="t-info">CPU</span>: Java / Spring Boot
       ██████      <span class="t-info">RAM</span>: 7.92 GPA / 10 GPA</div>
-<div class="t-line t-output">  <span class="t-info">Uptime</span>  : 2+ years</div>
+<div class="t-line t-output">  <span class="t-info">Uptime</span>  : ~2 years</div>
 <div class="t-line t-output">  <span class="t-info">Shell</span>   : Portfolio Terminal</div>
 <div class="t-line t-output">  <span class="t-info">Theme</span>   : Glassmorphism Dark</div>
 <div class="t-line t-output">  <span class="t-info">Kernel</span>  : Vanilla JS</div>`;
+  },
+
+  'ssh lqv.sys'() {
+    setTimeout(() => { location.href = 'system/'; }, 900);
+    return `<div class="t-line t-output">Connecting to lqv.sys (vn-south-1)...</div>
+<div class="t-line t-success">Authenticated. Redirecting to LQV/SYS...</div>`;
   },
 
   clear: '__CLEAR__'
