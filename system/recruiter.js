@@ -112,7 +112,7 @@ function setView(view, { updateHash = true } = {}) {
   }
   window.scrollTo({ top: 0, behavior: 'auto' });
   if (cv) {
-    $('#cv-back').focus({ preventScroll: true });
+    if (updateHash) $('#cv-back').focus({ preventScroll: true }); // only when the visitor opened it
     emit('view.changed', '{view:"tldr"}', 'user');
   }
 }
