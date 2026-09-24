@@ -34,6 +34,11 @@ function readPalette() {
   }
 }
 readPalette();
+
+/* Build in slices so no single task blocks input for long (INP/TBT) */
+const breathe = () => (window.scheduler?.yield ? scheduler.yield() : new Promise(r => setTimeout(r, 0)));
+await breathe();
+
 const mix = (a, b, t) => a.clone().lerp(b, t);
 
 /* ---------- Scene, camera, controls ---------- */
@@ -196,6 +201,7 @@ function buildNode(id, d) {
   nodes[id] = { id, d, grp, body, face, fMat, eMat, label, h, pulse: 0, shake: 0, down: false, intro: 0 };
 }
 Object.entries(DEFS).forEach(([id, d]) => buildNode(id, d));
+await breathe();
 
 /* ---------- Kafka log tower ---------- */
 const SLICE_H = 0.13, SLICE_GAP = 0.05, SLICE_MAX = 15, TOWER_R = 0.72;
@@ -291,6 +297,7 @@ buildArc('you', 'gw', 'sync');
 SERVICES.forEach(s => buildArc('gw', s, 'sync'));
 SERVICES.forEach(s => buildArc(s, 'kafka', 'async'));
 SINKS.forEach(s => buildArc('kafka', s, 'async'));
+await breathe();
 
 /* ---------- Packets (head + fading trail + halo) ---------- */
 const haloTex = (() => {
@@ -630,6 +637,29 @@ Object.values(nodes).forEach(n => {
   n.label = fresh;
 });
 Object.values(nodes).forEach((n, i) => { n.intro = n.isTower ? 0 : 0.15 + i * 0.06; });
+
+// Compile shaders off the critical path (parallel where KHR_parallel_shader_compile exists)
+try { await renderer.compileAsync(scene, camera); } catch { /* first render compiles instead */ }
+await breathe();
+
+// Without parallel compile, the first frame links every shader program and
+// uploads every buffer/texture in one go (~250ms+ on slow GPUs). Pay that
+// while the canvas is still hidden, one object at a time, in short slices.
+{
+  const leaves = [];
+  scene.traverse(o => { if (o.material) leaves.push(o); });
+  const was = leaves.map(o => o.visible);
+  leaves.forEach(o => { o.visible = false; });
+  let t0 = performance.now();
+  for (let i = 0; i < leaves.length; i++) {
+    if (!was[i]) continue;
+    leaves[i].visible = true;                 // draw just this object: cheap unless
+    renderer.render(scene, camera);           // it brings a new program or buffer
+    leaves[i].visible = false;
+    if (performance.now() - t0 > 12) { await breathe(); t0 = performance.now(); }
+  }
+  leaves.forEach((o, i) => { o.visible = was[i]; });
+}
 
 host.dataset.state = 'ready';
 frame();

@@ -176,7 +176,7 @@ function histogram(ok, W = 640) {
     const x = padL + band * i + (band - bw) / 2;
     const share = Math.round((c / total) * 100);
     const label = `${LT_BUCKET_LABELS[i]} ms: ${fmtN(c)} ${L('requests', 'request')} (${share}%)`;
-    return `<g class="lt-bar" tabindex="0" data-tip="${esc(fmtN(c))}|${esc(`${LT_BUCKET_LABELS[i]} ms · ${share}%`)}" aria-label="${esc(label)}">
+    return `<g class="lt-bar" role="img" tabindex="0" data-tip="${esc(fmtN(c))}|${esc(`${LT_BUCKET_LABELS[i]} ms · ${share}%`)}" aria-label="${esc(label)}">
         <rect x="${padL + band * i}" y="${padT}" width="${band}" height="${H - padT - padB}" class="lt-hit"/>
         <path d="${barPath(x, y(c), bw, y(0))}" class="lt-fill"/>
       </g>`;
@@ -194,7 +194,7 @@ function histogram(ok, W = 640) {
 
   return {
     counts,
-    svg: `<svg viewBox="0 0 ${W} ${H}" class="lt-hist" role="img" aria-label="${esc(L('Latency distribution of successful requests', 'Phân bố độ trễ của các request thành công'))}">
+    svg: `<svg viewBox="0 0 ${W} ${H}" class="lt-hist" role="group" aria-label="${esc(L('Latency distribution of successful requests', 'Phân bố độ trễ của các request thành công'))}">
       ${grid}${bars}${edges}${markers}
       <line x1="${padL}" x2="${W - padR}" y1="${y(0)}" y2="${y(0)}" class="lt-axis"/>
     </svg>`
@@ -250,7 +250,7 @@ function renderLoadTest() {
       ${LT_STAGES.map(s => `<span class="lt-stage${lt?.stage === s.key ? ' on' : ''}">${stageName[s.key]}</span>`).join('')}
       <span class="lt-state">${running ? L('running…', 'đang chạy…') : done ? L('finished', 'hoàn tất') : L('ready', 'sẵn sàng')}</span>
     </div>
-    <div class="lt-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(elapsed * 100)}"><span style="width:${elapsed * 100}%"></span></div>
+    <div class="lt-meter" role="progressbar" aria-label="${esc(L('Test progress', 'Tiến độ bài test'))}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(elapsed * 100)}"><span style="width:${elapsed * 100}%"></span></div>
 
     <dl class="lt-tiles">
       <div><dt>${L('Requests', 'Request')}</dt><dd>${fmtN(total)}</dd></div>

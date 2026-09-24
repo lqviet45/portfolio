@@ -17,16 +17,16 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://lqviet45.github.io/portfolio/system/og.jpg">
 <link rel="icon" href="../favicon.ico" type="image/x-icon">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="system.css">
 <script>
   // Opt into entrance/scroll motion only when the visitor allows motion.
   // Safety net: if scripts fail, everything is revealed after 2.5s anyway.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.classList.add('motion');
-    setTimeout(function () { if (!window.__motionReady) document.documentElement.classList.add('entered', 'reveal-all'); }, 2500);
+    setTimeout(function () { if (!window.__motionReady) document.documentElement.classList.add('reveal-all'); }, 2500);
   }
 </script>
 </head>
@@ -129,7 +129,7 @@
         </span>
       </div>
       <div class="topo-scroll">
-        <svg id="topo" viewBox="0 0 920 540" role="img" data-i18n-aria="topo" aria-label="Interactive system topology of Le Quoc Viet's career"></svg>
+        <svg id="topo" viewBox="0 0 920 540" role="group" data-i18n-aria="topo" aria-label="Interactive system topology of Le Quoc Viet's career"></svg>
       </div>
       <p class="topo-foot muted" data-i18n="topo.foot">↑ click a node to inspect it · packets are real clicks on this page, plus some ambient traffic</p>
     </div>
@@ -138,12 +138,12 @@
       <div class="insp-head">
         <div>
           <div class="insp-kind" id="insp-kind">client</div>
-          <div class="insp-title" id="insp-title">you</div>
+          <h3 class="insp-title" id="insp-title">you</h3>
         </div>
         <button class="insp-close" id="insp-close" data-i18n-aria="close" aria-label="Close">×</button>
       </div>
       <div class="insp-route" id="insp-route"></div>
-      <div class="insp-body" id="insp-body"></div>
+      <div class="insp-body" id="insp-body" tabindex="0"></div>
     </aside>
   </section>
 
@@ -172,7 +172,7 @@
         <span>consumer-group <b>visitors</b> · partition <b>0</b> · offset <b id="offset">0</b></span>
         <button class="mini" id="events-toggle">pause</button>
       </div>
-      <ol class="events" id="events"></ol>
+      <ol class="events" id="events" tabindex="0"></ol>
     </div>
 
     <div class="panel" id="panel-replay"></div>
@@ -227,22 +227,31 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="system.js"></script>
-<script src="recruiter.js"></script>
-<script src="loadtest.js"></script>
-<script src="replay.js"></script>
-<script src="story.js"></script>
-<script src="incident.js"></script>
-<script src="github.js"></script>
-<script src="motion.js"></script>
+<script src="system.js" defer></script>
+<script src="recruiter.js" defer></script>
+<script src="loadtest.js" defer></script>
+<script src="replay.js" defer></script>
+<script src="story.js" defer></script>
+<script src="incident.js" defer></script>
+<script src="github.js" defer></script>
+<script src="motion.js" defer></script>
 <script type="importmap">
   { "imports": { "three": "./vendor/three.module.min.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js" } }
 </script>
 <script type="module">
-  import('./scene3d.js').catch(err => {
-    console.warn('3D scene unavailable:', err);
-    document.getElementById('hero3d').dataset.state = 'failed';
-  });
+  // The 3D hero is decoration: load it after the page is interactive, and
+  // not at all when the visitor asked to save data.
+  const hero = document.getElementById('hero3d');
+  if (navigator.connection && navigator.connection.saveData) {
+    hero.dataset.state = 'off';
+  } else {
+    const start = () => import('./scene3d.js').catch(err => {
+      console.warn('3D scene unavailable:', err);
+      hero.dataset.state = 'failed';
+    });
+    const idle = () => ('requestIdleCallback' in window) ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 200);
+    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+  }
 </script>
 </body>
 </html>
