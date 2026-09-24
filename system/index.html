@@ -4,7 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>LQV/SYS — Le Quoc Viet</title>
-<meta name="description" content="Le Quoc Viet — Backend Developer. A portfolio you can send requests through.">
+<meta name="description" content="Le Quoc Viet — Backend Developer (Java/Spring Boot · .NET/C#) building core-banking microservices at Sacombank. A portfolio you can send requests through.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LQV/SYS">
+<meta property="og:title" content="Le Quoc Viet — Backend Developer">
+<meta property="og:description" content="Core-banking microservices at Sacombank: Saga, Outbox, Kafka, IBM MQ. A portfolio you can send requests through — hire me, break it with chaos monkey, or load-test it.">
+<meta property="og:url" content="https://lqviet45.github.io/portfolio/system/">
+<meta property="og:image" content="https://lqviet45.github.io/portfolio/system/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LQV/SYS — Le Quoc Viet's portfolio rendered as a live 3D distributed system">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lqviet45.github.io/portfolio/system/og.jpg">
 <link rel="icon" href="../favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,13 +32,17 @@
   <div class="bar-right">
     <span class="muted hide-sm"><span data-i18n="region">region</span> <b>vn-south-1</b></span>
     <span class="muted hide-sm" id="clock">--:--:--</span>
-    <a class="bar-link" href="../" data-i18n="classic">classic&nbsp;OS&nbsp;↗</a>
+    <button class="bar-btn tldr-btn" id="tldr-btn" data-i18n-aria="tldr">TL;DR</button>
+    <a class="bar-link hide-xs" href="../" data-i18n="classic">classic&nbsp;OS&nbsp;↗</a>
     <button class="bar-btn lang-btn" id="lang-btn" data-i18n-aria="lang" aria-label="Chuyển sang tiếng Việt">VI</button>
     <button class="bar-btn" id="theme-btn" data-i18n-aria="theme" aria-label="Toggle theme">◐</button>
   </div>
 </header>
 
 <main class="wrap">
+
+  <!-- ====== TL;DR / recruiter view (rendered by system.js, printable) ====== -->
+  <section class="cv" id="cv-view" hidden></section>
 
   <!-- ====== Intro ====== -->
   <section class="intro">
@@ -40,8 +55,10 @@
       <div class="actions">
         <button class="btn primary" id="hire-btn"><span class="verb">POST</span> /hire</button>
         <button class="btn" id="chaos-btn"><span class="skull">☠</span> chaos monkey: <b id="chaos-state">off</b></button>
+        <button class="btn" id="load-btn"><span class="bolt">⚡</span> <span data-i18n="load.btn">load test me</span></button>
         <button class="btn ghost" data-node="notify" data-i18n="contact">contact →</button>
       </div>
+      <p class="recruiter" data-i18n="recruiter">Recruiter? Read the <a href="#cv">10-second version</a> or <a href="../cv/Le-Quoc-Viet-CV.pdf" download>download my CV (PDF)</a>.</p>
     </div>
 
     <!-- three.js hero: a live 3D mirror of the topology (scene3d.js) -->
@@ -132,7 +149,9 @@
     <span>© <span id="year">2026</span> <span data-i18n="name">Le Quoc Viet</span> · <span data-i18n="footer">built with vanilla JS, no frameworks were harmed</span></span>
     <span><a href="https://github.com/lqviet45" target="_blank" rel="noopener">github</a> ·
       <a href="https://www.linkedin.com/in/le-quoc-viet-a03721240" target="_blank" rel="noopener">linkedin</a> ·
-      <a href="mailto:lqviet455@gmail.com">email</a></span>
+      <a href="mailto:lqviet455@gmail.com">email</a> ·
+      <a href="../cv/Le-Quoc-Viet-CV.pdf" download>cv.pdf</a> ·
+      <a href="../" data-i18n="classic">classic&nbsp;OS&nbsp;↗</a></span>
   </footer>
 </main>
 
@@ -152,9 +171,16 @@
   </div>
 </div>
 
+<!-- ====== Load test report ====== -->
+<div class="saga lt" id="lt" hidden>
+  <div class="saga-card lt-card" role="dialog" aria-modal="true" aria-labelledby="lt-title" id="lt-card"></div>
+</div>
+
 <div class="toast" id="toast" hidden></div>
 
 <script src="system.js"></script>
+<script src="recruiter.js"></script>
+<script src="loadtest.js"></script>
 <script type="importmap">
   { "imports": { "three": "./vendor/three.module.min.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js" } }
 </script>
