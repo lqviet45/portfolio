@@ -20,14 +20,7 @@ window.__motionReady = true;
   const MOTION = root.classList.contains('motion');
   const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  /* ---------- 1. hero entrance ---------- */
-  const heroParts = [
-    ...$$('.intro-text > *'),
-    $('#hero3d')
-  ].filter(Boolean);
-  heroParts.forEach((el, i) => { el.classList.add('enter'); el.style.setProperty('--d', `${80 + i * 70}ms`); });
-  const enter = () => requestAnimationFrame(() => root.classList.add('entered'));
-  Promise.race([document.fonts?.ready, new Promise(r => setTimeout(r, 600))]).then(enter);
+  /* ---------- 1. hero entrance: pure CSS (@keyframes enter in system.css) ---------- */
 
   /* ---------- 2. section heads (bilingual) ---------- */
   function renderHeads() {
@@ -65,7 +58,7 @@ window.__motionReady = true;
     p.innerHTML = out.join('');
     p.setAttribute('aria-label', text.replace(/[{}]/g, ''));
     words = $$('.w', p);
-    litStatement();
+    requestAnimationFrame(litStatement); // measure in a frame, not mid-boot
   }
   function litStatement() {
     if (!words.length) return;
@@ -105,8 +98,8 @@ window.__motionReady = true;
 
   function renderWork() {
     $('#work-grid').innerHTML = WORK.map((w, i) => `
-      <article class="work-card" tabindex="0" role="button" data-node="${w.node}" style="--i:${i}"
-               aria-label="${esc(`${w.title} — ${L('open in the inspector', 'mở trong inspector')}`)}">
+      <article class="work-card" data-node="${w.node}" style="--i:${i}">
+        <button type="button" class="work-hit" aria-label="${esc(`${w.title} — ${L('open in the inspector', 'mở trong inspector')}`)}"></button>
         <div class="work-glare" aria-hidden="true"></div>
         <p class="work-kicker">${esc(tx(w.kicker))}</p>
         <h3 class="work-title">${esc(w.title)}</h3>
@@ -128,7 +121,6 @@ window.__motionReady = true;
         select(card.dataset.node);
         $('.stage').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
       };
-      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
       card.addEventListener('click', e => { e.stopPropagation(); open(); });
       if (!FINE || !MOTION) return;
       let raf = 0;

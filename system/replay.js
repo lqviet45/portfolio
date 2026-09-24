@@ -100,6 +100,15 @@ function rpChips(items, fresh, empty) {
   return `<div class="tags">${items.map(x => `<span class="tag${fresh.includes(x) ? ' rp-new' : ''}">${esc(x)}</span>`).join('')}</div>`;
 }
 
+// Keep the current event in view by scrolling the log box only (never the page).
+// Skipped while the tab is hidden: measuring would force a layout for nothing.
+function centerLog() {
+  if (!$('#panel-replay')?.classList.contains('active')) return;
+  const log = $('#rp-log');
+  const cur = $('#rp-log li.current');
+  if (cur) log.scrollTop = cur.offsetTop - log.clientHeight / 2 + cur.offsetHeight / 2;
+}
+
 function renderReplay() {
   const panel = $('#panel-replay');
   if (!panel) return;
@@ -127,10 +136,7 @@ function renderReplay() {
       <span class="rp-key">${esc(ev.key)}</span><span class="rp-text">${esc(tr(ev.text))}</span>
     </button></li>`;
   }).join('');
-  // keep the current event in view by scrolling the log box only (never the page)
-  const log = $('#rp-log');
-  const cur = $('#rp-log li.current');
-  if (cur) log.scrollTop = cur.offsetTop - log.clientHeight / 2 + cur.offsetHeight / 2;
+  centerLog();
 
   // the materialized view
   const row = (k, label, value) => `<div class="rp-field${changed(k) ? ' changed' : ''}"><dt>${label}</dt><dd>${value}</dd></div>`;
@@ -165,7 +171,7 @@ function buildReplay(panel) {
       <section class="rp-col">
         <div class="rp-head"><b>${L('Materialized view', 'Materialized view')}</b>
           <code class="rp-code">state = log.slice(0, offset).reduce(apply, EMPTY)</code></div>
-        <dl class="rp-view" id="rp-view"></dl>
+        <dl class="rp-view" id="rp-view" tabindex="0"></dl>
       </section>
     </div>
     <p class="rp-note" id="rp-note"></p>`;
@@ -220,12 +226,16 @@ function pauseReplay() {
 
 function openReplay({ play = false } = {}) {
   openTab('replay');
+  centerLog();
   $('.lower').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
   if (play && !rpTimer) { rpOffset = CAREER_LOG.length; playReplay(); }
 }
 
 /* Wiring */
-document.addEventListener('click', e => { if (e.target.closest('[data-open-replay]')) openReplay(); });
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-open-replay]')) openReplay();
+  else if (e.target.closest('.tab[data-tab="replay"]')) requestAnimationFrame(centerLog);
+});
 renderReplay();
 renderNote();
 addEventListener('lqv:lang', () => { rpBuilt = false; renderReplay(); renderNote(); });

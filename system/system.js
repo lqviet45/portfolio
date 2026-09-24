@@ -396,7 +396,6 @@ function drawTopology() {
     nodeEls[id] = g;
   }
 
-  for (const e of Object.values(edgeEls)) e.len = e.el.getTotalLength();
 }
 
 /* ---- Packets ---- */
@@ -405,6 +404,8 @@ function travel(a, b, cls = 'sync', dur) {
   if (!edgeEls[key]) { key = `${b}>${a}`; reverse = true; }
   const edge = edgeEls[key];
   if (!edge) return Promise.resolve();
+  // measured on first use: getTotalLength() forces a layout, too costly during boot
+  if (!edge.len) edge.len = edge.el.getTotalLength();
   const ms = REDUCED ? 1 : (dur || (cls === 'async' ? 700 : 520));
   bus('travel', { a, b, cls, ms });
   return new Promise(resolve => {

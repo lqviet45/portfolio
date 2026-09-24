@@ -262,11 +262,11 @@ function renderConsole(first = false) {
       <div class="inc-grid">
         <section>
           <div class="inc-tiles" id="inc-tiles"></div>
-          <h4 class="inc-h">${L('Timeline', 'Timeline')}</h4>
+          <h3 class="inc-h">${L('Timeline', 'Timeline')}</h3>
           <ol class="inc-log" id="inc-log"></ol>
         </section>
         <section>
-          <h4 class="inc-h">${L('Runbook', 'Runbook')}</h4>
+          <h3 class="inc-h">${L('Runbook', 'Runbook')}</h3>
           <p class="inc-hint">${L('Investigate first, then mitigate. Every action changes the metrics.', 'Điều tra trước, xử lý sau. Mỗi hành động đều làm số liệu thay đổi.')}</p>
           <div class="inc-actions" id="inc-actions"></div>
         </section>
@@ -342,18 +342,18 @@ function renderPostmortem() {
       <div><dt>${L('Failed requests', 'Request lỗi')}</dt><dd>${inc.failed.toLocaleString('en-US')}</dd></div>
       <div><dt>${L('Detours', 'Đường vòng')}</dt><dd>${s.wrongTurns}</dd></div>
     </dl>
-    <h4 class="inc-h">${L('Summary', 'Tóm tắt')}</h4>
+    <h3 class="inc-h">${L('Summary', 'Tóm tắt')}</h3>
     <p class="inc-p">${L(
       'Deploy v2.4.1 lowered ORACLE_POOL_MAX from 50 to 5. Under normal night traffic the pool saturated, requests queued for connections and timed out, pushing career-svc errors to ~20% and p99 past 2 s. Rolling back to v2.4.0 restored the pool and the service recovered.',
       'Deploy v2.4.1 hạ ORACLE_POOL_MAX từ 50 xuống 5. Với traffic ban đêm bình thường, pool bị bão hoà, request phải chờ kết nối rồi timeout, đẩy lỗi của career-svc lên ~20% và p99 vượt 2 giây. Rollback về v2.4.0 khôi phục pool và service hồi phục.')}</p>
-    <h4 class="inc-h">${L('Root cause', 'Nguyên nhân gốc')}</h4>
+    <h3 class="inc-h">${L('Root cause', 'Nguyên nhân gốc')}</h3>
     <p class="inc-p">${L('A config change shipped without a guardrail; nothing flagged that the pool was 10× smaller. Blameless: the process allowed it, so the fix is in the process.',
                          'Một thay đổi cấu hình được ship mà không có rào chắn; không có gì cảnh báo pool nhỏ đi 10 lần. Blameless: quy trình đã cho phép điều đó, nên sửa ở quy trình.')}</p>
     <div class="inc-two">
-      <div><h4 class="inc-h">${L('What went well', 'Điều làm tốt')}</h4><ul class="inc-ul">${(good.length ? good : [L('The alert fired within seconds of the SLO breach.', 'Cảnh báo bắn ra vài giây sau khi vi phạm SLO.')]).map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
-      <div><h4 class="inc-h">${L('Lessons', 'Bài học')}</h4><ul class="inc-ul">${learn.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
+      <div><h3 class="inc-h">${L('What went well', 'Điều làm tốt')}</h3><ul class="inc-ul">${(good.length ? good : [L('The alert fired within seconds of the SLO breach.', 'Cảnh báo bắn ra vài giây sau khi vi phạm SLO.')]).map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
+      <div><h3 class="inc-h">${L('Lessons', 'Bài học')}</h3><ul class="inc-ul">${learn.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
     </div>
-    <h4 class="inc-h">${L('Action items', 'Việc cần làm')}</h4>
+    <h3 class="inc-h">${L('Action items', 'Việc cần làm')}</h3>
     <ul class="inc-ul inc-todo">
       <li>${L('Validate pool-size config in CI (reject drops > 50%).', 'Validate cấu hình pool trong CI (chặn khi giảm > 50%).')}</li>
       <li>${L('Canary deploys with automatic rollback on SLO burn rate.', 'Canary deploy, tự rollback khi SLO burn rate vượt ngưỡng.')}</li>

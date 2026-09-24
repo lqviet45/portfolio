@@ -112,7 +112,8 @@
     }
     for (const [a, b] of EDGES) {
       const path = el('path', { d: route(a, b), class: 'st-edge' }, gE);
-      E[`${a}>${b}`] = { path, len: path.getTotalLength() };
+      // length measured lazily: getTotalLength() forces a layout
+      E[`${a}>${b}`] = { path, _len: 0, get len() { return this._len || (this._len = this.path.getTotalLength()); } };
     }
     const mk = cls => { const g = el('g', { class: `st-pkt ${cls}` }, gP); el('circle', { r: 13, class: 'halo' }, g); el('circle', { r: 6 }, g); return g; };
     packets = { main: mk('sync'), dup: mk('fail'), comp: mk('comp'), out: mk('async') };
@@ -320,8 +321,8 @@
   /* ---------- boot ---------- */
   renderCopyDom();
   build();
-  shown = progress();
-  render(shown);
+  // first measure + paint in a frame, where layout is due anyway (no forced reflow during boot)
+  requestAnimationFrame(() => { shown = progress(); render(shown); });
   addEventListener('scroll', kick, { passive: true });
   addEventListener('resize', () => { build(); labelNodes(); shown = progress(); render(shown); });
   $('#story-skip').addEventListener('click', skipStory);

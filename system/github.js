@@ -128,13 +128,13 @@ function ghChart(buckets) {
     return `M${x} ${base} V${top + r} Q${x} ${top} ${x + r} ${top} H${x + w - r} Q${x + w} ${top} ${x + w} ${top + r} V${base} Z`;
   };
   return `
-    <svg viewBox="0 0 ${W} ${H}" class="gh-chart" role="img" aria-label="${esc(L(`Repositories by month of last push, last ${GH.months} months`, `Số repository theo tháng push gần nhất, ${GH.months} tháng qua`))}">
+    <svg viewBox="0 0 ${W} ${H}" class="gh-chart" role="group" aria-label="${esc(L(`Repositories by month of last push, last ${GH.months} months`, `Số repository theo tháng push gần nhất, ${GH.months} tháng qua`))}">
       ${[0, nice].map(v => `<line x1="${padL}" x2="${W}" y1="${y(v)}" y2="${y(v)}" class="lt-grid"/><text x="${padL - 6}" y="${y(v) + 3.5}" text-anchor="end" class="lt-tick">${v}</text>`).join('')}
       ${buckets.map((w, i) => {
         const x = padL + band * i + (band - bw) / 2;
         const label = fmtMonth(w.start);
         const unit = w.count === 1 ? L('repository', 'repository') : L('repositories', 'repository');
-        return `<g class="lt-bar" tabindex="0" data-tip="${w.count} ${unit}|${esc(label)}" aria-label="${esc(`${label}: ${w.count} ${unit}`)}">
+        return `<g class="lt-bar" role="img" tabindex="0" data-tip="${w.count} ${unit}|${esc(label)}" aria-label="${esc(`${label}: ${w.count} ${unit}`)}">
           <rect x="${padL + band * i}" y="${padT}" width="${band}" height="${H - padT - padB}" class="lt-hit"/>
           <path d="${bar(x, y(w.count), bw, y(0))}" class="lt-fill"/></g>`;
       }).join('')}
@@ -171,7 +171,7 @@ function ghRender() {
     </dl>
     <div class="gh-grid">
       <section class="gh-activity">
-        <h4 class="inc-h">${L(`Repositories by month of last push · ${GH.months} months`, `Repository theo tháng push gần nhất · ${GH.months} tháng`)}</h4>
+        <h3 class="inc-h">${L(`Repositories by month of last push · ${GH.months} months`, `Repository theo tháng push gần nhất · ${GH.months} tháng`)}</h3>
         ${hasActivity ? `<div class="lt-plot">${ghChart(s.months)}<div class="lt-tip" id="gh-tip" hidden></div></div>
           <details class="lt-table"><summary>${L('view as table', 'xem dạng bảng')}</summary><table class="sql">
             <tr><th>${L('month', 'tháng')}</th><th>${L('repositories', 'repository')}</th></tr>
@@ -180,7 +180,7 @@ function ghRender() {
           : `<p class="gh-empty">${L('No public repository updated in the last 12 months — most of my day-to-day work lives in private repositories.', 'Không có repository công khai nào được cập nhật trong 12 tháng qua — phần lớn công việc hằng ngày nằm trong repo riêng tư.')}</p>`}
       </section>
       <section>
-        <h4 class="inc-h">${L('Recently pushed', 'Push gần đây')}</h4>
+        <h3 class="inc-h">${L('Recently pushed', 'Push gần đây')}</h3>
         <ul class="gh-repos">
           ${s.recent.map(r => `
             <li><a href="${esc(r.url)}" target="_blank" rel="noopener">
