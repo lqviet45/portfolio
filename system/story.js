@@ -2,8 +2,8 @@
    LQV/SYS — scroll story: "the life of a payment"
    A pinned, scroll-driven explainer in the style of product pages.
    One pure function, render(P), maps scroll progress P ∈ [0,1] to every
-   attribute on the SVG; P itself eases toward the scroll position so the
-   motion stays smooth on wheels and trackpads alike.
+   attribute on the SVG. P follows the scroll position 1:1 (no damping —
+   lagging behind the wheel felt sticky), coalesced to one render per frame.
    Simplified illustration of the CD purchase flow described in the CV.
    Loaded after system.js (uses $, $$, L, esc, REDUCED, bus).
    ============================================== */
@@ -251,6 +251,10 @@
       </article>`).join('');
     $('#story-dots').innerHTML = CHAPTERS.map((c, i) => `<button type="button" data-i="${i}" aria-label="${esc(tx(c.eyebrow))}"></button>`).join('');
     $('#story-badge').innerHTML = `<span>✓</span> ${esc(L('exactly once', 'đúng một lần'))}`;
+    $('#story-skip').textContent = L('Skip story ↓', 'Bỏ qua ↓');
+    chEls = $$('.story-ch', section);
+    dotEls = $$('#story-dots button');
+    lastActive = -1;
     const head = $('#story-head');
     head.innerHTML = `
       <p class="section-eyebrow">${L('How it works', 'Cách nó hoạt động')}</p>
@@ -259,10 +263,11 @@
                                   'Cuộn để theo một lệnh mua chứng chỉ tiền gửi đi qua hệ thống. Phiên bản rút gọn của luồng thật trong CV.')}</p>`;
   }
 
+  let chEls = [], dotEls = [], lastActive = -1;
   function renderCopy(P) {
     const x = P * CHAPTERS.length;
     const active = Math.min(CHAPTERS.length - 1, Math.floor(x));
-    $$('.story-ch', section).forEach((ch, i) => {
+    chEls.forEach((ch, i) => {
       const local = x - i;                                         // 0..1 inside chapter i
       let o;
       if (REDUCED) o = i === active ? 1 : 0;
@@ -275,28 +280,35 @@
       ch.style.opacity = o;
       ch.style.transform = REDUCED ? '' : `translateY(${(1 - o) * (local < 0.5 ? 24 : -24)}px)`;
       ch.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
-      ch.setAttribute('aria-hidden', i !== active);
     });
-    $$('#story-dots button').forEach((d, i) => d.classList.toggle('on', i === active));
+    if (active !== lastActive) {                                   // only touch the DOM when the chapter changes
+      lastActive = active;
+      chEls.forEach((ch, i) => ch.setAttribute('aria-hidden', i !== active));
+      dotEls.forEach((d, i) => d.classList.toggle('on', i === active));
+    }
   }
 
-  /* ---------- scroll → target progress → damped progress ---------- */
-  let target = 0, shown = 0, raf = 0, last = 0;
-  function measure() {
+  /* ---------- scroll → progress, 1:1, one render per frame ---------- */
+  let shown = 0, scheduled = false;
+  function progress() {
     const r = section.getBoundingClientRect();
     const span = r.height - window.innerHeight;
-    target = span > 0 ? clamp(-r.top / span) : 0;
+    return span > 0 ? clamp(-r.top / span) : 0;
   }
-  function loop(now) {
-    const dt = Math.min(0.05, (now - (last || now)) / 1000);
-    last = now;
-    shown = REDUCED ? target : shown + (target - shown) * (1 - Math.exp(-dt * 9));
-    if (Math.abs(target - shown) < 0.0004) shown = target;
-    render(shown);
-    raf = shown !== target ? requestAnimationFrame(loop) : 0;
-    if (!raf) last = 0;
+  function frame() {
+    scheduled = false;
+    const P = progress();
+    if (Math.abs(P - shown) < 1e-4) return;                      // nothing moved: skip the work
+    shown = P;
+    render(P);
   }
-  function kick() { measure(); if (!raf) raf = requestAnimationFrame(loop); }
+  function kick() { if (!scheduled) { scheduled = true; requestAnimationFrame(frame); } }
+
+  // escape hatch: never trap people inside a pinned section
+  function skipStory() {
+    const r = section.getBoundingClientRect();
+    window.scrollTo({ top: window.scrollY + r.bottom - 64, behavior: REDUCED ? 'auto' : 'smooth' });
+  }
 
   function scrollToChapter(i) {
     const r = section.getBoundingClientRect();
@@ -308,11 +320,11 @@
   /* ---------- boot ---------- */
   renderCopyDom();
   build();
-  measure();
-  shown = target;
+  shown = progress();
   render(shown);
   addEventListener('scroll', kick, { passive: true });
-  addEventListener('resize', () => { build(); labelNodes(); kick(); render(shown); });
+  addEventListener('resize', () => { build(); labelNodes(); shown = progress(); render(shown); });
+  $('#story-skip').addEventListener('click', skipStory);
   $('#story-dots').addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b) scrollToChapter(+b.dataset.i); });
   addEventListener('lqv:lang', () => { renderCopyDom(); labelNodes(); render(shown); });
 })();
