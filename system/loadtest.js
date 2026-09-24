@@ -253,8 +253,8 @@ function renderLoadTest() {
     <div class="lt-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(elapsed * 100)}"><span style="width:${elapsed * 100}%"></span></div>
 
     <dl class="lt-tiles">
-      <div><dt>${L('requests', 'request')}</dt><dd>${fmtN(total)}</dd></div>
-      <div><dt>${L('peak rate', 'tốc độ đỉnh')}</dt><dd>${lt ? lt.peakRps : 0}<small> req/s</small></dd></div>
+      <div><dt>${L('Requests', 'Request')}</dt><dd>${fmtN(total)}</dd></div>
+      <div><dt>${L('Peak rate', 'Tốc độ đỉnh')}</dt><dd>${lt ? lt.peakRps : 0}<small> req/s</small></dd></div>
       <div><dt>p50</dt><dd>${fmtMs(pct(ok, 0.5))}</dd></div>
       <div><dt>p95</dt><dd>${fmtMs(pct(ok, 0.95))}</dd></div>
       <div><dt>p99</dt><dd>${fmtMs(pct(ok, 0.99))}</dd></div>

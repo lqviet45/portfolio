@@ -113,20 +113,20 @@ scene.add(floor);
 /* ---------- Labels: white text on canvas, tinted per state via material.color ---------- */
 function makeLabel(kind, name) {
   const s = 3;                          // supersample for crisp text
-  const fKind = `500 ${9 * s}px "IBM Plex Mono", ui-monospace, monospace`;
-  const fName = `500 ${13 * s}px "IBM Plex Mono", ui-monospace, monospace`;
+  const fKind = `500 ${9.5 * s}px Inter, system-ui, sans-serif`;
+  const fName = `500 ${13 * s}px "JetBrains Mono", ui-monospace, monospace`;
   const c = document.createElement('canvas');
   const ctx = c.getContext('2d');
   ctx.font = fName;
   const wName = ctx.measureText(name).width;
   ctx.font = fKind;
-  const wKind = ctx.measureText(kind.toUpperCase()).width;
+  const wKind = ctx.measureText(kind).width;
   c.width = Math.ceil(Math.max(wName, wKind) + 8 * s);
   c.height = 34 * s;
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
   ctx.font = fKind;
-  ctx.fillText(kind.toUpperCase(), c.width / 2, 11 * s);
+  ctx.fillText(kind, c.width / 2, 11 * s);
   ctx.fillStyle = '#fff';
   ctx.font = fName;
   ctx.fillText(name, c.width / 2, 28 * s);
@@ -497,7 +497,7 @@ function updateNode(n, dt, t, introP) {
   _c.copy(P.card);
   if (n.down) _c.lerp(P.err, 0.18);
   else if (sel || hov) _c.lerp(P.signal, sel ? 0.16 : 0.1);
-  _c.lerp(P.signal, n.pulse * 0.28);
+  _c.lerp(P.signal, n.pulse * 0.18);
   n.fMat.color.copy(_c);
   n.label.material.color.copy(n.down ? P.err : sel ? P.signal : P.ink);
   // farther labels fade back, so the front of the ring reads first
