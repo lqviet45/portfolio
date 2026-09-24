@@ -114,6 +114,7 @@
       <button class="tab active" data-tab="trace" role="tab" data-i18n="tab.trace">trace <span class="muted">· career waterfall</span></button>
       <button class="tab" data-tab="events" role="tab" data-i18n="tab.events">kafka <span class="muted">· career.events</span></button>
       <button class="tab" data-tab="console" role="tab" data-i18n="tab.console">console <span class="muted">· curl it</span></button>
+      <button class="tab" data-tab="replay" role="tab" data-i18n="tab.replay">replay <span class="muted">· event sourcing</span></button>
     </div>
 
     <div class="panel active" id="panel-trace">
@@ -122,6 +123,7 @@
         <span>service <b>lqviet.career</b></span>
         <span>spans <b id="span-count">—</b></span>
         <span class="muted" data-i18n="trace.hint">click a span for attributes</span>
+        <button class="mini rp-cta" data-open-replay data-i18n="trace.replay">⏪ replay the event log</button>
       </div>
       <div class="trace" id="trace"></div>
     </div>
@@ -133,6 +135,8 @@
       </div>
       <ol class="events" id="events"></ol>
     </div>
+
+    <div class="panel" id="panel-replay"></div>
 
     <div class="panel" id="panel-console">
       <div class="console" id="console-out"></div>
@@ -181,6 +185,7 @@
 <script src="system.js"></script>
 <script src="recruiter.js"></script>
 <script src="loadtest.js"></script>
+<script src="replay.js"></script>
 <script type="importmap">
   { "imports": { "three": "./vendor/three.module.min.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js" } }
 </script>
