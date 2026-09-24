@@ -500,8 +500,15 @@ async function request(target, { sink } = {}) {
 /* Ambient traffic */
 function startAmbient() {
   if (REDUCED) return;
+  // only generate traffic while someone can see it (2D topology or the 3D hero that mirrors it)
+  const onScreen = new Set();
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => (e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target))));
+    [$('.topo-card'), $('#hero3d')].filter(Boolean).forEach(el => io.observe(el));
+  }
   setInterval(() => {
     if (document.hidden || packets.length > 16) return;
+    if ('IntersectionObserver' in window && !onScreen.size) return;
     request(pick(SERVICES));
   }, 1100);
 }

@@ -634,7 +634,7 @@ table.sql th { color: var(--muted); font-weight: 500; font-size: 12px; }
 }
 
 /* scroll story (pinned) */
-.story { position: relative; height: 520vh; }
+.story { position: relative; height: 300vh; }  /* ~360px of scrolling per chapter */
 .story-sticky {
   position: sticky; top: 0; height: 100vh; height: 100svh;
   display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.25fr); align-items: center; gap: 48px;
@@ -657,7 +657,10 @@ table.sql th { color: var(--muted); font-weight: 500; font-size: 12px; }
   background: color-mix(in srgb, var(--ok) 14%, var(--card)); color: var(--ok);
   font-size: 15px; font-weight: 700; letter-spacing: -.01em;
 }
-.story-dots { position: absolute; left: 0; bottom: 48px; display: flex; gap: 8px; }
+.story-nav { position: absolute; left: 0; bottom: 40px; display: flex; align-items: center; gap: 20px; }
+.story-dots { display: flex; gap: 8px; }
+.story-skip { background: none; border: 0; padding: 6px 0; font-size: 14px; font-weight: 500; color: var(--muted); }
+.story-skip:hover { color: var(--signal); }
 .story-dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 4px; background: var(--line-strong); opacity: .5; transition: width var(--dur-l) var(--ease-out), opacity var(--dur-m), background var(--dur-m); }
 .story-dots button.on { width: 28px; background: var(--signal); opacity: 1; }
 .story-dots button:hover { opacity: 1; }
@@ -729,13 +732,13 @@ table.sql th { color: var(--muted); font-weight: 500; font-size: 12px; }
   .st-title { font-size: 13.5px; }
   .st-sub { font-size: 11px; }
   .story-stage svg { max-height: calc(100svh - 300px); }
-  .story-dots { position: static; }
+  .story-nav { position: static; justify-content: space-between; }
   .story-badge { top: 10px; right: 10px; font-size: 13px; padding: 6px 10px; }
   .work-grid { grid-template-columns: minmax(0, 1fr); }
   .work-card { min-height: 0; padding: 24px; }
   .section-head { margin: 96px 0 28px; }
 }
-@media (max-width: 900px) and (min-width: 0) { .story { height: 460vh; } }
+@media (max-width: 900px) and (min-width: 0) { .story { height: 280vh; } }
 
 /* ====== TL;DR / recruiter view ====== */
 body.cv-mode .intro, body.cv-mode .stats, body.cv-mode .stage, body.cv-mode .lower { display: none; }
