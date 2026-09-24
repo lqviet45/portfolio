@@ -188,6 +188,7 @@
     <span>© <span id="year">2026</span> <span data-i18n="name">Le Quoc Viet</span> · <span data-i18n="footer">built with vanilla JS, no frameworks were harmed</span></span>
     <span><a href="https://github.com/lqviet45" target="_blank" rel="noopener">github</a> ·
       <a href="https://www.linkedin.com/in/le-quoc-viet-a03721240" target="_blank" rel="noopener">linkedin</a> ·
+      <a href="#" data-incident title="↑↑↓↓←→←→BA">on-call drill</a> ·
       <a href="mailto:lqviet455@gmail.com">email</a> ·
       <a href="../cv/Le-Quoc-Viet-CV.pdf" download>cv.pdf</a> ·
       <a href="../" data-i18n="classic">classic&nbsp;OS&nbsp;↗</a></span>
@@ -215,6 +216,11 @@
   <div class="saga-card lt-card" role="dialog" aria-modal="true" aria-labelledby="lt-title" id="lt-card"></div>
 </div>
 
+<!-- ====== On-call drill (incident.js) ====== -->
+<div class="saga inc-overlay" id="inc" hidden>
+  <div class="inc-card" id="inc-card" role="dialog" aria-modal="true" aria-label="On-call drill"></div>
+</div>
+
 <div class="toast" id="toast" hidden></div>
 
 <script src="system.js"></script>
@@ -222,6 +228,7 @@
 <script src="loadtest.js"></script>
 <script src="replay.js"></script>
 <script src="story.js"></script>
+<script src="incident.js"></script>
 <script src="motion.js"></script>
 <script type="importmap">
   { "imports": { "three": "./vendor/three.module.min.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js" } }
