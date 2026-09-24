@@ -67,6 +67,8 @@ const STATIC = {
   ],
   'tab.trace':     ['trace <span class="muted">· career waterfall</span>', 'trace <span class="muted">· dòng thời gian sự nghiệp</span>'],
   'tab.events':    ['kafka <span class="muted">· career.events</span>', 'kafka <span class="muted">· career.events</span>'],
+  'tab.replay':    ['replay <span class="muted">· event sourcing</span>', 'replay <span class="muted">· event sourcing</span>'],
+  'trace.replay':  ['⏪ replay the event log', '⏪ phát lại event log'],
   'tab.console':   ['console <span class="muted">· curl it</span>', 'console <span class="muted">· thử curl</span>'],
   'trace.hint':    ['click a span for attributes', 'bấm vào span để xem thuộc tính'],
   'send':          ['send', 'gửi'],
@@ -540,6 +542,8 @@ const INSPECT = {
                 'Bật <b>chaos monkey</b> rồi tuyển tôi lần nữa. Xem Saga bù trừ (compensation).')}</li>
         <li>${L('Open the <b>console</b> tab and <code>curl /health</code>.',
                 'Mở tab <b>console</b> và thử <code>curl /health</code>.')}</li>
+        <li>${L('Open <b>replay</b> and drag the offset back — the whole career is rebuilt from its event log.',
+                'Mở tab <b>replay</b> và kéo offset về trước — cả sự nghiệp được dựng lại từ event log.')}</li>
       </ul>`
   }),
 
@@ -1074,7 +1078,7 @@ function health() {
 }
 
 const API = {
-  'GET /': () => [200, { service: 'lqv.sys', owner: tr(PROFILE.name), routes: ['/about', '/experience', '/projects', '/skills', '/education', '/contact', '/health', '/cv', '/tldr', 'POST /hire', 'POST /loadtest', 'POST /chaos'] }, 'gw'],
+  'GET /': () => [200, { service: 'lqv.sys', owner: tr(PROFILE.name), routes: ['/about', '/experience', '/projects', '/skills', '/education', '/contact', '/health', '/cv', '/tldr', 'POST /hire', 'POST /loadtest', 'POST /replay', 'POST /chaos'] }, 'gw'],
   'GET /about': () => [200, { name: tr(PROFILE.name), role: PROFILE.role, company: PROFILE.company, location: tr(PROFILE.location), summary: tr(PROFILE.summary) }, 'identity'],
   'GET /experience': () => [200, PROFILE.experience.map(x => ({ company: x.company, product: tr(x.product), title: x.title, period: tr(x.period), tech: x.tech })), 'career'],
   'GET /projects': () => [200, PROFILE.projects.map(p => ({ name: p.name, kind: tr(p.kind), period: tr(p.period), tech: p.tech })), 'projects'],
@@ -1090,6 +1094,7 @@ const API = {
   'POST /hire': () => { setTimeout(() => runSaga(), 300); return [202, { accepted: true, saga: 'HireLeQuocViet', note: L('opening orchestrator…', 'đang mở orchestrator…') }, 'gw']; },
   'GET /cv': () => { setTimeout(downloadCV, 300); return [200, { file: 'Le-Quoc-Viet-CV.pdf', type: 'application/pdf', size: '349 KB', note: L('download started', 'đang tải xuống') }, 'notify']; },
   'GET /tldr': () => { setTimeout(() => setView('cv'), 300); return [200, { view: 'tldr', note: L('opening the recruiter version…', 'đang mở bản tóm tắt…') }, 'identity']; },
+  'POST /replay': () => { setTimeout(() => openReplay({ play: true }), 300); return [202, { accepted: true, from_offset: 0, events: CAREER_LOG.length, note: L('replaying the career log…', 'đang phát lại career log…') }, 'kafka']; },
   'POST /loadtest': () => { setTimeout(() => runLoadTest(), 300); return [202, { accepted: true, tool: 'k6-style', note: L('opening the report…', 'đang mở báo cáo…') }, 'gw']; },
   'POST /chaos': () => { toggleChaos(); return [200, { chaosMonkey: chaosOn }, 'gw']; },
   'DELETE /chaos': () => { toggleChaos(false); return [200, { chaosMonkey: false }, 'gw']; },
@@ -1200,7 +1205,7 @@ function setupConsole() {
     if (e.key === 'ArrowDown') { hIdx = Math.max(hIdx - 1, -1); input.value = hIdx < 0 ? '' : history[hIdx]; e.preventDefault(); }
   });
 
-  const chips = ['/', '/experience', '/projects', '/skills', '/health', '/cv', 'POST /hire', 'POST /loadtest', 'POST /chaos', '/coffee'];
+  const chips = ['/', '/experience', '/projects', '/skills', '/health', '/cv', 'POST /hire', 'POST /loadtest', 'POST /replay', 'POST /chaos', '/coffee'];
   $('#console-chips').innerHTML = chips.map(c => `<button type="button" data-cmd="${esc(c)}">${esc(c)}</button>`).join('');
   $('#console-chips').addEventListener('click', e => {
     const b = e.target.closest('button');

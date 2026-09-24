@@ -410,6 +410,12 @@ addEventListener('lqv:event', e => {
   if (offsetEl) offsetEl.textContent = e.detail.offset;
 });
 addEventListener('lqv:chaos', e => { state.chaos = e.detail.on; });
+// replay from offset 0: the log tower collapses, then regrows event by event
+addEventListener('lqv:replay', e => {
+  if (!e.detail.reset) return;
+  while (slices.length) { const s = slices.shift(); s.dieT = 0; dying.push(s); }
+  ring(new THREE.Vector3(), 'async', 4, 0, 0.6, 900);
+});
 addEventListener('lqv:commit', () => {
   const n = nodes.notify;
   n.pulse = 1;
