@@ -697,6 +697,12 @@ function select(id, { silent = false } = {}) {
   $('#insp-body').innerHTML = d.html;
   if (silent) return;
 
+  // cross-fade the new content in (restart the CSS animation)
+  const body = $('#insp-body');
+  body.classList.remove('swap');
+  void body.offsetWidth;
+  body.classList.add('swap');
+
   $('#insp-body').scrollTop = 0;
   request(id);
   emit('http.request', `GET ${NODES[id].route || '/' + NODES[id].label} ← visitor`, 'user');

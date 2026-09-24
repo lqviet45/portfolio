@@ -482,6 +482,15 @@ resize();
 let visible = true;
 new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(host);
 
+/* ---------- Pointer parallax (fine pointers only) ---------- */
+const tilt = { x: 0, y: 0 };
+if (!COARSE) {
+  addEventListener('pointermove', e => {
+    tilt.x = (e.clientX / innerWidth) * 2 - 1;
+    tilt.y = (e.clientY / innerHeight) * 2 - 1;
+  }, { passive: true });
+}
+
 /* ---------- Frame loop ---------- */
 const clock = new THREE.Clock();
 const startedAt = performance.now();
@@ -598,6 +607,12 @@ function frame() {
     const top = sel.isTower ? TOWER_TOP + 1.35 : sel.grp.position.y + sel.h / 2 + 1.25;
     marker.position.set(sel.grp.position.x, top + (REDUCED ? 0 : Math.sin(t * 3) * 0.08), sel.grp.position.z);
     marker.rotation.y = REDUCED ? 0 : t * 1.5;
+  }
+
+  // pointer parallax: the whole scene leans a little toward the cursor
+  if (!REDUCED) {
+    scene.rotation.x += (tilt.y * 0.05 - scene.rotation.x) * Math.min(1, dt * 4);
+    scene.rotation.z += (-tilt.x * 0.035 - scene.rotation.z) * Math.min(1, dt * 4);
   }
 
   renderer.render(scene, camera);
