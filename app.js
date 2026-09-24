@@ -381,6 +381,13 @@ function buildContactContent() {
           <div class="contact-value">linkedin.com/in/le-quoc-viet-a03721240</div>
         </div>
       </a>
+      <a class="contact-row" href="cv/Le-Quoc-Viet-CV.pdf" download>
+        <div class="contact-icon-wrap"><i class="fas fa-file-pdf"></i></div>
+        <div>
+          <div class="contact-label">CV</div>
+          <div class="contact-value">Le-Quoc-Viet-CV.pdf</div>
+        </div>
+      </a>
       <a class="contact-row" href="https://facebook.com/le.quoc.viet.692602" target="_blank" rel="noopener">
         <div class="contact-icon-wrap"><i class="fab fa-facebook"></i></div>
         <div>

@@ -74,6 +74,11 @@ const STATIC = {
   'h3d.hint':      ['drag to orbit · click a node', 'kéo để xoay · bấm vào node'],
   'h3d.hint.touch':['tap a node to inspect', 'chạm vào node để xem'],
   'h3d.loading':   ['booting three.js…', 'đang khởi động three.js…'],
+  'load.btn':      ['load test me', 'load test thử'],
+  'recruiter': [
+    'Recruiter? Read the <a href="#cv">10-second version</a> or <a href="../cv/Le-Quoc-Viet-CV.pdf" download>download my CV (PDF)</a>.',
+    'Nhà tuyển dụng? Xem <a href="#cv">bản tóm tắt 10 giây</a> hoặc <a href="../cv/Le-Quoc-Viet-CV.pdf" download>tải CV (PDF)</a>.'
+  ],
   'footer':        ['built with vanilla JS, no frameworks were harmed', 'viết bằng vanilla JS, không framework nào bị tổn hại']
 };
 
@@ -82,7 +87,8 @@ const ARIA = {
   'lang':    ['Chuyển sang tiếng Việt', 'Switch to English'],
   'close':   ['Close', 'Đóng'],
   'topo':    ["Interactive system topology of Le Quoc Viet's career", 'Sơ đồ hệ thống tương tác về sự nghiệp của Lê Quốc Việt'],
-  'api':     ['API path', 'Đường dẫn API']
+  'api':     ['API path', 'Đường dẫn API'],
+  'tldr':    ['TL;DR — recruiter version of this page', 'TL;DR — bản tóm tắt cho nhà tuyển dụng']
 };
 
 function applyStatic() {
@@ -113,6 +119,7 @@ function setLang(lang) {
   renderTrace();
   setupConsoleIntro(true);
   tickClock();
+  bus('lang', { lang });
   emit('i18n.changed', `{lang:"${lang}"}`, 'user');
 }
 
@@ -1067,7 +1074,7 @@ function health() {
 }
 
 const API = {
-  'GET /': () => [200, { service: 'lqv.sys', owner: tr(PROFILE.name), routes: ['/about', '/experience', '/projects', '/skills', '/education', '/contact', '/health', 'POST /hire', 'POST /chaos'] }, 'gw'],
+  'GET /': () => [200, { service: 'lqv.sys', owner: tr(PROFILE.name), routes: ['/about', '/experience', '/projects', '/skills', '/education', '/contact', '/health', '/cv', '/tldr', 'POST /hire', 'POST /loadtest', 'POST /chaos'] }, 'gw'],
   'GET /about': () => [200, { name: tr(PROFILE.name), role: PROFILE.role, company: PROFILE.company, location: tr(PROFILE.location), summary: tr(PROFILE.summary) }, 'identity'],
   'GET /experience': () => [200, PROFILE.experience.map(x => ({ company: x.company, product: tr(x.product), title: x.title, period: tr(x.period), tech: x.tech })), 'career'],
   'GET /projects': () => [200, PROFILE.projects.map(p => ({ name: p.name, kind: tr(p.kind), period: tr(p.period), tech: p.tech })), 'projects'],
@@ -1081,6 +1088,9 @@ const API = {
   'GET /health': () => [down.size ? 503 : 200, health(), 'gw'],
   'GET /hire': () => [405, { error: 'Method Not Allowed', hint: L('try: POST /hire', 'thử: POST /hire') }, 'gw'],
   'POST /hire': () => { setTimeout(() => runSaga(), 300); return [202, { accepted: true, saga: 'HireLeQuocViet', note: L('opening orchestrator…', 'đang mở orchestrator…') }, 'gw']; },
+  'GET /cv': () => { setTimeout(downloadCV, 300); return [200, { file: 'Le-Quoc-Viet-CV.pdf', type: 'application/pdf', size: '349 KB', note: L('download started', 'đang tải xuống') }, 'notify']; },
+  'GET /tldr': () => { setTimeout(() => setView('cv'), 300); return [200, { view: 'tldr', note: L('opening the recruiter version…', 'đang mở bản tóm tắt…') }, 'identity']; },
+  'POST /loadtest': () => { setTimeout(() => runLoadTest(), 300); return [202, { accepted: true, tool: 'k6-style', note: L('opening the report…', 'đang mở báo cáo…') }, 'gw']; },
   'POST /chaos': () => { toggleChaos(); return [200, { chaosMonkey: chaosOn }, 'gw']; },
   'DELETE /chaos': () => { toggleChaos(false); return [200, { chaosMonkey: false }, 'gw']; },
   'GET /coffee': () => [418, { error: "I'm a teapot", note: L('but I do run on coffee', 'nhưng tôi chạy bằng cà phê') }, 'gw']
@@ -1190,7 +1200,7 @@ function setupConsole() {
     if (e.key === 'ArrowDown') { hIdx = Math.max(hIdx - 1, -1); input.value = hIdx < 0 ? '' : history[hIdx]; e.preventDefault(); }
   });
 
-  const chips = ['/', '/experience', '/projects', '/skills', '/health', 'POST /hire', 'POST /chaos', '/coffee'];
+  const chips = ['/', '/experience', '/projects', '/skills', '/health', '/cv', 'POST /hire', 'POST /loadtest', 'POST /chaos', '/coffee'];
   $('#console-chips').innerHTML = chips.map(c => `<button type="button" data-cmd="${esc(c)}">${esc(c)}</button>`).join('');
   $('#console-chips').addEventListener('click', e => {
     const b = e.target.closest('button');
