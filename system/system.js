@@ -1093,7 +1093,7 @@ function health() {
 }
 
 const API = {
-  'GET /': () => [200, { service: 'lqv.sys', owner: tr(PROFILE.name), routes: ['/about', '/experience', '/projects', '/skills', '/education', '/contact', '/health', '/cv', '/tldr', 'POST /hire', 'POST /loadtest', 'POST /replay', 'POST /incident', 'POST /chaos'] }, 'gw'],
+  'GET /': () => [200, { service: 'lqv.sys', owner: tr(PROFILE.name), routes: ['/about', '/experience', '/projects', '/skills', '/education', '/contact', '/health', '/cv', '/tldr', '/github', 'POST /hire', 'POST /loadtest', 'POST /replay', 'POST /incident', 'POST /chaos'] }, 'gw'],
   'GET /about': () => [200, { name: tr(PROFILE.name), role: PROFILE.role, company: PROFILE.company, location: tr(PROFILE.location), summary: tr(PROFILE.summary) }, 'identity'],
   'GET /experience': () => [200, PROFILE.experience.map(x => ({ company: x.company, product: tr(x.product), title: x.title, period: tr(x.period), tech: x.tech })), 'career'],
   'GET /projects': () => [200, PROFILE.projects.map(p => ({ name: p.name, kind: tr(p.kind), period: tr(p.period), tech: p.tech })), 'projects'],
@@ -1221,7 +1221,7 @@ function setupConsole() {
     if (e.key === 'ArrowDown') { hIdx = Math.max(hIdx - 1, -1); input.value = hIdx < 0 ? '' : history[hIdx]; e.preventDefault(); }
   });
 
-  const chips = ['/', '/experience', '/projects', '/skills', '/health', '/cv', 'POST /hire', 'POST /loadtest', 'POST /replay', 'POST /incident', 'POST /chaos', '/coffee'];
+  const chips = ['/', '/experience', '/projects', '/skills', '/health', '/cv', '/github', 'POST /hire', 'POST /loadtest', 'POST /replay', 'POST /incident', 'POST /chaos', '/coffee'];
   $('#console-chips').innerHTML = chips.map(c => `<button type="button" data-cmd="${esc(c)}">${esc(c)}</button>`).join('');
   $('#console-chips').addEventListener('click', e => {
     const b = e.target.closest('button');
