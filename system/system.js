@@ -37,6 +37,7 @@ const tr = v => (v && typeof v === 'object' && !Array.isArray(v) && 'en' in v ? 
 
 /* Static strings in index.html, keyed by data-i18n (innerHTML) */
 const STATIC = {
+  'name':          ['Le Quoc Viet', 'Lê Quốc Việt'],
   'region':        ['region', 'vùng'],
   'classic':       ['classic&nbsp;OS&nbsp;↗', 'bản&nbsp;OS&nbsp;cổ&nbsp;điển&nbsp;↗'],
   'eyebrow.a':     ['service manifest', 'service manifest'],
@@ -81,6 +82,7 @@ const ARIA = {
 function applyStatic() {
   const i = LANG === 'vi' ? 1 : 0;
   document.documentElement.lang = LANG;
+  document.title = `LQV/SYS — ${STATIC.name[i]}`;
   $$('[data-i18n]').forEach(el => {
     const pair = STATIC[el.dataset.i18n];
     if (pair) el.innerHTML = pair[i];

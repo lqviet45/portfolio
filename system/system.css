@@ -24,6 +24,7 @@
 
 /* Instrument Serif has no Vietnamese glyphs — swap the display serif in VI */
 :root[lang="vi"] { --serif: 'Newsreader', 'Instrument Serif', Georgia, serif; }
+:root[lang="vi"] h1 { letter-spacing: -.035em; }
 
 :root[data-theme="dark"] {
   --paper: #11100d;
@@ -125,7 +126,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   color: var(--muted);
 }
 h1 {
-  font-family: 'Instrument Serif', var(--serif);
+  font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(3rem, 8vw, 6.4rem);
   line-height: .92;
