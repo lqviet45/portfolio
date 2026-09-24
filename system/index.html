@@ -43,13 +43,23 @@
         <button class="btn ghost" data-node="notify" data-i18n="contact">contact →</button>
       </div>
     </div>
-    <dl class="stats">
+
+    <!-- three.js hero: a live 3D mirror of the topology (scene3d.js) -->
+    <div class="hero3d" id="hero3d" data-state="loading">
+      <canvas id="scene3d" aria-hidden="true"></canvas>
+      <div class="h3d-chip"><span class="led ok"></span>three.js · <span data-i18n="h3d.chip">live 3D mirror of the topology</span></div>
+      <div class="h3d-loading" data-i18n="h3d.loading">booting three.js…</div>
+      <div class="h3d-offset">career.events · offset <b id="h3d-offset">0</b></div>
+      <div class="h3d-hint" id="h3d-hint">drag to orbit · click a node</div>
+    </div>
+  </section>
+
+  <dl class="stats">
       <div><dt data-i18n="stat.uptime">uptime (since 2023-12)</dt><dd id="uptime">—</dd></div>
       <div><dt data-i18n="stat.platforms">core-banking platforms</dt><dd>2</dd></div>
       <div><dt data-i18n="stat.partners">partner banks integrated</dt><dd>6</dd></div>
       <div><dt data-i18n="stat.requests">requests this session</dt><dd id="req-count">0</dd></div>
-    </dl>
-  </section>
+  </dl>
 
   <!-- ====== Topology + Inspector ====== -->
   <section class="stage">
@@ -145,5 +155,14 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="system.js"></script>
+<script type="importmap">
+  { "imports": { "three": "./vendor/three.module.min.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js" } }
+</script>
+<script type="module">
+  import('./scene3d.js').catch(err => {
+    console.warn('3D scene unavailable:', err);
+    document.getElementById('hero3d').dataset.state = 'failed';
+  });
+</script>
 </body>
 </html>
