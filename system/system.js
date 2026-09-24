@@ -12,6 +12,8 @@ const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const hex = n => Array.from({ length: n }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+/* Event bus: the three.js hero (scene3d.js) mirrors everything that happens here */
+const bus = (type, detail = {}) => window.dispatchEvent(new CustomEvent(`lqv:${type}`, { detail }));
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 /* ==============================================
@@ -37,6 +39,7 @@ const tr = v => (v && typeof v === 'object' && !Array.isArray(v) && 'en' in v ? 
 
 /* Static strings in index.html, keyed by data-i18n (innerHTML) */
 const STATIC = {
+  'name':          ['Le Quoc Viet', 'Lê Quốc Việt'],
   'region':        ['region', 'vùng'],
   'classic':       ['classic&nbsp;OS&nbsp;↗', 'bản&nbsp;OS&nbsp;cổ&nbsp;điển&nbsp;↗'],
   'eyebrow.a':     ['service manifest', 'service manifest'],
@@ -67,6 +70,10 @@ const STATIC = {
   'tab.console':   ['console <span class="muted">· curl it</span>', 'console <span class="muted">· thử curl</span>'],
   'trace.hint':    ['click a span for attributes', 'bấm vào span để xem thuộc tính'],
   'send':          ['send', 'gửi'],
+  'h3d.chip':      ['live 3D mirror of the topology', 'bản sao 3D trực tiếp của hệ thống'],
+  'h3d.hint':      ['drag to orbit · click a node', 'kéo để xoay · bấm vào node'],
+  'h3d.hint.touch':['tap a node to inspect', 'chạm vào node để xem'],
+  'h3d.loading':   ['booting three.js…', 'đang khởi động three.js…'],
   'footer':        ['built with vanilla JS, no frameworks were harmed', 'viết bằng vanilla JS, không framework nào bị tổn hại']
 };
 
@@ -81,6 +88,7 @@ const ARIA = {
 function applyStatic() {
   const i = LANG === 'vi' ? 1 : 0;
   document.documentElement.lang = LANG;
+  document.title = `LQV/SYS — ${STATIC.name[i]}`;
   $$('[data-i18n]').forEach(el => {
     const pair = STATIC[el.dataset.i18n];
     if (pair) el.innerHTML = pair[i];
@@ -90,6 +98,8 @@ function applyStatic() {
     if (pair) { el.setAttribute('aria-label', pair[i]); el.title = pair[i]; }
   });
   $('#lang-btn').textContent = LANG === 'vi' ? 'EN' : 'VI';
+  const hint = $('#h3d-hint');
+  if (hint) hint.innerHTML = STATIC[matchMedia('(pointer: coarse)').matches ? 'h3d.hint.touch' : 'h3d.hint'][i];
   $('#chaos-state').textContent = chaosOn ? L('ON', 'BẬT') : L('off', 'tắt');
   $('#events-toggle').textContent = evPaused ? L('resume', 'tiếp tục') : L('pause', 'tạm dừng');
 }
@@ -387,6 +397,7 @@ function travel(a, b, cls = 'sync', dur) {
   const edge = edgeEls[key];
   if (!edge) return Promise.resolve();
   const ms = REDUCED ? 1 : (dur || (cls === 'async' ? 700 : 520));
+  bus('travel', { a, b, cls, ms });
   return new Promise(resolve => {
     const el = svg('circle', { r: cls === 'async' ? 4 : 4.5, class: `packet ${cls}` }, $('#packets'));
     packets.push({ edge, reverse, el, start: performance.now(), ms, resolve });
@@ -414,6 +425,7 @@ function tick(now) {
 function ping(id) {
   const g = nodeEls[id];
   if (!g) return;
+  bus('ping', { id });
   g.classList.remove('ping');
   void g.getBBox();
   g.classList.add('ping');
@@ -665,6 +677,7 @@ const INSPECT = {
 
 function select(id, { silent = false } = {}) {
   selected = id;
+  bus('select', { id });
   Object.entries(nodeEls).forEach(([k, g]) => g.classList.toggle('sel', k === id));
   const d = INSPECT[id]();
   $('#insp-kind').textContent = d.kind;
@@ -723,6 +736,7 @@ function emit(key, val, cls = '') {
   while (ol.children.length > 80) ol.lastElementChild.remove();
   offset++;
   $('#offset').textContent = offset;
+  bus('event', { key, cls, offset });
 }
 
 function startEvents() {
@@ -847,6 +861,7 @@ function setDown(id, isDown) {
   if (isDown) down.add(id); else down.delete(id);
   nodeEls[id].classList.toggle('down', isDown);
   edgeEls[`gw>${id}`].el.classList.toggle('broken', isDown);
+  bus('down', { id, down: isDown });
   updateClusterStatus();
 }
 
@@ -889,6 +904,7 @@ function toggleChaos(force) {
   $('#chaos-btn').classList.toggle('on', chaosOn);
   $('#chaos-state').textContent = chaosOn ? L('ON', 'BẬT') : L('off', 'tắt');
   clearInterval(chaosTimer);
+  bus('chaos', { on: chaosOn });
   if (chaosOn) {
     emit('chaos.enabled', '{by:"visitor", blast_radius:"services"}', 'user');
     chaosStrike();
@@ -1002,6 +1018,7 @@ async function runSaga({ newKey = false } = {}) {
   committedKey = key;
   sagaRunning = false;
   floatTag('notify', '201 created', true);
+  bus('commit', { key, compensated });
   emit('saga.committed', `{key:"${key}", attempts:${attempt}}`, 'user');
   $('#saga-result').innerHTML = `
     <div class="big ok">${L('201 Created — hire committed', '201 Created — đã chốt tuyển dụng')}${compensated ? L(' (after compensation)', ' (sau khi bù trừ)') : ''}.</div>
@@ -1220,6 +1237,12 @@ function setupTheme() {
 /* ==============================================
    Boot
    ============================================== */
+/* Read by scene3d.js */
+window.LQV = {
+  select: id => select(id),
+  state: () => ({ selected, down: [...down], chaos: chaosOn, offset })
+};
+
 function boot() {
   setupTheme();
   applyStatic();

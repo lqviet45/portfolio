@@ -33,7 +33,7 @@
   <section class="intro">
     <div class="intro-text">
       <p class="eyebrow"><span data-i18n="eyebrow.a">service manifest</span> · <span id="manifest-ver">v2026</span> · <span data-i18n="eyebrow.owner">owner</span>: lqviet45</p>
-      <h1>Le Quoc Viet<span class="caret">_</span></h1>
+      <h1><span data-i18n="name">Le Quoc Viet</span><span class="caret">_</span></h1>
       <p class="lede" data-i18n="lede">Backend developer. I build systems where money moves <em>exactly once</em> —
         core-banking microservices at <b>Sacombank</b>, in Java/Spring Boot and .NET/C#.</p>
       <p class="hint" data-i18n="hint">This page <em>is</em> the system. Click any node, fire a request, or break it on purpose.</p>
@@ -43,13 +43,23 @@
         <button class="btn ghost" data-node="notify" data-i18n="contact">contact →</button>
       </div>
     </div>
-    <dl class="stats">
+
+    <!-- three.js hero: a live 3D mirror of the topology (scene3d.js) -->
+    <div class="hero3d" id="hero3d" data-state="loading">
+      <canvas id="scene3d" aria-hidden="true"></canvas>
+      <div class="h3d-chip"><span class="led ok"></span>three.js · <span data-i18n="h3d.chip">live 3D mirror of the topology</span></div>
+      <div class="h3d-loading" data-i18n="h3d.loading">booting three.js…</div>
+      <div class="h3d-offset">career.events · offset <b id="h3d-offset">0</b></div>
+      <div class="h3d-hint" id="h3d-hint">drag to orbit · click a node</div>
+    </div>
+  </section>
+
+  <dl class="stats">
       <div><dt data-i18n="stat.uptime">uptime (since 2023-12)</dt><dd id="uptime">—</dd></div>
       <div><dt data-i18n="stat.platforms">core-banking platforms</dt><dd>2</dd></div>
       <div><dt data-i18n="stat.partners">partner banks integrated</dt><dd>6</dd></div>
       <div><dt data-i18n="stat.requests">requests this session</dt><dd id="req-count">0</dd></div>
-    </dl>
-  </section>
+  </dl>
 
   <!-- ====== Topology + Inspector ====== -->
   <section class="stage">
@@ -119,7 +129,7 @@
   </section>
 
   <footer class="foot">
-    <span>© <span id="year">2026</span> Le Quoc Viet · <span data-i18n="footer">built with vanilla JS, no frameworks were harmed</span></span>
+    <span>© <span id="year">2026</span> <span data-i18n="name">Le Quoc Viet</span> · <span data-i18n="footer">built with vanilla JS, no frameworks were harmed</span></span>
     <span><a href="https://github.com/lqviet45" target="_blank" rel="noopener">github</a> ·
       <a href="https://www.linkedin.com/in/le-quoc-viet-a03721240" target="_blank" rel="noopener">linkedin</a> ·
       <a href="mailto:lqviet455@gmail.com">email</a></span>
@@ -145,5 +155,14 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="system.js"></script>
+<script type="importmap">
+  { "imports": { "three": "./vendor/three.module.min.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js" } }
+</script>
+<script type="module">
+  import('./scene3d.js').catch(err => {
+    console.warn('3D scene unavailable:', err);
+    document.getElementById('hero3d').dataset.state = 'failed';
+  });
+</script>
 </body>
 </html>
