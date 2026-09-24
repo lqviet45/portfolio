@@ -21,6 +21,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="system.css">
+<script>
+  // Opt into entrance/scroll motion only when the visitor allows motion.
+  // Safety net: if scripts fail, everything is revealed after 2.5s anyway.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('motion');
+    setTimeout(function () { if (!window.__motionReady) document.documentElement.classList.add('entered', 'reveal-all'); }, 2500);
+  }
+</script>
 </head>
 <body>
 
@@ -71,15 +79,39 @@
     </div>
   </section>
 
-  <dl class="stats">
+  <dl class="stats" data-reveal>
       <div><dt data-i18n="stat.uptime">uptime (since 2023-12)</dt><dd id="uptime">—</dd></div>
-      <div><dt data-i18n="stat.platforms">core-banking platforms</dt><dd>2</dd></div>
-      <div><dt data-i18n="stat.partners">partner banks integrated</dt><dd>6</dd></div>
+      <div><dt data-i18n="stat.platforms">core-banking platforms</dt><dd data-count="2">2</dd></div>
+      <div><dt data-i18n="stat.partners">partner banks integrated</dt><dd data-count="6">6</dd></div>
       <div><dt data-i18n="stat.requests">requests this session</dt><dd id="req-count">0</dd></div>
   </dl>
 
   <!-- ====== Topology + Inspector ====== -->
-  <section class="stage">
+  <!-- ====== Statement: words light up as you scroll ====== -->
+  <section class="statement" aria-label="Statement">
+    <p class="statement-text" id="statement"></p>
+  </section>
+
+  <!-- ====== Scroll story: the life of a payment (pinned, scroll-driven) ====== -->
+  <header class="section-head" id="story-head" data-reveal></header>
+  <section class="story" id="story">
+    <div class="story-sticky">
+      <div class="story-copy" id="story-copy" aria-live="polite"></div>
+      <div class="story-stage">
+        <svg id="story-svg" role="img" aria-labelledby="story-svg-title"><title id="story-svg-title">Life of a payment</title></svg>
+        <div class="story-badge" id="story-badge" aria-hidden="true"></div>
+      </div>
+      <div class="story-dots" id="story-dots"></div>
+    </div>
+  </section>
+
+  <!-- ====== Selected work (tilt cards) ====== -->
+  <header class="section-head" id="work-head" data-reveal></header>
+  <section class="work-grid" id="work-grid" data-reveal-stagger></section>
+
+  <header class="section-head" id="explore-head" data-reveal></header>
+
+  <section class="stage" data-reveal>
     <div class="topo-card">
       <div class="card-head">
         <span><span data-i18n="topology">topology</span> <span class="muted">· career-cluster</span></span>
@@ -109,7 +141,7 @@
   </section>
 
   <!-- ====== Lower tabs ====== -->
-  <section class="lower">
+  <section class="lower" data-reveal>
     <div class="tabs" role="tablist">
       <button class="tab active" data-tab="trace" role="tab" data-i18n="tab.trace">trace <span class="muted">· career waterfall</span></button>
       <button class="tab" data-tab="events" role="tab" data-i18n="tab.events">kafka <span class="muted">· career.events</span></button>
@@ -186,6 +218,8 @@
 <script src="recruiter.js"></script>
 <script src="loadtest.js"></script>
 <script src="replay.js"></script>
+<script src="story.js"></script>
+<script src="motion.js"></script>
 <script type="importmap">
   { "imports": { "three": "./vendor/three.module.min.js", "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js" } }
 </script>
