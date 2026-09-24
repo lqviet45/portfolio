@@ -39,8 +39,8 @@ window.__motionReady = true;
     $('#explore-head').innerHTML = `
       <p class="section-eyebrow">${L('Under the hood', 'Bên dưới lớp vỏ')}</p>
       <h2 class="section-title">${L('Explore the live system.', 'Khám phá hệ thống đang chạy.')}</h2>
-      <p class="section-sub">${L('Every node is clickable. Send requests, break things with chaos monkey, load-test it, or replay the whole career from its event log.',
-                                  'Node nào cũng bấm được. Gửi request, phá bằng chaos monkey, load test, hoặc phát lại cả sự nghiệp từ event log.')}</p>`;
+      <p class="section-sub">${L('Every node is clickable. Send requests, break things with chaos monkey, load-test it, replay the whole career from its event log — or <a href="#" data-incident>take the 3 AM on-call drill</a>.',
+                                  'Node nào cũng bấm được. Gửi request, phá bằng chaos monkey, load test, phát lại cả sự nghiệp từ event log — hoặc <a href="#" data-incident>thử ca trực sự cố lúc 3h sáng</a>.')}</p>`;
   }
 
   /* ---------- 3. statement: words light up with scroll ---------- */
